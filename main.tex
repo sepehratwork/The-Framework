@@ -1,0 +1,91 @@
+\documentclass[12pt,a4paper]{article}
+
+% ==========================================
+% Packages
+% ==========================================
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+\setlength{\headheight}{15pt}
+
+% ==========================================
+% Xepersian Configuration (MUST be the last package)
+% ==========================================
+\usepackage{xepersian}
+
+\settextfont{Vazirmatn}
+\setlatintextfont{Liberation Serif}
+
+% ==========================================
+% Styling & Design
+% ==========================================
+\hypersetup{
+	colorlinks=true,
+	linkcolor=blue!60!black,
+	urlcolor=cyan,
+	citecolor=green!50!black
+}
+
+\titleformat{\section}{\Huge\bfseries\color{blue!70!black}}{\thesection}{1em}{}
+\titleformat{\subsection}{\Large\bfseries\color{blue!60!black}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\large\bfseries\color{blue!50!black}}{\thesubsubsection}{1em}{}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\textcolor{gray}{\leftmark}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ==========================================
+% Custom Commands
+% ==========================================
+\newcommand{\en}[1]{\texorpdfstring{\lr{#1}}{#1}}
+\newcommand{\model}[1]{\lr{\textbf{#1}}}
+\renewcommand{\labelitemi}{\textcolor{blue!70!black}{\textbullet}}
+
+% ==========================================
+% Document Content
+% ==========================================
+\begin{document}
+	
+	% --- Title Page ---
+	\begin{titlepage}
+		\centering
+		\vspace*{2.5cm}
+		{\Huge \bfseries \textcolor{blue!70!black}{مروری بر مدل‌های زبانی}\par}
+		\vspace{16cm}
+		{\Large \bfseries سپهر کراچی\par}
+		\vspace{0.5cm}
+		{\Large 1406\par}
+		\vfill
+	\end{titlepage}
+	
+	% --- Table of Contents ---
+	\newpage
+	\renewcommand{\contentsname}{فهرست مطالب}
+	\tableofcontents
+	\newpage
+	
+	% --- Include Sections ---
+	\input{sections/01_training.tex}
+	\input{sections/02_architecture.tex}
+	\input{sections/03_optimization.tex}
+	\input{sections/04_hyperparameter.tex}
+	\input{sections/05_evaluation.tex}
+	\input{sections/06_rl.tex}
+	
+	% --- Bibliography ---
+	\newpage
+	\renewcommand{\refname}{منابع} % Rename References to Persian
+	% Switch to Left-to-Right for English references
+	\begin{latin}
+		\bibliographystyle{unsrt} % Standard style (numbers based on appearance)
+		\bibliography{references} % Points to references.bib
+	\end{latin}
+	
+\end{document}
