@@ -1,0 +1,21 @@
+\contentsline {section}{\numberline {1}آموزش (\lr {Training})}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}داده‌ها (\lr {Data})}{2}{subsection.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.1}پیش‌آموزش (\lr {Pre-Training})}{2}{subsubsection.1.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.2}پس‌آموزش (\lr {Post-Training})}{2}{subsubsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.2}روش (\lr {Method})}{3}{subsection.1.2}%
+\contentsline {subsubsection}{\numberline {1.2.1}پیش‌آموزش (\lr {Pre-Training})}{3}{subsubsection.1.2.1}%
+\contentsline {subsubsection}{\numberline {1.2.2}پس‌آموزش (\lr {Post-Training})}{3}{subsubsection.1.2.2}%
+\contentsline {section}{\numberline {2}ساختار (\lr {Architecture})}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}کدگذاری موقعیت (\lr {Positional Encoding})}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}بردارکننده (\lr {Tokenizer})}{4}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}شبکه عصبی (\lr {MLP})}{5}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}تابع فعالساز (\lr {Activation Function})}{5}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}نرمالسازی (\lr {Normalization})}{6}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}مکانیزم توجه (\lr {Attention})}{6}{subsection.2.6}%
+\contentsline {subsection}{\numberline {2.7}ساختار ترنسفورمر (\lr {Transformer})}{7}{subsection.2.7}%
+\contentsline {section}{\numberline {3}بهینه سازی (\lr {Optimization})}{7}{section.3}%
+\contentsline {subsection}{\numberline {3.1}الگوریتم (\lr {Algorithm})}{7}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}تابع هزینه (\lr {Loss Function})}{8}{subsection.3.2}%
+\contentsline {section}{\numberline {4}تنظیم هایپرپارامتر (\lr {Hyperparameter Tuning})}{8}{section.4}%
+\contentsline {section}{\numberline {5}ارزیابی (\lr {Evaluation})}{9}{section.5}%
+\contentsline {section}{\numberline {6}تنظیم هایپرپارامتر (\lr {Hyperparameter Tuning})}{9}{section.6}%
