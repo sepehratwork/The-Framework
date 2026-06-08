@@ -18,4 +18,4 @@
 \contentsline {subsection}{\numberline {3.2}تابع هزینه (\lr {Loss Function})}{8}{subsection.3.2}%
 \contentsline {section}{\numberline {4}تنظیم هایپرپارامتر (\lr {Hyperparameter Tuning})}{8}{section.4}%
 \contentsline {section}{\numberline {5}ارزیابی (\lr {Evaluation})}{9}{section.5}%
-\contentsline {section}{\numberline {6}تنظیم هایپرپارامتر (\lr {Hyperparameter Tuning})}{9}{section.6}%
+\contentsline {section}{\numberline {6}یادگیری تقویتی (\lr {Reinforcement Learning})}{9}{section.6}%

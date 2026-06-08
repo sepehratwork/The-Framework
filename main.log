@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026/Arch Linux) (preloaded format=xelatex 2026.6.7)  7 JUN 2026 19:10
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026/Arch Linux) (preloaded format=xelatex 2026.6.7)  7 JUN 2026 19:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -867,11 +867,6 @@ n/24.88 Hyperparameter Tuning[]\TU/Vazirmatn(0)/b/n/24.88 )| []
 (./models/Evaluation/kimi_k2.tex) (./models/Evaluation/kimi_k2_5.tex)
 (./models/Evaluation/magistral.tex) (./models/Evaluation/mobilellm_pro.tex)
 (./models/Evaluation/mobilellm_r1.tex)) (./sections/07_rl.tex
-Overfull \hbox (12.14981pt too wide) in paragraph at lines 1--1
-[]|[]\TU/Vazirmatn(0)/b/n/24.88 تنظیم هایپرپارامتر ([]\TU/LiberationSerif(0)/b/
-n/24.88 Hyperparameter Tuning[]\TU/Vazirmatn(0)/b/n/24.88 )| [] 
- []
-
 (./models/ReinforcementLearning/PPO.tex)
 (./models/ReinforcementLearning/DPO.tex)
 (./models/ReinforcementLearning/GRPO.tex)
@@ -898,7 +893,7 @@ LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 00721F7232555850A05212BBB6517788;4593.
+(rerunfilecheck)             Checksum: 475C29B7D6818AE93274C84A6F75EE4B;4566.
  ) 
 Here is how much of TeX's memory you used:
  15921 strings out of 468168
