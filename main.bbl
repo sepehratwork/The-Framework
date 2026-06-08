@@ -1,3 +1,118 @@
-\begin{thebibliography}{}
+\begin{thebibliography}{10}
+
+\bibitem{li2025farseer}
+Houyi Li, Wenzhen Zheng, Qiufeng Wang, Zhenyu Ding, Haoying Wang, Zili Wang,
+  Shijie Xuyang, Ning Ding, Shuigeng Zhou, Xiangyu Zhang, et~al.
+\newblock Predictable scale: Part ii, farseer--a refined scaling law in large
+  language models.
+\newblock {\em arXiv preprint arXiv:2506.10972}, 2025.
+
+\bibitem{chen2025revisiting}
+Zhengyu Chen, Siqi Wang, Teng Xiao, Yudong Wang, Shiqi Chen, Xunliang Cai,
+  Junxian He, and Jingang Wang.
+\newblock Revisiting scaling laws for language models: The role of data quality
+  and training strategies.
+\newblock {\em arXiv preprint}, 2025.
+
+\bibitem{mcleish2025gemstones}
+Sean McLeish, John Kirchenbauer, David~Yu Miller, Siddharth Singh, Abhinav
+  Bhatele, Micah Goldblum, Ashwinee Panda, and Tom Goldstein.
+\newblock Gemstones: A model suite for multi-faceted scaling laws.
+\newblock {\em arXiv preprint arXiv:2502.06857}, 2025.
+
+\bibitem{bian2025scaling}
+Song Bian, Tao Yu, Shivaram Venkataraman, and Youngsuk Park.
+\newblock Scaling laws meet model architecture: Toward inference-efficient
+  llms.
+\newblock {\em arXiv preprint arXiv:2510.18245}, 2025.
+
+\bibitem{liu2026inverse}
+Yizhou Liu, Sara Kangaslahti, Ziming Liu, and Jeff Gore.
+\newblock Inverse depth scaling from most layers being similar.
+\newblock {\em arXiv preprint arXiv:2602.05970}, 2026.
+
+\bibitem{sun2026law}
+Wenjie Sun, Jinning Yang, Shuai Zhang, and Mengnan Du.
+\newblock Law of neural interaction: Depth--width shape, interaction
+  efficiency, and generalization.
+\newblock {\em arXiv preprint arXiv:2605.27989}, 2026.
+
+\bibitem{jha2025spectral}
+Nandan~Kumar Jha and Brandon Reagen.
+\newblock Spectral scaling laws in language models: How effectively do
+  feed-forward networks use their latent space?
+\newblock {\em arXiv preprint arXiv:2510.00537}, 2025.
+
+\bibitem{beck2026xlstm}
+Maximilian Beck, Kajetan Schweighofer, Sebastian B{\"o}ck, Sebastian Lehner,
+  and Sepp Hochreiter.
+\newblock xlstm scaling laws: Competitive performance with linear
+  time-complexity.
+\newblock {\em arXiv preprint arXiv:2510.02228}, 2026.
+
+\bibitem{anonymous2026recall}
+Anonymous.
+\newblock On the recall scaling laws in mamba: A theoretical and mechanistic
+  study via hashing.
+\newblock {\em arXiv preprint}, 2026.
+
+\bibitem{tian2025towards}
+Changxin Tian, Kunlong Chen, Jia Liu, Ziqi Liu, Zhiqiang Zhang, and Jun Zhou.
+\newblock Towards greater leverage: Scaling laws for efficient
+  mixture-of-experts language models.
+\newblock {\em arXiv preprint arXiv:2507.17702}, 2025.
+
+\bibitem{abnar2025parameters}
+Samira Abnar, Harshay Shah, Dan Busbridge, Alaaeldin El-Nouby, Josh Susskind,
+  and Vimal Thilak.
+\newblock Parameters vs flops: Scaling laws for optimal sparsity for
+  mixture-of-experts language models.
+\newblock {\em arXiv preprint arXiv:2501.12370}, 2025.
+
+\bibitem{ludziejewski2025joint}
+Jan Ludziejewski, Maciej Pi{\'o}ro, Jakub Krajewski, Maciej Stefaniak,
+  Micha{\l} Krutul, Jan Ma{\l}a{\'s}nicki, Marek Cygan, Piotr Sankowski, Kamil
+  Adamczewski, Piotr Mi{\l}o{\'s}, et~al.
+\newblock Joint moe scaling laws: Mixture of experts can be memory efficient.
+\newblock {\em arXiv preprint arXiv:2502.05172}, 2025.
+
+\bibitem{liew2025scaling}
+Seng~Pei Liew, Takuya Kato, and Sho Takase.
+\newblock Scaling laws for upcycling mixture-of-experts language models.
+\newblock {\em arXiv preprint arXiv:2502.03009}, 2025.
+
+\bibitem{subramanyam2026scaling}
+Anirudh Subramanyam, Yuxin Chen, and Robert~L Grossman.
+\newblock Scaling laws revisited: Modeling the role of data quality in language
+  model pretraining.
+\newblock {\em arXiv preprint arXiv:2510.03313}, 2026.
+
+\bibitem{shukor2025scaling}
+Mustafa Shukor, Louis Bethune, Dan Busbridge, David Grangier, Enrico Fini,
+  Alaaeldin El-Nouby, and Pierre Ablin.
+\newblock Scaling laws for optimal data mixtures.
+\newblock {\em arXiv preprint arXiv:2507.09404}, 2025.
+
+\bibitem{cagnetta2025scaling}
+Francesco Cagnetta, Alessandro Favero, Antonio Sclocchi, and Matthieu Wyart.
+\newblock Scaling laws and representation learning in simple hierarchical
+  languages: Transformers vs. convolutional architectures.
+\newblock {\em arXiv preprint arXiv:2505.07070}, 2025.
+
+\bibitem{held2026relative}
+William Held, David Hall, Percy Liang, and Diyi Yang.
+\newblock Relative scaling laws for llms.
+\newblock {\em arXiv preprint arXiv:2510.24626}, 2026.
+
+\bibitem{yue2025relative}
+Baoqing Yue, Jinyuan Zhou, Zixi Wei, Jingtao Zhan, Qingyao Ai, and Yiqun Liu.
+\newblock Relative-based scaling law for neural language models.
+\newblock {\em arXiv preprint arXiv:2510.20387}, 2025.
+
+\bibitem{xiao2025densing}
+Chaojun Xiao, Jie Cai, Weilin Zhao, Biyuan Lin, Guoyang Zeng, Jie Zhou, Zhi
+  Zheng, Xu~Han, Zhiyuan Liu, and Maosong Sun.
+\newblock Densing law of llms.
+\newblock {\em Nature Machine Intelligence}, pages 1--11, 2025.
 
 \end{thebibliography}

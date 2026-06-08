@@ -82,11 +82,12 @@
 	
 	% --- Bibliography ---
 	\newpage
-	\renewcommand{\refname}{منابع} % Rename References to Persian
-	% Switch to Left-to-Right for English references
+	\section{منابع}
+	\renewcommand{\refname}{منابع} 
 	\begin{latin}
-		\bibliographystyle{unsrt} % Standard style (numbers based on appearance)
-		\bibliography{references} % Points to references.bib
+		\nocite{*}
+		\bibliographystyle{unsrt} 
+		\bibliography{references} 
 	\end{latin}
 	
 \end{document}
