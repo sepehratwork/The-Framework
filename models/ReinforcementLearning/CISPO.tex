@@ -1,1 +1,281 @@
-\item \textbf asd
+\subsection{الگوریتم بهینه‌سازی خط‌مشی با ضریب اهمیت برش‌خورده (\en{Clipped IS-weight Policy Optimization - CISPO})}
+
+الگوریتم \model{CISPO} یک الگوریتم پیشرفته در حوزه یادگیری تقویتی برون‌پویا (\en{Off-Policy Reinforcement Learning}) است که توسط آزمایشگاه \en{MiniMax} در سال ۲۰۲۵ و در جریان توسعه مدل استدلال‌گر بزرگ \model{MiniMax-M1} معرفی شد \cite{minimax2025m1}. این الگوریتم با حذف کامل قید سنتی ناحیه اطمینان (\en{Trust Region}) روی گرادیان توکن‌ها و در عوض اعمال برش (\en{Clipping}) صرفاً بر روی وزن‌های نمونه‌برداری اهمیت (\en{Importance Sampling Weights})، انقلابی در مقیاس‌پذیری پایدار و کارآمد فرآیند تفکر طولانی‌مدت (\en{Long Chain-of-Thought}) پدید آورده است.
+
+\subsubsection*{تاریخچه، انگیزه و ضرورت پیدایش الگوریتم}
+
+با پیدایش مدل‌های استدلال‌گر نظیر \model{OpenAI o1} و \model{DeepSeek-R1} \cite{deepseek2025r1}، مقیاس‌پذیری محاسبات زمان آزمون (\en{Test-Time Compute Scaling}) به یکی از ارکان اصلی پیشرفت مدل‌های زبانی بدل شد. در این پارادایم، طول استدلال مدل به ده‌ها هزار توکن افزایش می‌یابد تا راه‌حل مسائل پیچیده المپیادی، ریاضیات و مهندسی نرم‌افزار کشف شود \cite{jimenez2024swebench}.
+
+با این حال، الگوریتم‌های استاندارد یادگیری تقویتی مانند \model{PPO} \cite{schulman2017proximal} و \model{GRPO} \cite{shao2024deepseekmath} در این زمینه با یک نقیصه ساختاری بنیادین تحت عنوان \textbf{«پاتولوژی برش توکن» (\en{The Pathology of Token Clipping})} مواجه می‌شوند:
+\begin{itemize}
+    \item \textbf{نقش حیاتی توکن‌های بازتابی (\en{Reflective Tokens}):} رفتارهای کلیدی در استدلال زنجیره‌ای طولانی مانند تفکر انتقادی و تصحیح مسیر، به توکن‌های کلیدی و اتصال‌دهنده‌ای نظیر «\en{However}»، «\en{Wait}»، «\en{Recheck}» و «\en{Aha}» وابسته‌اند. این توکن‌ها نقش دوشاخه‌شدن (\en{Forks}) در گراف مسیرهای استدلال را ایفا می‌کنند.
+    \item \textbf{احتمال پایه پایین و جهش نسبت اهمیت:} این توکن‌ها در مدل پایه دارای احتمال اولیه اندکی هستند ($\pi_{\theta_{\text{old}}} \ll 1$). هنگامی که مدل پاداش مثبت دریافت می‌کند، در اولین به‌روزرسانی‌ها احتمال این توکن‌ها افزایش سریعی پیدا کرده و در نتیجه نسبت اهمیت $r_{i,t}(\theta) = \frac{\pi_\theta(o_{i,t})}{\pi_{\theta_{\text{old}}}(o_{i,t})}$ به سرعت از حد مجاز ($1 + \epsilon$) فراتر می‌رود.
+    \item \textbf{صفر شدن گرادیان در \model{PPO} و \model{GRPO}:} در الگوریتم‌های سنتی، به محض عبور نسبت اهمیت از سقف $1+\epsilon$، گرادیان مربوط به آن توکن صفر می‌شود. در سناریوهای بهینه‌سازی برون‌پویا که شامل چندین دور به‌روزرسانی ریزدسته (مثلاً ۱۶ دور در هر بچ داده) هستند، این توکن‌های حیاتی پس از اولین دور کاملاً از فرآیند یادگیری کنار گذاشته می‌شوند.
+    \item \textbf{تخریب پویایی آنتروپی و مهار CoT:} حذف گرادیان توکن‌های بازتابی باعث سقوط آنتروپی \cite{cui2025entropy, wang2025beyond}، ناپایداری بهینه‌سازی و مهار رفتارهای استدلالی بلندمدت می‌شود.
+\end{itemize}
+
+اگرچه الگوریتم \model{DAPO} \cite{yu2025dapo} تلاش نمود با بالا بردن سقف برش بالایی این چالش را کاهش دهد، اما این راهکار در چرخه‌های آف‌پالیسی طولانی ناکافی بوده و با کندی همگرایی همراه است. \model{CISPO} با بازطراحی ساختار تابع هدف، این مشکل را به‌صورت پایه‌ای مرتفع می‌سازد.
+
+\subsubsection*{مبانی نظری و اشتقاق‌های کامل ریاضی از اصول اولیه}
+
+مسئله تصمیم‌گیری زبانی را در قالب یک فرآیند تصمیم‌گیری مارکوف با توزیع پرسش‌های $q \sim \mathcal{D}$ و توالی پاسخ $o = (o_1, o_2, \dots, o_{|o|})$ مدل‌سازی می‌کنیم. توزیع احتمال خودهمبسته تولید پاسخ تحت خط‌مشی پارامتری $\pi_\theta$ عبارت است از:
+\begin{equation}
+	P(o \mid q; \theta) = \prod_{t=1}^{|o|} \pi_\theta(o_t \mid q, o_{<t})
+\end{equation}
+
+تابع هدف امید ریاضی پاداش در خط‌مشی به صورت زیر تعریف می‌شود:
+\begin{equation}
+	J(\theta) = \mathbb{E}_{q \sim \mathcal{D}, o \sim \pi_\theta} [R(q, o)] = \sum_{q} P(q) \int_{\Omega_o} P(o \mid q; \theta) R(q, o) \, do
+\end{equation}
+
+با مشتق‌گیری نسبت به بردار پارامترهای $\theta \in \mathbb{R}^d$ و بهره‌گیری از اتحاد لگاریتمی ($\nabla_\theta P = P \nabla_\theta \log P$):
+\begin{align}
+	\nabla_\theta J(\theta) &= \sum_{q} P(q) \int_{\Omega_o} \nabla_\theta P(o \mid q; \theta) R(q, o) \, do \nonumber \\
+	&= \sum_{q} P(q) \int_{\Omega_o} P(o \mid q; \theta) \nabla_\theta \log P(o \mid q; \theta) R(q, o) \, do \nonumber \\
+	&= \mathbb{E}_{q \sim \mathcal{D}, o \sim \pi_\theta} \left[ \nabla_\theta \log P(o \mid q; \theta) R(q, o) \right]
+\end{align}
+
+با اعمال قاعده زنجیره‌ای بر لگاریتم احتمال زنجیره توکن‌ها:
+\begin{equation}
+	\nabla_\theta \log P(o \mid q; \theta) = \sum_{t=1}^{|o|} \nabla_\theta \log \pi_\theta(o_t \mid q, o_{<t})
+\end{equation}
+
+در بهینه‌سازی برون‌پویا (\en{Off-Policy}) که نمونه‌ها از خط‌مشی جمع‌آوری‌کننده قدیمی $\pi_{\theta_{\text{old}}}$ نمونه‌برداری می‌شوند، با استفاده از قضیه نمونه‌برداری اهمیت (\en{Importance Sampling Theorem}) داریم:
+\begin{equation}
+	\mathbb{E}_{x \sim p}[f(x)] = \int p(x) f(x) \, dx = \int q(x) \frac{p(x)}{q(x)} f(x) \, dx = \mathbb{E}_{x \sim q} \left[ \frac{p(x)}{q(x)} f(x) \right]
+\end{equation}
+
+نسبت وزن اهمیت توکنی برای توکن $t$-ام از پاسخ $i$-ام به صورت زیر تعریف می‌گردد:
+\begin{equation}
+	r_{i,t}(\theta) = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{\text{old}}}(o_{i,t} \mid q, o_{i,<t})}
+\end{equation}
+
+در فرمولاسیون \model{GRPO} \cite{shao2024deepseekmath}، برای هر پرسش $q$ تعداد $G$ خروجی $\{o_i\}_{i=1}^G$ تولید شده و مزیت درون‌گروهی نرمال‌شده بدون نیاز به مدل نقاد (\en{Critic-Free}) محاسبه می‌شود:
+\begin{equation}
+	\hat{A}_{i,t} = \hat{A}_i = \frac{R_i - \text{mean}(\{R_j\}_{j=1}^G)}{\text{std}(\{R_j\}_{j=1}^G) + \delta}
+\end{equation}
+
+تابع هدف \en{REINFORCE} با تصحیح توزیع برای به‌روزرسانی‌های آفلاین با بهره‌گیری از عملگر توقف مشتق (\en{Stop-Gradient}) $\text{sg}(\cdot)$ به صورت زیر بیان می‌شود:
+\begin{equation}
+	\mathcal{J}_{\text{REINFORCE}}(\theta) = \mathbb{E}_{(q,a) \sim \mathcal{D}, o_i \sim \pi_{\theta_{\text{old}}}} \left[ \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} \text{sg}(r_{i,t}(\theta)) \hat{A}_{i,t} \log \pi_\theta(o_{i,t} \mid q, o_{i,<t}) \right]
+\end{equation}
+
+\subsubsection*{فرمولاسیون اختصاصی و مشتق گرادیان CISPO}
+
+به جای اعمال برش بر روی کل تابع هدف به‌روزرسانی که موجب قطع گرادیان می‌شود، الگوریتم \model{CISPO} برش را مستقیماً بر روی ضریب اهمیت اعمال کرده و آن را در داخل عملگر توقف مشتق قرار می‌دهد:
+\begin{equation}
+	\hat{r}_{i,t}(\theta) = \text{clip}\left( r_{i,t}(\theta), \; 1 - \epsilon_{\text{low}}^{IS}, \; 1 + \epsilon_{\text{high}}^{IS} \right)
+\end{equation}
+
+تابع هدف نهایی الگوریتم \model{CISPO} با تلفات در سطح توکن (\en{Token-Level Loss}) عبارت است از:
+\begin{equation}
+	\mathcal{J}_{\text{CISPO}}(\theta) = \mathbb{E}_{q \sim \mathcal{D}, \{o_i\}_{i=1}^G \sim \pi_{\theta_{\text{old}}}} \left[ \frac{1}{\sum_{i=1}^G |o_i|} \sum_{i=1}^G \sum_{t=1}^{|o_i|} \text{sg}\left(\hat{r}_{i,t}(\theta)\right) \hat{A}_{i,t} \log \pi_\theta(o_{i,t} \mid q, o_{i,<t}) \right]
+\end{equation}
+
+با محاسبه صریح گرادیان نسبت به پارامترهای $\theta$:
+\begin{equation}
+	\nabla_\theta \mathcal{J}_{\text{CISPO}}(\theta) = \mathbb{E} \left[ \frac{1}{\sum_{i=1}^G |o_i|} \sum_{i=1}^G \sum_{t=1}^{|o_i|} \hat{r}_{i,t}(\theta) \hat{A}_{i,t} \nabla_\theta \log \pi_\theta(o_{i,t} \mid q, o_{i,<t}) \right]
+\end{equation}
+
+\textbf{تمایز بنیادین گرادیان:} در معادله فوق، از آنجا که $\hat{r}_{i,t}(\theta) \ge 1 - \epsilon_{\text{low}}^{IS} > 0$ همواره مقداری اکیداً مثبت است، مقدار مشتق $\nabla_\theta \log \pi_\theta$ \textbf{هرگز صفر نمی‌شود}. در نتیجه تمامی توکن‌ها با ضریب مقیاس متناسب و کران‌دار در هدایت گرادیان شبکه مشارکت خواهند داشت. در کاربرد عملی، کران پایین حذف شده ($\epsilon_{\text{low}}^{IS} \to \infty$) و تنها $\epsilon_{\text{high}}^{IS}$ تنظیم می‌شود.
+
+\subsubsection*{فرمولاسیون تعمیم‌یافته و مقایسه‌ای (\en{A Unified Formulation})}
+
+برای مقایسه روش‌های برش، می‌توان یک فرمولاسیون جامع با معرفی ماسک توکنی $M_{i,t}$ تعریف نمود:
+\begin{equation}
+	\mathcal{J}_{\text{unify}}(\theta) = \mathbb{E} \left[ \frac{1}{\sum_{i=1}^G |o_i|} \sum_{i=1}^G \sum_{t=1}^{|o_i|} \text{sg}\left(\hat{r}_{i,t}(\theta)\right) \hat{A}_{i,t} \log \pi_\theta(o_{i,t} \mid q, o_{i,<t}) M_{i,t} \right]
+\end{equation}
+که در آن ماسک ناحیه اطمینان برابر است با:
+\begin{equation}
+	M_{i,t} = \begin{cases} 
+		0 & \text{if } \hat{A}_{i,t} > 0 \text{ and } r_{i,t}(\theta) > 1 + \epsilon_{\text{high}} \\
+		0 & \text{if } \hat{A}_{i,t} < 0 \text{ and } r_{i,t}(\theta) < 1 - \epsilon_{\text{low}} \\
+		1 & \text{otherwise}
+	\end{cases}
+\end{equation}
+
+جدول~\ref{tab:rl_comparison_unified} تفاوت ساختاری این الگوریتم‌ها را به تصویر می‌کشد.
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه ساختاری الگوریتم‌های یادگیری تقویتی برون‌پویا بر پایه فرمولاسیون یکپارچه.}
+\label{tab:rl_comparison_unified}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{الگوریتم} & \textbf{تعریف وزن اهمیت $\hat{r}_{i,t}$} & \textbf{وضعیت ماسک $M_{i,t}$} & \textbf{حفظ گرادیان توکن‌های نادر} & \textbf{نیاز به مدل نقاد (\en{Critic})} \\
+\midrule
+\model{PPO} \cite{schulman2017proximal} & $r_{i,t}(\theta)$ & شرطی (حذف گرادیان در خروج از مرز) & خیر & بله \\
+\model{GRPO} \cite{shao2024deepseekmath} & $r_{i,t}(\theta)$ & شرطی (حذف گرادیان در خروج از مرز) & خیر & خیر \\
+\model{DAPO} \cite{yu2025dapo} & $r_{i,t}(\theta)$ & شرطی با $\epsilon_{\text{high}}$ بسیار بزرگتر & تا حدی & خیر \\
+\textbf{\model{CISPO}} \cite{minimax2025m1} & $\text{clip}(r_{i,t}, 1-\epsilon_{\text{low}}^{IS}, 1+\epsilon_{\text{high}}^{IS})$ & \textbf{همواره فعال ($M_{i,t} = 1$)} & \textbf{کامل (۱۰۰٪ توکن‌ها)} & \textbf{خیر} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsubsection*{تحلیل‌های تئوری اطلاعات، آمار و پویایی آنتروپی}
+
+\begin{itemize}
+    \item \textbf{توازن بایاس و واریانس (\en{Bias-Variance Tradeoff}):} واریانس برآوردگر نمونه‌برداری اهمیت متناسب با واگرایی رنی مرتبه دوم $d_2(\pi_\theta \parallel \pi_{\theta_{\text{old}}})$ رشد می‌کند. اعمال برش مستقیم بر وزن $\hat{r}_{i,t} \le 1 + \epsilon_{\text{high}}^{IS}$، کران بالای واریانس گرادیان را محبوس می‌سازد:
+    \begin{equation}
+    	\operatorname{Var}\left[ \nabla_\theta \mathcal{J}_{\text{CISPO}} \right] \le (1 + \epsilon_{\text{high}}^{IS})^2 \cdot \operatorname{Var}\left[ \hat{A}_{i,t} \nabla_\theta \log \pi_\theta \right]
+    \end{equation}
+    این رویکرد مقداری بایاس اندک وارد می‌کند اما مانع از واگرایی واریانس در دنباله‌های طولانی ($L \ge 40\text{K}$) می‌شود.
+    \item \textbf{تثبیت آنتروپی شانون و عدم نیاز به جریمه KL:} آنتروپی در سطح توکن به صورت $\mathcal{H}(\pi_\theta) = -\sum_{v} \pi_\theta(v) \log \pi_\theta(v)$ محاسبه می‌شود. از آنجا که گرادیان توکن‌های اقلیت با آنتروپی بالا حذف نمی‌شود، توزیع مدل دچار فروپاشی نابهنگام (\en{Premature Collapse}) نشده و نیاز به افزودن جریمه مستقیم واگرایی کولبک-لایبلر ($D_{\text{KL}}$) منتفی می‌گردد \cite{wang2025beyond}.
+\end{itemize}
+
+\subsubsection*{چالش‌های مقیاس‌پذیری در معماری‌های هیبرید و راهکارهای مهندسی}
+
+مدل \model{MiniMax-M1} از ساختار ترکیبی متشکل از ۷ بلوک \en{Transnormer} با مکانیزم توجه خطی صاعقه‌ای (\en{Lightning Attention}) \cite{qin2024lightning2} به ازای هر ۱ بلوک توجه استاندارد \en{Softmax} بهره می‌برد. آموزش یادگیری تقویتی در مقیاس ۴۵۶ میلیارد پارامتر با این معماری نیازمند راهکارهای مهندسی زیر بود:
+\begin{enumerate}
+    \item \textbf{رفع عدم تطابق دقت محاسباتی (\en{Precision Mismatch}):} تفاوت جزئی در خروجی هسته‌های محاسباتی آموزش و استنتاج مانع رشد پاداش می‌شد. با ارتقای دقت لایه خروجی سر پیش‌بینی کلمات (\en{LM Output Head}) به \en{FP32}، همبستگی پیرسون احتمالات از ۰.۹۸ به بالای ۰.۹۹۷ افزایش یافت.
+    \item \textbf{پیکربندی بهینه‌ساز \model{AdamW}:} با توجه به بازه گسترده بزرگی گرادیان‌ها ($10^{-18}$ تا $10^{-5}$)، پارامترهای بهینه‌ساز به صورت $\beta_1 = 0.9$، $\beta_2 = 0.95$ و $\epsilon = 10^{-15}$ تنظیم شدند \cite{loshchilov2019adamw}.
+    \item \textbf{توقف زودهنگام مبتنی بر تشخیص تکرار (\en{Repetition Early Truncation}):} در صورت مشاهده ۳۰۰۰ توکن متوالی با احتمال بالای ۰.۹۹، تولید متوقف می‌شود تا از مصرف بیهوده کانتکست و تزریق گرادیان‌های ناپایدار جلوگیری شود.
+    \item \textbf{راهبرد توسعه مرحله‌ای پنجره کانتکست (\en{Staged Window Expansion}):} طول تولید از 40K آغاز و به ترتیب به 48K، 56K، 64K، 72K و نهایتاً 80K ارتقا یافت.
+\end{enumerate}
+
+\subsubsection*{دیاگرام جامع جریان داده، عملیات و انتشار گرادیان}
+
+شکل~\ref{fig:cispo_architecture} معماری کامل چرخه داده، ارزیابی، برش ضرایب و پس‌انتشار گرادیان را در الگوریتم \model{CISPO} نشان می‌دهد.
+
+\begin{figure}[htbp]
+\centering
+\begin{latin}
+\begin{tikzpicture}[
+	node distance=1.6cm and 2.0cm,
+	querybox/.style={rectangle, rounded corners=8pt, draw=blue!80!black, fill=blue!10, thick, inner sep=10pt, align=center, font=\small\sffamily, drop shadow},
+	rolloutbox/.style={rectangle, rounded corners=8pt, draw=teal!80!black, fill=teal!10, thick, inner sep=10pt, align=center, font=\small\sffamily, drop shadow},
+	evalbox/.style={rectangle, rounded corners=8pt, draw=purple!80!black, fill=purple!10, thick, inner sep=10pt, align=center, font=\small\sffamily, drop shadow},
+	advbox/.style={rectangle, rounded corners=8pt, draw=olive!80!black, fill=olive!10, thick, inner sep=10pt, align=center, font=\small\sffamily, drop shadow},
+	cispobox/.style={rectangle, rounded corners=8pt, draw=red!80!black, fill=red!10, thick, inner sep=10pt, align=center, font=\small\sffamily, drop shadow},
+	optbox/.style={rectangle, rounded corners=8pt, draw=orange!90!black, fill=orange!15, thick, inner sep=10pt, align=center, font=\small\sffamily, drop shadow},
+	arrow/.style={-{Stealth[scale=1.2]}, very thick, draw=blue!85!black},
+	gradarrow/.style={-{Stealth[scale=1.2]}, very thick, dashed, draw=red!80!black}
+]
+
+	% Nodes Definition
+	\node[querybox] (query) {\textbf{Input Reasoning Queries}\\ Batch of prompts $q \sim \mathcal{D}$ (Math, Code, SWE-bench)};
+	
+	\node[rolloutbox, below=1.3cm of query] (rollout) {\textbf{Rollout Generation with Hybrid Attention}\\ Generate $G$ trajectories $\{o_1, o_2, \dots, o_G\} \sim \pi_{\theta_{\text{old}}}(\cdot|q)$\\ Store base token log-probabilities $\log \pi_{\theta_{\text{old}}}(o_{i,t})$};
+	
+	\node[evalbox, below left=1.5cm and 0.4cm of rollout] (reward) {\textbf{Curriculum Reward Engine}\\ Rule-based Verifiers (Math/SynLogic)\\ Sandbox Execution (SWE-bench)\\ GenRM Pairwise Model $\to \{R_1, \dots, R_G\}$};
+	
+	\node[evalbox, below right=1.5cm and 0.4cm of rollout] (forward) {\textbf{FP32 LM-Head Forward Evaluation}\\ Compute current token policy probabilities\\ $\log \pi_\theta(o_{i,t} \mid q, o_{i,<t})$ (Training Mode)};
+	
+	\node[advbox, below=1.3cm of reward] (adv) {\textbf{Group Relative Advantage}\\ $\hat{A}_{i,t} = \frac{R_i - \operatorname{mean}(\{R_j\})}{\operatorname{std}(\{R_j\}) + \delta}$};
+	
+	\node[cispobox, below=1.3cm of forward] (isweight) {\textbf{Importance Weight Clipping}\\ $r_{i,t}(\theta) = \exp\left(\log\pi_\theta - \log\pi_{\theta_{\text{old}}}\right)$\\ $\hat{r}_{i,t}(\theta) = \min\left(r_{i,t}(\theta), \, 1 + \epsilon_{\text{high}}^{IS}\right)$};
+
+	\node[cispobox, below=4.5cm of rollout] (loss) {\textbf{CISPO Surrogate Loss Engine}\\ $\mathcal{J}_{\text{CISPO}}(\theta) = \frac{1}{\sum |o_i|} \sum_{i=1}^G \sum_{t=1}^{|o_i|} \text{sg}\left(\hat{r}_{i,t}\right) \hat{A}_{i,t} \log \pi_\theta(o_{i,t})$\\ \textcolor{red!70!black}{\textbf{All tokens preserved, Zero Gradient Masking Eliminated}}};
+
+	\node[optbox, below=1.3cm of loss] (adamw) {\textbf{Off-Policy AdamW Optimization Engine}\\ $\nabla_\theta \mathcal{J}_{\text{CISPO}} = \frac{1}{\sum |o_i|} \sum \hat{r}_{i,t} \hat{A}_{i,t} \nabla_\theta \log \pi_\theta(o_{i,t})$\\ Parameters: $\beta_1=0.9, \, \beta_2=0.95, \, \text{eps}=10^{-15}$};
+
+	\node[rolloutbox, left=2.5cm of loss] (sync) {\textbf{Synchronize Weights}\\ $\theta_{\text{old}} \leftarrow \theta$};
+
+	% Connections
+	\draw[arrow] (query) -- (rollout);
+	\draw[arrow] (rollout) -| (reward);
+	\draw[arrow] (rollout) -| (forward);
+	\draw[arrow] (reward) -- (adv);
+	\draw[arrow] (forward) -- (isweight);
+	\draw[arrow] (adv) |- (loss);
+	\draw[arrow] (isweight) |- (loss);
+	\draw[arrow] (loss) -- node[right, font=\footnotesize] {Backprop (All Tokens)} (adamw);
+	\draw[gradarrow] (adamw) -| (sync);
+	\draw[gradarrow] (sync) |- (rollout);
+
+\end{tikzpicture}
+\end{latin}
+\caption{دیاگرام جامع جریان داده، محاسبه مزیت درون‌گروهی، برش ضرایب اهمیت و به‌روزرسانی در الگوریتم \model{CISPO}.}
+\label{fig:cispo_architecture}
+\end{figure}
+
+\subsubsection*{شبه‌کد استاندارد الگوریتم CISPO}
+
+الگوریتم~\ref{alg:cispo_standard}، روند اجرایی یادگیری تقویتی مدل با الگوریتم \model{CISPO} را شرح می‌دهد:
+
+\begin{latin}
+\begin{algorithm}[H]
+\caption{Clipped IS-weight Policy Optimization (CISPO)}
+\label{alg:cispo_standard}
+\begin{algorithmic}[1]
+\State \textbf{Input:} Policy parameters $\theta$, base reference/sampling model $\pi_{\theta_{\text{old}}}$, group size $G$, upper IS clip threshold $\epsilon_{\text{high}}^{IS}$, learning rate schedule $\eta$, number of off-policy epochs $K$, repetition early stopping threshold $L_{\text{rep}} = 3000$.
+\For{$\text{iteration} = 1, 2, \dots$}
+    \State Sample a batch of queries $\{q_m\}_{m=1}^B \sim \mathcal{D}$.
+    \State Set trajectories buffer $\mathcal{B} \leftarrow \emptyset$.
+    \For{each query $q_m$}
+        \State Sample $G$ independent responses $\{o_i\}_{i=1}^G \sim \pi_{\theta_{\text{old}}}(\cdot \mid q_m)$ using rollout engine.
+        \State Apply repetition detection: Halt generation if $L_{\text{rep}}$ consecutive tokens have $P(o_t) > 0.99$.
+        \State Compute rewards $R_i = \mathcal{R}(q_m, o_i)$ via rule checkers or Generative Reward Model (GenRM).
+        \State Compute group mean $\mu_R = \frac{1}{G}\sum_{j=1}^G R_j$ and std $\sigma_R = \sqrt{\frac{1}{G}\sum_{j=1}^G (R_j - \mu_R)^2} + 10^{-8}$.
+        \State Compute advantage for each response: $\hat{A}_i = (R_i - \mu_R) / \sigma_R$.
+        \State Store $(q_m, o_i, \log \pi_{\theta_{\text{old}}}(o_i \mid q_m), \hat{A}_i)$ in buffer $\mathcal{B}$.
+    \EndFor
+    \For{$\text{epoch} = 1, \dots, K$}
+        \State Clear gradients: $\nabla_\theta \mathcal{J} \leftarrow 0$.
+        \State Total batch tokens: $N_{\text{total}} = \sum_{(q, o) \in \mathcal{B}} |o|$.
+        \For{each $(q, o_i, \log \pi_{\theta_{\text{old}}}(o_i), \hat{A}_i) \in \mathcal{B}$}
+            \State Compute current token log-probabilities $\log \pi_\theta(o_{i,t} \mid q, o_{i,<t})$ with FP32 LM head.
+            \State Compute token-level importance ratio: $r_{i,t}(\theta) = \exp\left( \log \pi_\theta(o_{i,t}) - \log \pi_{\theta_{\text{old}}}(o_{i,t}) \right)$.
+            \State Clip importance weight: $\hat{r}_{i,t}(\theta) = \min\left( r_{i,t}(\theta), \; 1 + \epsilon_{\text{high}}^{IS} \right)$.
+            \State Compute loss component: 
+            \State \quad $\mathcal{L}_i(\theta) = - \frac{1}{N_{\text{total}}} \sum_{t=1}^{|o_i|} \text{sg}\left(\hat{r}_{i,t}(\theta)\right) \hat{A}_i \log \pi_\theta(o_{i,t} \mid q, o_{i,<t})$.
+            \State Accumulate gradients: $\nabla_\theta \mathcal{J} \leftarrow \nabla_\theta \mathcal{J} + \nabla_\theta \mathcal{L}_i(\theta)$.
+        \EndFor
+        \State Clip global gradient norm: $g \leftarrow \text{clip\_norm}(\nabla_\theta \mathcal{J}, \text{max\_norm}=1.0)$.
+        \State Update policy parameters using AdamW ($\beta_1=0.9, \beta_2=0.95, \epsilon=10^{-15}$):
+        \State \quad $\theta \leftarrow \theta - \eta \cdot \text{AdamW}(g)$.
+    \EndFor
+    \State Synchronize rollout policy: $\theta_{\text{old}} \leftarrow \theta$.
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+\end{latin}
+
+\subsubsection*{ارزیابی‌های تجربی و تحلیل نتایج بنچمارک‌ها}
+
+بر اساس ارزیابی‌های تجربی ارائه‌شده در گزارش فنی \model{MiniMax-M1} \cite{minimax2025m1}، نتایج به شرح زیر حاصل شده است:
+\begin{itemize}
+    \item \textbf{شتاب آموزش ۲ برابری نسبت به \model{DAPO}:} در آزمون کنترل‌شده روی مدل \model{Qwen2.5-32B} در بنچمارک ریاضی \en{AIME 2024}، الگوریتم \model{CISPO} با مصرف تنها ۵۰٪ از گام‌های آموزشی به عملکردی برابر با \model{DAPO} دست یافته و هر دو الگوریتم \model{GRPO} و \model{DAPO} را پشت سر گذاشت.
+    \item \textbf{کاهش چشمگیر هزینه آموزش:} ترکیب توجه هیبرید با الگوریتم \model{CISPO} آموزش کامل مدل ۴۵۶ میلیارد پارامتری را روی ۵۱۲ پردازنده \en{H800} در مدت تنها ۳ هفته و با هزینه تقریبی ۵۳۴,۷۰۰ دلار تکمیل نمود.
+\end{itemize}
+
+جدول~\ref{tab:m1_benchmark_results} نتایج جامع مدل‌های آموزش‌دیده با \model{CISPO} را در مقایسه با پیشرفته‌ترین مدل‌های متن‌باز و تجاری جهان نشان می‌دهد.
+
+\begin{table}[htbp]
+\centering
+\caption{ارزیابی مقایسه‌ای مدل‌های \model{MiniMax-M1} آموزش‌دیده با الگوریتم \model{CISPO} در بنچمارک‌های استاندارد بین‌المللی \cite{minimax2025m1}.}
+\label{tab:m1_benchmark_results}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccccc}
+\toprule
+\textbf{وظیفه / بنچمارک} & \textbf{\model{OpenAI o3}} & \textbf{\model{Gemini 2.5 Pro}} & \textbf{\model{Claude 4 Opus}} & \textbf{\model{DeepSeek-R1}} & \textbf{\model{Qwen3-235B}} & \textbf{\model{M1-40k}} & \textbf{\model{M1-80k}} \\
+\midrule
+\textbf{سقف طول تفکر} & 100K & 64K & 64K & 64K & 32K & 40K & 80K \\
+\midrule
+\multicolumn{8}{l}{\textbf{استدلال ریاضی (\en{Mathematics})}} \\
+AIME 2024 & 91.6 & 92.0 & 76.0 & 91.4 & 85.7 & 83.3 & \textbf{86.0} \\
+AIME 2025 & 88.9 & 88.0 & 75.5 & 87.5 & 81.5 & 74.6 & \textbf{76.9} \\
+MATH-500 & 98.1 & 98.8 & 98.2 & 98.0 & 96.2 & 96.0 & \textbf{96.8} \\
+\midrule
+\multicolumn{8}{l}{\textbf{کدنویسی و مهندسی نرم‌افزار (\en{Coding \& Software Engineering})}} \\
+LiveCodeBench & 75.8 & 77.1 & 56.6 & 73.1 & 65.9 & 62.3 & \textbf{65.0} \\
+SWE-bench Verified & 69.1 & 67.2 & 72.5 & 57.6 & 34.4 & 55.6 & \textbf{56.0} \\
+\midrule
+\multicolumn{8}{l}{\textbf{بافت فوق طولانی (\en{Long Context Understanding})}} \\
+OpenAI-MRCR (128k) & 56.5 & 76.8 & 48.9 & 51.5 & 27.7 & \textbf{76.1} & 73.4 \\
+OpenAI-MRCR (1M) & — & 58.8 & — & — & — & \textbf{58.6} & 56.2 \\
+LongBench-v2 & 58.8 & 65.0 & 55.6 & 52.1 & 50.1 & 61.0 & \textbf{61.5} \\
+\midrule
+\multicolumn{8}{l}{\textbf{استفاده از ابزار و عامل هوشمند (\en{Agentic Tool Use})}} \\
+TAU-bench (Airline) & 52.0 & 50.0 & 59.6 & 53.5 & 34.7 & 60.0 & \textbf{62.0} \\
+TAU-bench (Retail) & 73.9 & 67.0 & 81.4 & 63.9 & 58.6 & \textbf{67.8} & 63.5 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsubsection*{جمع‌بندی}
+
+الگوریتم \model{CISPO} با تشخیص آسیب‌شناسی پنهان در توابع هدف رایج و ارائه راه‌حل مبتنی بر برش وزن اهمیت (\en{IS-Weight Clipping})، موفق شده است ضمن حفظ کامل سیگنال‌های گرادیان در تمام مسیرهای بازتابی و استدلالی، واریانس آموزش برون‌پویا را به طور کامل مهار نماید. این الگوریتم اکنون به عنوان یکی از پایدارترین و اقتصادی‌ترین استانداردهای آموزش یادگیری تقویتی برای ساخت مدل‌های استدلال‌گر بزرگ در مقیاس‌های کانتکست میلیونی شناخته می‌شود.

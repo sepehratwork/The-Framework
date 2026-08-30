@@ -23,46 +23,62 @@ Repeated entry---line 429 of file references.bib
  : @misc{openai2024learning
  :                         ,
 I'm skipping whatever remains of this entry
+Repeated entry---line 477 of file references.bib
+ : @article{minimax2025m1
+ :                       ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 484 of file references.bib
+ : @article{shao2024deepseekmath
+ :                              ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 491 of file references.bib
+ : @article{yu2025dapo
+ :                    ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 498 of file references.bib
+ : @article{deepseek2025r1
+ :                        ,
+I'm skipping whatever remains of this entry
 Warning--can't use both volume and number fields in chen2023sufficiency
-You've used 59 entries,
+You've used 67 entries,
             1791 wiz_defined-function locations,
-            702 strings with 15999 characters,
-and the built_in function-call counts, 13696 in all, are:
-= -- 937
-> -- 1179
+            729 strings with 17603 characters,
+and the built_in function-call counts, 15361 in all, are:
+= -- 1033
+> -- 1342
 < -- 9
-+ -- 416
-- -- 357
-* -- 959
-:= -- 2482
-add.period$ -- 177
-call.type$ -- 59
-change.case$ -- 59
++ -- 473
+- -- 406
+* -- 1070
+:= -- 2797
+add.period$ -- 201
+call.type$ -- 67
+change.case$ -- 67
 chr.to.int$ -- 0
-cite$ -- 60
-duplicate$ -- 559
-empty$ -- 1030
-format.name$ -- 357
-if$ -- 2857
+cite$ -- 68
+duplicate$ -- 631
+empty$ -- 1164
+format.name$ -- 406
+if$ -- 3201
 int.to.chr$ -- 0
-int.to.str$ -- 59
-missing$ -- 57
-newline$ -- 298
-num.names$ -- 59
-pop$ -- 183
+int.to.str$ -- 67
+missing$ -- 65
+newline$ -- 338
+num.names$ -- 67
+pop$ -- 215
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 279
+skip$ -- 304
 stack$ -- 0
 substring$ -- 363
-swap$ -- 135
+swap$ -- 145
 text.length$ -- 9
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 1
-while$ -- 88
-width$ -- 61
-write$ -- 606
-(There were 5 error messages)
+while$ -- 96
+width$ -- 69
+write$ -- 686
+(There were 9 error messages)

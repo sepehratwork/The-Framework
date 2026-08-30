@@ -350,6 +350,39 @@ Ke~Wang, Junting Pan, Weikang Shi, Zimu Lu, Houxing Ren, Aojun Zhou, Mingjie
 \newblock In {\em Advances in Neural Information Processing Systems (NeurIPS)},
   volume~37, pages 95095--95169, 2024.
 
+\bibitem{jimenez2024swebench}
+Carlos~E Jimenez, John Yang, Alexander Wettig, Shunyu Yao, Kexin Pei, Ofir
+  Press, and Karthik Narasimhan.
+\newblock Swe-bench: Can language models resolve real-world github issues?
+\newblock In {\em International Conference on Learning Representations (ICLR)},
+  2024.
+
+\bibitem{cui2025entropy}
+Ganqu Cui, Yuchen Zhang, Jiacheng Chen, Lifan Yuan, Zhi Wang, Yuxin Zuo,
+  Haozhan Li, et~al.
+\newblock The entropy mechanism of reinforcement learning for reasoning
+  language models.
+\newblock {\em arXiv preprint arXiv:2505.22617}, 2025.
+
+\bibitem{wang2025beyond}
+Shenzhi Wang, Le~Yu, Chang Gao, Chujie Zheng, Shixuan Liu, Rui Lu, Kai Dang,
+  et~al.
+\newblock Beyond the 80/20 rule: High-entropy minority tokens drive effective
+  reinforcement learning for llm reasoning.
+\newblock {\em arXiv preprint arXiv:2506.01939}, 2025.
+
+\bibitem{qin2024lightning2}
+Zhen Qin, Weigao Sun, Dong Li, Xuyang Shen, Weixuan Sun, and Yiran Zhong.
+\newblock Lightning attention-2: A free lunch for handling unlimited sequence
+  lengths in large language models.
+\newblock {\em arXiv preprint arXiv:2401.04658}, 2024.
+
+\bibitem{loshchilov2019adamw}
+Ilya Loshchilov and Frank Hutter.
+\newblock Decoupled weight decay regularization.
+\newblock {\em International Conference on Learning Representations (ICLR)},
+  2019.
+
 \bibitem{wang2016sample}
 Ziyu Wang, Victor Bapst, Nicolas Heess, Volodymyr Mnih, Remi Munos, Koray
   Kavukcuoglu, and Nando de~Freitas.
@@ -363,5 +396,24 @@ Xing Chen, Dongcui Diao, Hechang Chen, Hengshuai Yao, Haiyin Piao, Zhixiao Sun,
   insufficient according to an off-policy measure.
 \newblock In {\em Proceedings of the AAAI Conference on Artificial
   Intelligence}, volume~37, pages 7078--7086, 2023.
+
+\bibitem{yao2025taubench}
+Shunyu Yao, Noah Shinn, Pedram Razavi, and Karthik~R Narasimhan.
+\newblock $\tau$-bench: A benchmark for tool-agent-user interaction in
+  real-world domains.
+\newblock In {\em International Conference on Learning Representations (ICLR)},
+  2025.
+
+\bibitem{bai2024longbench}
+Yushi Bai, Shangqing Tu, Jiajie Zhang, Hao Peng, Xiaozhi Wang, Xin Lv, et~al.
+\newblock Longbench: A bilingual, multitask benchmark for long context
+  understanding.
+\newblock {\em arXiv preprint arXiv:2412.15204}, 2024.
+
+\bibitem{liu2025synlogic}
+Junteng Liu, Yuanxiang Fan, Zhuo Jiang, Han Ding, Yongyi Hu, Chi Zhang, et~al.
+\newblock Synlogic: Synthesizing verifiable reasoning data at scale for
+  learning logical reasoning and beyond.
+\newblock {\em arXiv preprint arXiv:2505.19641}, 2025.
 
 \end{thebibliography}
