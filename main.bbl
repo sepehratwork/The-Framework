@@ -115,4 +115,85 @@ Chaojun Xiao, Jie Cai, Weilin Zhao, Biyuan Lin, Guoyang Zeng, Jie Zhou, Zhi
 \newblock Densing law of llms.
 \newblock {\em Nature Machine Intelligence}, pages 1--11, 2025.
 
+\bibitem{schulman2017proximal}
+John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov.
+\newblock Proximal policy optimization algorithms.
+\newblock {\em arXiv preprint arXiv:1707.06347}, 2017.
+
+\bibitem{mnih2015human}
+Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Andrei~A Rusu, Joel Veness,
+  Marc~G Bellemare, Alex Graves, Martin Riedmiller, Andreas~K Fidjeland, Georg
+  Ostrovski, et~al.
+\newblock Human-level control through deep reinforcement learning.
+\newblock {\em Nature}, 518(7540):529--533, 2015.
+
+\bibitem{bellemare2015arcade}
+Marc~G Bellemare, Yavar Naddaf, Joel Veness, and Michael Bowling.
+\newblock The arcade learning environment: An evaluation platform for general
+  agents.
+\newblock {\em Twenty-Fourth International Joint Conference on Artificial
+  Intelligence (IJCAI)}, 2015.
+
+\bibitem{brockman2016openai}
+Greg Brockman, Vicki Cheung, Ludwig Pettersson, Jonas Schneider, John Schulman,
+  Jie Tang, and Wojciech Zaremba.
+\newblock Openai gym.
+\newblock {\em arXiv preprint arXiv:1606.01540}, 2016.
+
+\bibitem{duan2016benchmarking}
+Yan Duan, Xi~Chen, Rein Houthooft, John Schulman, and Pieter Abbeel.
+\newblock Benchmarking deep reinforcement learning for continuous control.
+\newblock {\em International Conference on Machine Learning (ICML)}, pages
+  1329--1338, 2016.
+
+\bibitem{williams1992simple}
+Ronald~J Williams.
+\newblock Simple statistical gradient-following algorithms for connectionist
+  reinforcement learning.
+\newblock {\em Machine Learning}, 8(3-4):229--256, 1992.
+
+\bibitem{mnih2016asynchronous}
+Volodymyr Mnih, Adria~Puigdomenech Badia, Mehdi Mirza, Alex Graves, Timothy
+  Lillicrap, Tim Harley, David Silver, and Koray Kavukcuoglu.
+\newblock Asynchronous methods for deep reinforcement learning.
+\newblock {\em International Conference on Machine Learning (ICML)}, pages
+  1928--1937, 2016.
+
+\bibitem{kakade2002approximately}
+Sham Kakade and John Langford.
+\newblock Approximately optimal approximate reinforcement learning.
+\newblock {\em International Conference on Machine Learning (ICML)},
+  2:267--274, 2002.
+
+\bibitem{schulman2015trust}
+John Schulman, Sergey Levine, Philipp Moritz, Michael Jordan, and Pieter
+  Abbeel.
+\newblock Trust region policy optimization.
+\newblock {\em International Conference on Machine Learning (ICML)}, pages
+  1889--1897, 2015.
+
+\bibitem{kingma2014adam}
+Diederik~P Kingma and Jimmy Ba.
+\newblock Adam: A method for stochastic optimization.
+\newblock {\em arXiv preprint arXiv:1412.6980}, 2014.
+
+\bibitem{schulman2015high}
+John Schulman, Philipp Moritz, Sergey Levine, Michael Jordan, and Pieter
+  Abbeel.
+\newblock High-dimensional continuous control using generalized advantage
+  estimation.
+\newblock {\em arXiv preprint arXiv:1506.02438}, 2015.
+
+\bibitem{heess2017emergence}
+Nicolas Heess, Srinivasan Sriram, Jay Lemmon, Josh Merel, Greg Wayne, Yuval
+  Tassa, Tom Erez, Ziyu Wang, SM~Eslami, Martin Riedmiller, et~al.
+\newblock Emergence of locomotion behaviours in rich environments.
+\newblock {\em arXiv preprint arXiv:1707.02286}, 2017.
+
+\bibitem{wang2016sample}
+Ziyu Wang, Victor Bapst, Nicolas Heess, Volodymyr Mnih, Remi Munos, Koray
+  Kavukcuoglu, and Nando de~Freitas.
+\newblock Sample efficient actor-critic with experience replay.
+\newblock {\em arXiv preprint arXiv:1611.01224}, 2016.
+
 \end{thebibliography}
