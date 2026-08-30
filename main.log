@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026/Arch Linux) (preloaded format=xelatex 2026.6.29)  30 AUG 2026 16:03
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026/Arch Linux) (preloaded format=xelatex 2026.6.29)  30 AUG 2026 16:09
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1450,11 +1450,43 @@ Overfull \hbox (160.23457pt too wide) in paragraph at lines 126--155
  [][][][][][] 
  []
 
-[28] [29]) (./models/ReinforcementLearning/DAPO.tex)
-(./models/ReinforcementLearning/SAPO.tex)
+[28] [29]) (./models/ReinforcementLearning/DAPO.tex
+Overfull \hbox (6.76285pt too wide) in paragraph at lines 1--1
+[]\TU/Vazirmatn(0)/b/n/17.28 ([]\TU/LiberationSerif(0)/b/n/17.28 Decoupled Clip
+ and Dynamic Sampling Policy Optimiza-[][] 
+ []
+
+[30] [31]
+Overfull \hbox (25.25891pt too wide) detected at line 29
+[][][]\OMS/cmsy/m/n/12 r[]\OML/cmm/m/it/12 J\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 ^
+^R\OT1/cmr/m/n/12 ) = [] \OMS/cmsy/m/n/12 r[]\OML/cmm/m/it/12 P\OT1/cmr/m/n/12 
+(\OML/cmm/m/it/12 ^^\\OT1/cmr/m/n/12 ; \OML/cmm/m/it/12 ^^R\OT1/cmr/m/n/12 )\OM
+L/cmm/m/it/12 R\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 ^^\\OT1/cmr/m/n/12 ) \OML/cmm/
+m/it/12 d^^\ \OT1/cmr/m/n/12 = [] \OML/cmm/m/it/12 P\OT1/cmr/m/n/12 (\OML/cmm/m
+/it/12 ^^\\OT1/cmr/m/n/12 ; \OML/cmm/m/it/12 ^^R\OT1/cmr/m/n/12 )\OMS/cmsy/m/n/
+12 r[] [] \OML/cmm/m/it/12 P\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 ^^\\OT1/cmr/m/n/1
+2 ; \OML/cmm/m/it/12 ^^R\OT1/cmr/m/n/12 )\OML/cmm/m/it/12 R\OT1/cmr/m/n/12 (\OM
+L/cmm/m/it/12 ^^\\OT1/cmr/m/n/12 ) \OML/cmm/m/it/12 d^^\ \OT1/cmr/m/n/12 = \U/m
+sb/m/n/12 E[] []
+ []
+
+
+Overfull \hbox (13.93204pt too wide) in paragraph at lines 36--37
+[][]\TU/Vazirmatn(0)/m/it/12 با استفاده از نمونه‌برداری ترجیحی ([]\TU/Liberatio
+nSerif(0)/m/n/12 Importance Sampling[]\TU/Vazirmatn(0)/m/it/12 ) برای استفاده م
+جدد از داده‌های جمع‌آوری‌شده[]
+ []
+
+
+Overfull \hbox (64.88864pt too wide) detected at line 53
+[][][]\OML/cmm/m/it/12 J[]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 ^^R\OT1/cmr/m/n/12 
+) = \U/msb/m/n/12 E[] []
+ []
+
+[32] [33] [34] [35]) (./models/ReinforcementLearning/SAPO.tex)
 (./models/ReinforcementLearning/CISPO.tex)
-(./models/ReinforcementLearning/RLVR.tex [30])
-(./models/ReinforcementLearning/RLVR_GRPO.tex)) [31] (./main.bbl
+(./models/ReinforcementLearning/RLVR.tex)
+(./models/ReinforcementLearning/RLVR_GRPO.tex [36])) [37] (./main.bbl
 Missing character: There is no م (U+0645) in font Liberation Serif Bold/OT:scri
 pt=latn;language=dflt;mapping=tex-text;!
 Missing character: There is no ن (U+0646) in font Liberation Serif Bold/OT:scri
@@ -1471,13 +1503,13 @@ Underfull \hbox (badness 1215) in paragraph at lines 91--95
 ptimal data mixtures.  \TU/LiberationSerif(0)/m/it/12 arXiv preprint[]
  []
 
-[32]
+[38]
 Underfull \hbox (badness 1412) in paragraph at lines 181--186
 []\TU/LiberationSerif(0)/m/n/12 dimensional continuous control using generalize
 d advantage estimation.  \TU/LiberationSerif(0)/m/it/12 arXiv preprint[]
  []
 
-[33]
+[39]
 Underfull \hbox (badness 1102) in paragraph at lines 208--211
 [][]\TU/LiberationSerif(0)/m/n/12 John Schulman.  Approximating kl divergence. 
  \TU/LiberationSerif(0)/m/it/12 Online blog: http://joschu.net/blog/kl-[]
@@ -1489,7 +1521,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 256--259
 ]$[][][][][] [] [] [] [][][][][][] [] [][][] [] [][][][][] []$[][]
  []
 
-[34]) [35] (./main.aux)
+[40]) [41] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1499,15 +1531,15 @@ L3 programming layer <2026-01-19>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 040B46B585FD3BE1764655B662708EBD;8846.
+(rerunfilecheck)             Checksum: D015915DFEB82784BF75D4B9BE1DE5A5;9726.
  ) 
 Here is how much of TeX's memory you used:
- 30142 strings out of 469704
- 662740 string characters out of 5467967
- 1068258 words of memory out of 5000000
- 57717 multiletter control sequences out of 15000+600000
- 638592 words of font info for 137 fonts, out of 8000000 for 9000
+ 30248 strings out of 469704
+ 664883 string characters out of 5467967
+ 1069708 words of memory out of 5000000
+ 57821 multiletter control sequences out of 15000+600000
+ 638608 words of font info for 139 fonts, out of 8000000 for 9000
  286 hyphenation exceptions out of 8191
- 88i,18n,106p,1181b,1138s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 88i,18n,106p,1181b,1147s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (36 pages).
+Output written on main.pdf (42 pages).

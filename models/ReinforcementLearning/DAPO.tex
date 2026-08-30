@@ -1,1 +1,254 @@
-\item \textbf asd
+\subsection{الگوریتم بهینه‌سازی خط‌مشی با برش مجزا و نمونه‌برداری پویا (\en{Decoupled Clip and Dynamic Sampling Policy Optimization - DAPO})}
+
+الگوریتم \model{DAPO} که در سال ۲۰۲۵ توسط محققان آزمایشگاه \en{ByteDance Seed} و دانشگاه تسینگ‌هوا (\en{Tsinghua AIR}) معرفی شد \cite{yu2025dapo}، یک سامانه پیشرفته، مقیاس‌پذیر و کاملاً متن‌باز برای یادگیری تقویتی در مدل‌های زبانی استدلال‌گر بزرگ (\en{Reasoning LLMs}) به شمار می‌رود. این الگوریتم با برطرف کردن موانع اساسی در سناریوهای استدلال با زنجیره تفکر طولانی (\en{Long Chain-of-Thought - Long-CoT})، موفق شد بر پایه مدل پایه \model{Qwen2.5-32B} \cite{yang2024qwen25} به دقت ۵۰٪ در بنچمارک المپیاد ریاضی \en{AIME 2024} دست یابد و با مصرف تنها ۵۰٪ از گام‌های آموزشی، از مدل پیشروی \model{DeepSeek-R1-Zero-Qwen-32B} \cite{guo2025deepseek} پیشی بگیرد.
+
+\subsubsection*{تاریخچه، انگیزه و ضرورت پیدایش الگوریتم}
+
+با ظهور پارادایم افزایش محاسبات در زمان استنتاج (\en{Test-Time Compute Scaling}) توسط مدل‌هایی همچون \en{OpenAI o1} \cite{openai2024learning} و \model{DeepSeek-R1} \cite{guo2025deepseek}، استدلال مبتنی بر زنجیره تفکر طولانی به ابزار اصلی حل مسائل ریاضیات پیشرفته و برنامه‌نویسی مبدل گشت. با این وجود، به دلیل پنهان نگه‌داشتن جزئیات فنی و ترفندهای حیاتی پایدارسازی آموزش در گزارش‌های فنی این مدل‌ها، تلاش‌های مستقل جامعه متن‌باز برای بازتولید این نتایج با الگوریتم‌های رایج نظیر \model{GRPO} \cite{shao2024deepseekmath} و \model{PPO} \cite{schulman2017proximal} با ناکامی مواجه شد (دستیابی به تنها ۳۰٪ در \en{AIME}). 
+
+تحلیل‌های عمیق نشان داد که الگوریتم‌های سنتی در سناریوی استدلال‌های طولانی از چهار چالش بحرانی رنج می‌برند:
+\begin{itemize}
+    \item \textbf{فروپاشی آنتروپی (\en{Entropy Collapse}):} محدودیت بازه برش استاندارد، مانع ارتقای احتمال توکن‌های نادر اما حیاتی برای اکتشاف شده و مدل را به سرعت دچار دترمینیسم زودهنگام و پاسخ‌های یکنواخت می‌کرد.
+    \item \textbf{افت سیگنال گرادیان (\en{Vanishing Gradient in Extreme Samples}):} در پرامپت‌هایی که تمام خروجی‌های گروه درست یا همگی غلط بودند، واریانس پاداش صفر شده و گرادیان آموزشی ناپدید می‌گشت که به کاهش اندازه موثر دسته و افت شدید نسبت سیگنال به نویز (\en{SNR}) می‌انجامید.
+    \item \textbf{ناهمگونی وزن توکن‌ها (\en{Sample vs. Token Level Imbalance}):} میانگین‌گیری در سطح نمونه در روش‌های پیشین باعث می‌شد که توکن‌های مفید در پاسخ‌های طولانی سهم گرادیان اندکی دریافت کنند و الگوهای تکراری مخرب و هذیان‌های طویل (\en{Repetitive Gibberish}) به اندازه کافی جریمه نشوند.
+    \item \textbf{نویز ناشی از برش سخت پاسخ‌ها (\en{Truncation Reward Noise}):} جریمه کردن پاسخ‌های درستی که صرفاً به سقف طول مجاز برخورد کرده بودند، سیگنال‌های گمراه‌کننده‌ای به مدل القا می‌کرد.
+\end{itemize}
+
+الگوریتم \model{DAPO} برای حل جامع این معضلات، چهار نوآوری اساسی را در قالب یک چارچوب بهینه‌سازی مقیاس‌پذیر ارائه داد.
+
+\subsubsection*{مبانی نظری و اشتقاق‌های کامل ریاضی}
+
+فرض کنید یک توالی کامل تولیدشده به صورت $\tau = (q, o_1, o_2, \dots, o_T)$ نمایش داده شود که در آن $q$ پرسش و $o_t$ توکن‌های خروجی تحت خط‌مشی پارامتریزه $\pi_\theta$ هستند. هدف بهینه‌سازی بیشینه‌سازی امید ریاضی پاداش است:
+\begin{equation}
+	J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}[R(\tau)] = \int P(\tau; \theta) R(\tau) \, d\tau
+\end{equation}
+
+با مشتق‌گیری نسبت به بردار پارامترها $\theta$ طبق قاعده لایبنیتس و اعمال اتحاد لگاریتمی تابع امتیاز ($\nabla_\theta P = P \nabla_\theta \log P$):
+\begin{equation}
+	\nabla_\theta J(\theta) = \int \nabla_\theta P(\tau; \theta) R(\tau) \, d\tau = \int P(\tau; \theta) \nabla_\theta \log P(\tau; \theta) R(\tau) \, d\tau = \mathbb{E}_{\tau \sim \pi_\theta} \left[ \nabla_\theta \log P(\tau; \theta) R(\tau) \right]
+\end{equation}
+
+با توجه به ساختار خودبازگشتی مدل‌های زبانی ($P(\tau; \theta) = P(q) \prod_{t=1}^{|o|} \pi_\theta(o_t | q, o_{<t})$) و کسر خط مبنای مستقل از عمل جهت کاهش واریانس، گرادیان بر حسب تابع مزیت $\hat{A}_t$ استخراج می‌شود:
+\begin{equation}
+	\nabla_\theta J(\theta) = \mathbb{E}_{q \sim \mathcal{D}, o \sim \pi_\theta(\cdot|q)} \left[ \sum_{t=1}^{|o|} \nabla_\theta \log \pi_\theta(o_t | q, o_{<t}) \hat{A}_t \right]
+\end{equation}
+
+با استفاده از نمونه‌برداری ترجیحی (\en{Importance Sampling}) برای استفاده مجدد از داده‌های جمع‌آوری‌شده توسط خط‌مشی قدیمی $\pi_{\theta_{\text{old}}}$، نسبت احتمالاتی برای توکن $t$ به صورت زیر تعریف می‌شود:
+\begin{equation}
+	r_{i,t}(\theta) = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{\text{old}}}(o_{i,t} \mid q, o_{i,<t})}
+\end{equation}
+
+در الگوریتم \model{GRPO} \cite{shao2024deepseekmath}، برای هر پرسش $q$ یک گروه شامل $G$ پاسخ $\{o_i\}_{i=1}^G$ تولید شده و مزیت هر نمونه به صورت نرمال‌سازی درون‌گروهی بدون شبکه منتقد محاسبه می‌شود:
+\begin{equation}
+	\hat{A}_{i,t} = \frac{R_i - \operatorname{mean}(\{R_i\}_{i=1}^G)}{\operatorname{std}(\{R_i\}_{i=1}^G) + \epsilon_{\text{var}}}
+\end{equation}
+
+\textbf{حذف جریمه واگرایی \en{KL}:} بر خلاف روش‌های رایج \en{RLHF} که عبارت جریمه $-\beta D_{\text{KL}}(\pi_\theta \parallel \pi_{\text{ref}})$ را برای جلوگیری از انحراف مدل تحمیل می‌کنند، در استدلال‌های طولانی، توزیع مدل برای یادگیری راهبردهای جدید باید بتواند به طور چشمگیری از مدل پایه اولیه فاصله بگیرد؛ لذا در \model{DAPO} ترم واگرایی \en{KL} به طور کامل حذف شده است ($\beta = 0$).
+
+\subsubsection*{فرمولاسیون ریاضی و چهار نوآوری بنیادین DAPO}
+
+تابع هدف سراسری الگوریتم \model{DAPO} به صورت زیر تعریف می‌شود:
+\begin{equation}
+	J_{\text{DAPO}}(\theta) = \mathbb{E}_{(q,a) \sim \mathcal{D}, \{o_i\}_{i=1}^G \sim \pi_{\theta_{\text{old}}}} \left[ \frac{1}{\sum_{i=1}^G |o_i|} \sum_{i=1}^G \sum_{t=1}^{|o_i|} \min \left( r_{i,t}(\theta)\hat{A}_{i,t}, \, \text{clip}\left(r_{i,t}(\theta), 1-\varepsilon_{\text{low}}, 1+\varepsilon_{\text{high}}\right)\hat{A}_{i,t} \right) \right]
+\end{equation}
+\begin{equation}
+	\text{s.t.} \quad 0 < \sum_{i=1}^G \mathbb{I}(\text{is\_equivalent}(a, o_i)) < G
+\end{equation}
+
+چهار رکن اساسی این فرمولاسیون عبارتند از:
+
+\textbf{۱. برش نامتقارن به سمت بالا (\en{Clip-Higher}):}
+در برش متقارن کلاسیک ($\varepsilon = 0.2$)، بیشینه نسبت احتمالاتی مجاز برای توکن‌های با مزیت مثبت برابر با $1+\varepsilon = 1.2$ است. برای توکن‌های استثماری با احتمال اولیه بالا (مثلاً $\pi_{\text{old}} = 0.9$) بیشینه احتمال مجاز $1.08$ بوده که اجازه رشد تا نزدیکی ۱ را می‌دهد. اما برای توکن‌های اکتشافی نادر (مثلاً $\pi_{\text{old}} = 0.01$)، سقف رشد مجاز تنها $0.012$ است ($\Delta p = +0.002$). الگوریتم \model{DAPO} با تفکیک آستانه‌ها و قرار دادن $\varepsilon_{\text{high}} = 0.28$ و $\varepsilon_{\text{low}} = 0.20$، فضای کافی برای ارتقای توکن‌های اکتشافی فراهم می‌سازد و مانع فروپاشی آنتروپی می‌شود.
+
+\textbf{۲. نمونه‌برداری پویا (\en{Dynamic Sampling}):}
+اگر تمامی نمونه‌های گروه برای یک پرامپت درست یا همگی غلط باشند، $\hat{A}_{i,t} = 0$ شده و گرادیان آموزشی آن پرامپت صفر می‌شود. \model{DAPO} با اعمال شرط قید در حین گردآوری داده، نمونه‌برداری را تا پر شدن کامل بافر با دسته‌های دارای گرادیان موثر ($0 < \text{Correct} < G$) ادامه می‌دهد که این امر نسبت سیگنال به نویز گرادیان را در بالاترین سطح نگه می‌دارد.
+
+\textbf{۳. تابع اتلاف در سطح توکن (\en{Token-Level Policy Gradient Loss}):}
+بر خلاف \model{GRPO} که ابتدا اتلاف را بر طول هر نمونه $|o_i|$ تقسیم می‌کرد، \model{DAPO} نرمال‌سازی را بر مجموع کل توکن‌های گروه ($\sum_{i=1}^G |o_i|$) انجام می‌دهد. این امر موجب می‌شود توکن‌های الگوهای استدلالی بلندمرتبه ارزش‌گذاری عادلانه شده و توکن‌های هذیان‌گونه در پاسخ‌های معیوب به شدت تنبیه شوند.
+
+\textbf{۴. شکل‌دهی نرم پاداش طول پاسخ (\en{Soft Overlong Punishment}):}
+برای جلوگیری از شوک گرادیانی ناشی از برش سخت پاسخ‌ها در طول $L_{\text{max}}$، یک بازه حفاظتی $L_{\text{cache}}$ تعریف شده و جریمه خطی پیوسته‌ای به پاداش درستی اضافه می‌گردد:
+\begin{equation}
+	R_{\text{length}}(y) = \begin{cases} 
+		0 & |y| \le L_{\text{max}} - L_{\text{cache}} \\
+		\frac{(L_{\text{max}} - L_{\text{cache}}) - |y|}{L_{\text{cache}}} & L_{\text{max}} - L_{\text{cache}} < |y| \le L_{\text{max}} \\
+		-1 & |y| > L_{\text{max}}
+	\end{cases}
+\end{equation}
+
+\subsubsection*{تحلیل‌های تئوری اطلاعات و آمار ریاضی}
+
+آنتروپی شانون خط‌مشی به صورت $\mathcal{H}(\pi_\theta(\cdot | s)) = - \sum_{v \in \mathcal{V}} \pi_\theta(v | s) \log \pi_\theta(v | s)$ تعریف می‌شود. در الگوریتم‌های استاندارد، به دلیل محدودیت شدید رشد احتمالات کوچک، $\mathcal{H} \to 0$ میل کرده و توزیع احتمالاتی بر روی چند توکن محدود تیز می‌شود. راهبرد \en{Clip-Higher} باعث حفظ یک شیب ملایم مثبت در آنتروپی تولیدی در طول آموزش شده و از افت به سمت حالت دترمینستیک جلوگیری می‌نماید. همچنین نسبت سیگنال به نویز گرادیان که با $\text{SNR} = \frac{\|\mathbb{E}[g]\|_2}{\sqrt{\operatorname{Tr}(\operatorname{Cov}(g))}}$ تعریف می‌شود، در حضور نمونه‌برداری پویا به دلیل حذف گرادیان‌های تهی همواره در حالت ماکسیمم باقی می‌ماند.
+
+\subsubsection*{مهندسی داده و تبدیل مجموعه داده (\en{DAPO-Math-17K})}
+
+برای بهره‌گیری از پاداش‌های قطعی مبتنی بر قاعده و حذف خطاهای ناشی از مفسرهای فرمول‌های ریاضی (\en{Math Parsers})، مجموعه داده \model{DAPO-Math-17K} شامل ۱۷ هزار مسئله بازنویسی‌شده ایجاد شده است. در این فرآیند، با استفاده از مدل‌های زبانی و زنجیره تفکر، صورت مسائل به گونه‌ای بازنویسی شده‌اند که خروجی نهایی آن‌ها بدون استثنا یک **عدد صحیح منفرد** باشد؛ امری که ارزیابی پاداش را بر اساس تابع قطعی زیر مقدور می‌سازد:
+\begin{equation}
+	R(\hat{y}, y) = \begin{cases} +1 & \text{is\_equivalent}(\hat{y}, y) \\ -1 & \text{otherwise} \end{cases}
+\end{equation}
+
+\subsubsection*{دیاگرام معماری و جریان داده‌های الگوریتم}
+
+شکل~\ref{fig:dapo_architecture}، ساختار کلی جریان داده، فیلتر نمونه‌برداری پویا، شکل‌دهی پاداش و به‌روزرسانی خط‌مشی را در الگوریتم \model{DAPO} نشان می‌دهد.
+
+\begin{figure}[htbp]
+\centering
+\begin{latin}
+\begin{tikzpicture}[
+	node distance=1.6cm and 2.2cm,
+	databox/.style={rectangle, rounded corners=6pt, draw=cyan!80!black, fill=cyan!8, thick, inner sep=9pt, align=center, font=\small\sffamily, drop shadow},
+	rollbox/.style={rectangle, rounded corners=6pt, draw=blue!80!black, fill=blue!8, thick, inner sep=9pt, align=center, font=\small\sffamily, drop shadow},
+	filterbox/.style={diamond, aspect=2.2, draw=purple!80!black, fill=purple!8, thick, inner sep=4pt, align=center, font=\small\sffamily, drop shadow},
+	lossbox/.style={rectangle, rounded corners=6pt, draw=teal!80!black, fill=teal!8, thick, inner sep=9pt, align=center, font=\small\sffamily, drop shadow},
+	optbox/.style={rectangle, rounded corners=6pt, draw=orange!85!black, fill=orange!10, thick, inner sep=9pt, align=center, font=\small\sffamily, drop shadow},
+	discardbox/.style={rectangle, rounded corners=6pt, draw=red!75!black, fill=red!8, thick, inner sep=7pt, align=center, font=\footnotesize\sffamily, drop shadow},
+	arrow/.style={-{Stealth[scale=1.15]}, thick, draw=blue!85!black},
+	rejarrow/.style={-{Stealth[scale=1.15]}, thick, dashed, draw=red!80!black}
+]
+
+	% Data Generation Node
+	\node[databox] (data) {\textbf{Curated Dataset: DAPO-Math-17K}\\ Prompts $q$ with Single-Integer Verified Targets $a$};
+
+	% Rollout Node
+	\node[rollbox, below=of data] (rollout) {\textbf{Parallel Rollout Generation}\\ Sample $G=16$ Responses $\{o_i\}_{i=1}^G \sim \pi_{\theta_{\text{old}}}(\cdot|q)$};
+
+	% Reward Modeling
+	\node[rollbox, below=of rollout] (reward) {\textbf{Rule-Based Verification \& Soft Length Shaping}\\ $R_i = R_{\text{acc}}(o_i, a) + R_{\text{length}}(|o_i|)$};
+
+	% Dynamic Sampling Filter
+	\node[filterbox, below=1.8cm of reward] (filter) {\textbf{Dynamic Sampling Filter}\\ $0 < \sum_{i=1}^G \mathbb{I}(\text{Correct}) < G$ ?};
+
+	% Discard Node
+	\node[discardbox, right=2.6cm of filter] (discard) {\textbf{Discard Group}\\ Zero Gradient Signal\\ ($\hat{A}_{i,t} \equiv 0$)};
+
+	% Advantage and Loss
+	\node[lossbox, below=1.8cm of filter] (advantage) {\textbf{Group Advantage \& Token-Level Loss}\\ $\hat{A}_{i,t} = \frac{R_i - \mu_{\{R\}}}{\sigma_{\{R\}}}$, \quad Decoupled Clip: $[\varepsilon_{\text{low}}=0.2, \, \varepsilon_{\text{high}}=0.28]$\\ Loss normalized by total tokens: $\sum_{i=1}^G |o_i|$};
+
+	% Optimization
+	\node[optbox, below=of advantage] (optimizer) {\textbf{Model Optimization}\\ Mini-batch AdamW Update on \textbf{Qwen2.5-32B} Policy $\pi_\theta$\\ Sync weights: $\pi_{\theta_{\text{old}}} \leftarrow \pi_\theta$};
+
+	% Connections
+	\draw[arrow] (data) -- node[right, font=\footnotesize] {Sample Prompt $q$} (rollout);
+	\draw[arrow] (rollout) -- node[right, font=\footnotesize] {Outputs $\{o_i\}$} (reward);
+	\draw[arrow] (reward) -- (filter);
+	\draw[rejarrow] (filter) -- node[above, font=\footnotesize] {No (0\% or 100\%)} (discard);
+	\draw[arrow] (filter) -- node[right, font=\footnotesize] {Yes (Non-zero Variance)} (advantage);
+	\draw[arrow] (advantage) -- node[right, font=\footnotesize] {$\nabla_\theta J_{\text{DAPO}}(\theta)$} (optimizer);
+
+	% Cycle back
+	\draw[rejarrow] (discard) |- (rollout);
+	\draw[arrow] (optimizer.west) -- ++(-1.8,0) |- (rollout.west);
+
+\end{tikzpicture}
+\end{latin}
+\caption{دیاگرام جامع جریان داده، نمونه‌برداری پویا، شکل‌دهی طول و بهینه‌سازی توکن‌محور در الگوریتم \model{DAPO}.}
+\label{fig:dapo_architecture}
+\end{figure}
+
+\subsubsection*{شبه‌کد الگوریتم DAPO}
+
+شبه‌کد کامل مراحل اجرایی الگوریتم \model{DAPO} در الگوریتم~\ref{alg:dapo_algorithm} ارائه شده است:
+
+\begin{latin}
+\begin{algorithm}[H]
+\caption{Decoupled Clip and Dynamic Sampling Policy Optimization (DAPO)}
+\label{alg:dapo_algorithm}
+\begin{algorithmic}[1]
+\State \textbf{Input:} Initial policy $\pi_\theta$, verifiable reward function $R$, dataset $\mathcal{D}$, thresholds $\varepsilon_{\text{low}}, \varepsilon_{\text{high}}$, group size $G$, batch capacity $N$, update iterations $\mu$.
+\For{$\text{step} = 1, \dots, M$}
+    \State Synchronize behavior policy: $\pi_{\theta_{\text{old}}} \leftarrow \pi_\theta$
+    \State Initialize dynamic buffer $\mathcal{B}_{\text{dyn}} \leftarrow \emptyset$
+    \While{$|\mathcal{B}_{\text{dyn}}| < N$}
+        \State Sample a prompt batch $\mathcal{D}_b \sim \mathcal{D}$
+        \For{each question-answer pair $(q, a) \in \mathcal{D}_b$}
+            \State Sample $G$ independent rollouts $\{o_i\}_{i=1}^G \sim \pi_{\theta_{\text{old}}}(\cdot | q)$
+            \State Evaluate correctness count: $C_q = \sum_{i=1}^G \mathbb{I}(\text{is\_equivalent}(a, o_i))$
+            \If{$C_q == 0$ \textbf{or} $C_q == G$}
+                \State \textbf{continue} \Comment{Dynamic Sampling: Filter out degenerate zero-variance prompts}
+            \EndIf
+            \For{each response $o_i$}
+                \State Compute length punishment $R_{\text{length}}(|o_i|)$ via soft linear caching.
+                \State Compute total reward $R_i = R(o_i, a) + R_{\text{length}}(|o_i|)$.
+            \EndFor
+            \State Compute group statistics: $\mu_R = \operatorname{mean}(\{R_i\}_{i=1}^G)$, $\sigma_R = \operatorname{std}(\{R_i\}_{i=1}^G)$.
+            \For{each response $o_i$}
+                \State Compute advantage: $\hat{A}_{i,t} = (R_i - \mu_R) / (\sigma_R + 10^{-8})$.
+                \State Add tuple $(q, o_i, \hat{A}_{i,t})$ to $\mathcal{B}_{\text{dyn}}$.
+            \EndFor
+        \EndFor
+    \EndWhile
+    \For{$\text{iter} = 1, \dots, \mu$}
+        \State Compute total token count: $T_{\text{total}} = \sum_{o_i \in \mathcal{B}_{\text{dyn}}} |o_i|$.
+        \State Compute importance ratio: $r_{i,t}(\theta) = \frac{\pi_\theta(o_{i,t} \mid q, o_{i,<t})}{\pi_{\theta_{\text{old}}}(o_{i,t} \mid q, o_{i,<t})}$.
+        \State Compute Token-Level Clipped Surrogate Loss:
+        \State \quad $J_{\text{DAPO}}(\theta) = \frac{1}{T_{\text{total}}} \sum_{i=1}^{|\mathcal{B}_{\text{dyn}}|} \sum_{t=1}^{|o_i|} \min\left( r_{i,t}(\theta)\hat{A}_{i,t}, \, \text{clip}\left(r_{i,t}(\theta), 1-\varepsilon_{\text{low}}, 1+\varepsilon_{\text{high}}\right)\hat{A}_{i,t} \right)$.
+        \State Update policy parameters via AdamW: $\theta \leftarrow \theta + \alpha \nabla_\theta J_{\text{DAPO}}(\theta)$.
+    \EndFor
+\EndFor
+\State \textbf{Output:} Optimized Reasoning Policy $\pi_\theta$.
+\end{algorithmic}
+\end{algorithm}
+\end{latin}
+
+\subsubsection*{نتایج تجربی، تحلیل پویایی آموزش و مطالعات موردی}
+
+اثربخشی گام‌به‌گام هر یک از تکنیک‌های پیشنهادی در جدول~\ref{tab:dapo_ablation} بر روی بنچمارک \en{AIME 2024} خلاصه شده است:
+
+\begin{table}[htbp]
+\centering
+\caption{تحلیل ابلیشن و سهم پیشرونده تکنیک‌های \model{DAPO} روی مدل \model{Qwen2.5-32B} در بنچمارک \en{AIME 2024} \cite{yu2025dapo}.}
+\label{tab:dapo_ablation}
+\begin{tabular}{lc}
+\toprule
+\textbf{مدل و راهبرد بهینه‌سازی} & \textbf{دقت \en{AIME 2024} (avg@32)} \\
+\midrule
+\model{DeepSeek-R1-Zero-Qwen-32B} (مرجع پیشین) \cite{guo2025deepseek} & 47.0\% \\
+\midrule
+\model{Naive GRPO} (خط مبنای استاندارد) & 30.0\% \\
+\quad + فیلتر کردن پاسخ‌های قطع‌شده (\en{Overlong Filtering}) & 36.0\% \\
+\quad + برش نامتقارن به سمت بالا (\en{Clip-Higher}) & 38.0\% \\
+\quad + جریمه نرم طول پاسخ (\en{Soft Overlong Punishment}) & 41.0\% \\
+\quad + اتلاف در سطح توکن (\en{Token-Level Loss}) & 42.0\% \\
+\quad + نمونه‌برداری پویا (\textbf{\model{DAPO} کامل}) & \textbf{50.0\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{پدیدار شدن رفتار خوداصلاحی (\en{Emergence of Self-Correction}):} در طول آموزش با \model{DAPO}، رفتارهای بازبینی و خوداصلاحی عمیق بدون داده نظارت‌شده پدیدار گشت. به عنوان مثال در حل یک مسئله ترکیبیاتی، مدل پس از محاسبه مقدار کسری اشتباه $a_4 = 54.75$ برای تعداد افراد، تفکر خود را قطع کرده و بیان می‌کند: 
+\begin{latin}
+\textit{''Since $a_4$, the number of people owning all four items, must be a whole number, our current approach needs to be reconsidered...''}
+\end{latin}
+و سپس با بازتعریف متغیرها به پاسخ صحیح عدد صحیح دست می‌یابد.
+
+\subsubsection*{ابرپارامترهای استاندارد گزارش‌شده در مقاله}
+
+جدول~\ref{tab:dapo_hyperparameters} مقادیر دقیق ابرپارامترهای بهینه‌شده برای آموزش \model{DAPO} را نمایش می‌دهد:
+
+\begin{table}[htbp]
+\centering
+\caption{پیکربندی ابرپارامترهای الگوریتم \model{DAPO} روی مدل \model{Qwen2.5-32B}.}
+\label{tab:dapo_hyperparameters}
+\begin{tabular}{lc}
+\toprule
+\textbf{ابرپارامتر} & \textbf{مقدار} \\
+\midrule
+مدل پایه پیش‌آموزش‌دیده & \model{Qwen2.5-32B-Base} \\
+فریم‌ورک محاسباتی & \en{verl (HybridFlow)} \cite{sheng2024hybridflow} \\
+بهینه‌ساز & \en{AdamW} \cite{loshchilov2018decoupled} \\
+نرخ یادگیری (\en{Learning Rate}) & $1 \times 10^{-6}$ (ثابت با ۲۰ گام گرم‌کردن خطی) \\
+اندازه دسته پرامپت در \en{Rollout} & 512 \\
+تعداد نمونه به ازای هر پرامپت ($G$) & 16 \\
+اندازه مینی‌دسته آموزشی & 512 (۱۶ گام به‌روزرسانی گرادیان به ازای هر \en{Rollout}) \\
+سقف طول مجاز استدلال ($L_{\text{max}}$) & 16,384 توکن \\
+بازه حافظه جریمه نرم ($L_{\text{cache}}$) & 4,096 توکن \\
+حداکثر سقف مطلق طول تولید & 20,480 توکن \\
+حد آستانه برش پایین ($\varepsilon_{\text{low}}$) & 0.20 \\
+حد آستانه برش بالا ($\varepsilon_{\text{high}}$) & 0.28 \\
+پارامترهای ارزیابی استنتاج & دما $T=1.0$ و $\text{Top-}p=0.7$ روی ۳۲ بار ارزیابی \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{جمع‌بندی}
+
+الگوریتم \model{DAPO} با ترکیب چهار مولفه کلیدی \en{Clip-Higher}، \en{Dynamic Sampling}، \en{Token-Level Loss} و \en{Soft Overlong Punishment} نشان داد که چالش‌های بازتولید یادگیری تقویتی در استدلال‌های طولانی ناشی از کاستی‌های ظریف در فرمول‌بندی و پویایی‌های بهینه‌سازی است. انتشار متن‌باز کدها، معماری و پایگاه داده تبدیل‌شده \model{DAPO-Math-17K}، زیرساختی پایدار و تکرارپذیر را برای پژوهش‌های آینده در زمینه توسعه مدل‌های هوش مصنوعی استدلال‌گر در مقیاس بزرگ فراهم آورده است.

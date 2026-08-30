@@ -7,45 +7,53 @@ Repeated entry---line 300 of file references.bib
  : @article{shao2024deepseekmath
  :                              ,
 I'm skipping whatever remains of this entry
-You've used 46 entries,
+Repeated entry---line 365 of file references.bib
+ : @article{openai2024learning
+ :                            ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 379 of file references.bib
+ : @article{shao2024deepseekmath
+ :                              ,
+I'm skipping whatever remains of this entry
+You've used 51 entries,
             1791 wiz_defined-function locations,
-            651 strings with 13057 characters,
-and the built_in function-call counts, 10216 in all, are:
-= -- 718
-> -- 849
+            671 strings with 14228 characters,
+and the built_in function-call counts, 11422 in all, are:
+= -- 778
+> -- 991
 < -- 5
-+ -- 301
-- -- 255
-* -- 696
-:= -- 1860
-add.period$ -- 138
-call.type$ -- 46
-change.case$ -- 46
++ -- 350
+- -- 299
+* -- 791
+:= -- 2097
+add.period$ -- 153
+call.type$ -- 51
+change.case$ -- 51
 chr.to.int$ -- 0
-cite$ -- 46
-duplicate$ -- 419
-empty$ -- 780
-format.name$ -- 255
-if$ -- 2132
+cite$ -- 51
+duplicate$ -- 463
+empty$ -- 861
+format.name$ -- 299
+if$ -- 2371
 int.to.chr$ -- 0
-int.to.str$ -- 46
-missing$ -- 44
-newline$ -- 233
-num.names$ -- 46
-pop$ -- 137
+int.to.str$ -- 51
+missing$ -- 49
+newline$ -- 258
+num.names$ -- 51
+pop$ -- 156
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 202
+skip$ -- 218
 stack$ -- 0
 substring$ -- 275
-swap$ -- 92
+swap$ -- 98
 text.length$ -- 5
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 69
-width$ -- 48
-write$ -- 472
-(There was 1 error message)
+while$ -- 74
+width$ -- 53
+write$ -- 522
+(There were 3 error messages)

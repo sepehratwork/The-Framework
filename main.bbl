@@ -276,6 +276,37 @@ Chujie Zheng, Pei Ke, Zheng Zhang, and Minlie Huang.
 \newblock In {\em Findings of the Association for Computational Linguistics:
   ACL 2023}, pages 65--78, 2023.
 
+\bibitem{yu2025dapo}
+Qiying Yu, Zheng Zhang, Ruofei Zhu, Yufeng Yuan, Xiaochen Zuo, Yu~Yue, Weinan
+  Dai, Tiantian Fan, Gaohong Liu, Juncai Liu, et~al.
+\newblock Dapo: An open-source llm reinforcement learning system at scale.
+\newblock {\em arXiv preprint arXiv:2503.14476}, 2025.
+
+\bibitem{yang2024qwen25}
+An~Yang, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo~Zheng, Bowen Yu,
+  Chengyuan Li, Dayiheng Liu, Fei Huang, Haoran Wei, et~al.
+\newblock Qwen2.5 technical report.
+\newblock {\em arXiv preprint arXiv:2412.15115}, 2024.
+
+\bibitem{guo2025deepseek}
+Daya Guo, Dejian Yang, Haowei Zhang, Junxiao Song, Ruoyu Zhang, Runxin Xu,
+  Qihao Zhu, Shirong Ma, Peiyi Wang, Xiao Bi, et~al.
+\newblock Deepseek-r1: Incentivizing reasoning capability in llms via
+  reinforcement learning.
+\newblock {\em arXiv preprint arXiv:2501.12948}, 2025.
+
+\bibitem{sheng2024hybridflow}
+Guangming Sheng, Chi Zhang, Zilingfeng Ye, Xibin Wu, Wang Zhang, Ru~Zhang,
+  Yanghua Peng, Haibin Lin, and Chuan Wu.
+\newblock Hybridflow: A flexible and efficient rlhf framework.
+\newblock {\em arXiv preprint arXiv:2409.19256}, 2024.
+
+\bibitem{loshchilov2018decoupled}
+Ilya Loshchilov and Frank Hutter.
+\newblock Decoupled weight decay regularization.
+\newblock In {\em International Conference on Learning Representations (ICLR)},
+  2019.
+
 \bibitem{wang2016sample}
 Ziyu Wang, Victor Bapst, Nicolas Heess, Volodymyr Mnih, Remi Munos, Koray
   Kavukcuoglu, and Nando de~Freitas.
