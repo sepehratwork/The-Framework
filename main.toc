@@ -31,4 +31,5 @@
 \contentsline {subsection}{\numberline {7.2}الگوریتم بهینه‌سازی نسبی خط‌مشی گروهی (\lr {Group Relative Policy Optimization - GRPO})}{19}{subsection.7.2}%
 \contentsline {subsection}{\numberline {7.3}الگوریتم بهینه‌سازی توالی گروهی خط‌مشی (\lr {Group Sequence Policy Optimization - GSPO})}{24}{subsection.7.3}%
 \contentsline {subsection}{\numberline {7.4}الگوریتم بهینه‌سازی خط‌مشی با برش مجزا و نمونه‌برداری پویا (\lr {Decoupled Clip and Dynamic Sampling Policy Optimization - DAPO})}{31}{subsection.7.4}%
-\contentsline {section}{\numberline {8}منابع}{38}{section.8}%
+\contentsline {subsection}{\numberline {7.5}الگوریتم بهینه‌سازی خط‌مشی تطبیقی نرم (\lr {Soft Adaptive Policy Optimization - SAPO})}{37}{subsection.7.5}%
+\contentsline {section}{\numberline {8}منابع}{44}{section.8}%

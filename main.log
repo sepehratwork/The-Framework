@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026/Arch Linux) (preloaded format=xelatex 2026.6.29)  30 AUG 2026 16:09
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026/Arch Linux) (preloaded format=xelatex 2026.6.29)  30 AUG 2026 16:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1483,10 +1483,70 @@ Overfull \hbox (64.88864pt too wide) detected at line 53
 ) = \U/msb/m/n/12 E[] []
  []
 
-[32] [33] [34] [35]) (./models/ReinforcementLearning/SAPO.tex)
-(./models/ReinforcementLearning/CISPO.tex)
+[32] [33] [34] [35]) (./models/ReinforcementLearning/SAPO.tex
+Overfull \hbox (2.99974pt too wide) in paragraph at lines 1--1
+[]|[]\TU/Vazirmatn(0)/b/n/17.28 الگوریتم بهینه‌سازی خط‌مشی تطبیقی نرم ([]\TU/Li
+berationSerif(0)/b/n/17.28 Soft Adaptive Pol-[][] 
+ []
+
+[36]
+Overfull \hbox (29.89925pt too wide) in paragraph at lines 18--19
+[]\TU/Vazirmatn(0)/m/it/12 یک مدل زبانی خودبازگشت به عنوان خط‌مشی تصادفی $\OML/
+cmm/m/it/12 ^^Y[]$ \TU/Vazirmatn(0)/m/it/12 بر روی توالی توکن‌های پاسخ $\OML/cm
+m/m/it/12 y \OT1/cmr/m/n/12 = (\OML/cmm/m/it/12 y[]; y[]; [] ; y[]\OT1/cmr/m/n/
+12 )$[]
+ []
+
+[37] [38]
+Overfull \hbox (7.76164pt too wide) in paragraph at lines 125--125
+[]|\TU/Vazirmatn(0)/b/n/14.4 چارچوب یکپارچه سوروگیت و اثبات همگرایی به دروازه ت
+والی (اتصال []\TU/LiberationSerif(0)/b/n/14.4 SAPO–GSPO[]\TU/Vazirmatn(0)/b/n/1
+4.4 )| []
+ []
+
+
+Overfull \hbox (6.33315pt too wide) in paragraph at lines 130--131
+[][]\TU/Vazirmatn(0)/b/n/12 فرض A۲ (پراکندگی پایین درون توالی): \TU/Vazirmatn(0
+)/m/it/12 با تعریف $\OML/cmm/m/it/12 z[] \U/msa/m/n/12 , [] \OML/cmm/m/it/12 r[
+]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 ^^R\OT1/cmr/m/n/12 )$ \TU/Vazirmatn(0)/m/it/
+12 و میانگین $\OML/cmm/m/it/12 ^^V[] \U/msa/m/n/12 , [] [][] \OML/cmm/m/it/12 z
+[] \OT1/cmr/m/n/12 =$[]
+ []
+
+[39]
+Overfull \hbox (5.33012pt too wide) in paragraph at lines 174--175
+[]$[][]\OT1/cmr/m/n/12 (\OML/cmm/m/it/12 ^^R\OT1/cmr/m/n/12 )$ \TU/Vazirmatn(0)
+/m/it/12 در مدل‌های متراکم ([]\TU/LiberationSerif(0)/m/n/12 Dense[]\TU/Vazirmat
+n(0)/m/it/12 ) نظیر []\TU/LiberationSerif(0)/m/n/12 Qwen3-4B[] \TU/Vazirmatn(0)
+/m/it/12 کمتر از $\OT1/cmr/m/n/12 0\OML/cmm/m/it/12 :\OT1/cmr/m/n/12 005$ \TU/V
+azirmatn(0)/m/it/12 و در مدل‌های ترکیبی از متخصصان[]
+ []
+
+[40]
+Overfull \hbox (64.49661pt too wide) in paragraph at lines 193--231
+ [][][][][][] 
+ []
+
+[41]
+Overfull \hbox (11.32079pt too wide) in paragraph at lines 291--300
+ [][][][] 
+ []
+
+
+Overfull \hbox (46.96658pt too wide) in paragraph at lines 309--318
+ [][][][] 
+ []
+
+
+Overfull \hbox (2.19962pt too wide) in paragraph at lines 320--322
+[][]\TU/Vazirmatn(0)/b/n/12 آموزش مدل‌های چندوجهی ([]\TU/LiberationSerif(0)/b/n
+/12 Qwen3-VL[]\TU/Vazirmatn(0)/b/n/12 ): \TU/Vazirmatn(0)/m/it/12 در ارزیابی‌ها
+ی مقیاس بزرگ روی سری مدل‌های چندوجهی[]
+ []
+
+[42]) (./models/ReinforcementLearning/CISPO.tex)
 (./models/ReinforcementLearning/RLVR.tex)
-(./models/ReinforcementLearning/RLVR_GRPO.tex [36])) [37] (./main.bbl
+(./models/ReinforcementLearning/RLVR_GRPO.tex)) [43] (./main.bbl
 Missing character: There is no م (U+0645) in font Liberation Serif Bold/OT:scri
 pt=latn;language=dflt;mapping=tex-text;!
 Missing character: There is no ن (U+0646) in font Liberation Serif Bold/OT:scri
@@ -1503,13 +1563,13 @@ Underfull \hbox (badness 1215) in paragraph at lines 91--95
 ptimal data mixtures.  \TU/LiberationSerif(0)/m/it/12 arXiv preprint[]
  []
 
-[38]
+[44]
 Underfull \hbox (badness 1412) in paragraph at lines 181--186
 []\TU/LiberationSerif(0)/m/n/12 dimensional continuous control using generalize
 d advantage estimation.  \TU/LiberationSerif(0)/m/it/12 arXiv preprint[]
  []
 
-[39]
+[45]
 Underfull \hbox (badness 1102) in paragraph at lines 208--211
 [][]\TU/LiberationSerif(0)/m/n/12 John Schulman.  Approximating kl divergence. 
  \TU/LiberationSerif(0)/m/it/12 Online blog: http://joschu.net/blog/kl-[]
@@ -1521,7 +1581,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 256--259
 ]$[][][][][] [] [] [] [][][][][][] [] [][][] [] [][][][][] []$[][]
  []
 
-[40]) [41] (./main.aux)
+[46] [47]) [48] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1531,15 +1591,15 @@ L3 programming layer <2026-01-19>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: D015915DFEB82784BF75D4B9BE1DE5A5;9726.
+(rerunfilecheck)             Checksum: D8EDC5B4691362AC5F5FE82D300F8E3A;10319.
  ) 
 Here is how much of TeX's memory you used:
- 30248 strings out of 469704
- 664883 string characters out of 5467967
- 1069708 words of memory out of 5000000
- 57821 multiletter control sequences out of 15000+600000
- 638608 words of font info for 139 fonts, out of 8000000 for 9000
+ 30333 strings out of 469704
+ 666575 string characters out of 5467967
+ 1071552 words of memory out of 5000000
+ 57904 multiletter control sequences out of 15000+600000
+ 640476 words of font info for 148 fonts, out of 8000000 for 9000
  286 hyphenation exceptions out of 8191
- 88i,18n,106p,1181b,1147s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 88i,18n,106p,1181b,1158s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (42 pages).
+Output written on main.pdf (49 pages).

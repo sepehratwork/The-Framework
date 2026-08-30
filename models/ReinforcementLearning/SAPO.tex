@@ -1,1 +1,325 @@
-\item \textbf asd
+\subsection{الگوریتم بهینه‌سازی خط‌مشی تطبیقی نرم (\en{Soft Adaptive Policy Optimization - SAPO})}
+
+الگوریتم \model{SAPO} که در اواخر سال ۲۰۲۵ توسط تیم \en{Qwen} در شرکت علی‌بابا (\en{Alibaba Inc.}) معرفی شد \cite{gao2025sapo}، یکی از پیشرفته‌ترین و پایدارترین روش‌های بهینه‌سازی خط‌مشی در مقیاس بزرگ برای مدل‌های زبانی استدلال‌گر (\en{Reasoning LLMs}) و مدل‌های چندوجهی (\en{Vision-Language Models}) به شمار می‌رود. این الگوریتم با بازنگری بنیادین در مکانیزم برش سخت (\en{Hard Clipping}) در روش‌های پیشین گروهی نظیر \model{GRPO} \cite{shao2024deepseekmath} و \model{GSPO} \cite{zheng2025group}، یک دروازه‌بندی نرم کنترل‌شده با دما (\en{Temperature-Controlled Soft Gate}) به همراه طراحی دمای نامتقارن برای گرادیان‌های مثبت و منفی معرفی می‌کند که مانع از فروپاشی زودهنگام آموزش (\en{Early Training Collapse}) شده و بهره‌وری نمونه‌ها را به حداکثر می‌رساند.
+
+\subsubsection*{تاریخچه، انگیزه و ضرورت پیدایش الگوریتم}
+
+با گسترش آموزش یادگیری تقویتی در مدل‌های زبانی بزرگ برای انجام استدلال‌های طولانی ریاضی، برنامه‌نویسی و منطقی \cite{openai2024learning, deepseek2025deepseekr1, qwen2025qwen3}، روش‌های مبتنی بر بهینه‌سازی گروهی (\en{Group-based Policy Optimization}) به عنوان استانداردی کارآمد جایگزین روش‌های کلاسیک نظیر \model{PPO} شدند:
+\begin{itemize}
+    \item \textbf{معضل روش‌های برش سخت در سطح توکن (\model{GRPO}):} الگوریتم \model{GRPO} \cite{shao2024deepseekmath} با حذف مدل نقاد (\en{Critic}) و نرمال‌سازی پاداش‌ها در یک گروه از پاسخ‌ها، هزینه محاسباتی را به شدت کاهش داد. با این حال، استفاده از تابع برش ناپیوسته در سطح توکن باعث ایجاد رفتار «همه یا هیچ» شد؛ به طوری که توکن‌هایی با نسبت اهمیت خارج از بازه $[1-\varepsilon, 1+\varepsilon]$ گرادیان صفر دریافت کرده و سیگنال‌های یادگیری ارزشمند از بین می‌رفتند.
+    \item \textbf{معضل روش‌های برش در سطح توالی (\model{GSPO}):} الگوریتم \model{GSPO} \cite{zheng2025group} برش را به میانگین هندسی نسبت‌های کل توالی اعمال کرد تا واریانس انباشته در توالی‌های طولانی را مهار کند. اما نقطه ضعف اساسی آن شکنندگی در برابر توکن‌های پرت (\en{Outlier Tokens}) بود؛ اگر تنها چند توکن ناهمگون در یک توالی وجود داشت، کل توالی بریده شده و گرادیان تمامی توکن‌های مفید درون آن توالی مسدود می‌شد.
+    \item \textbf{ناپایداری در مدل‌های ترکیبی از متخصصان (\en{MoE}):} در معماری‌های \en{MoE} نظیر \en{Qwen3-30B-A3B}، به دلیل ناهمگونی مسیریابی توکن‌ها (\en{Routing Heterogeneity}) به متخصصان مختلف، واریانس نسبت‌های اهمیت $r_{i,t}$ فوق‌العاده افزایش می‌یابد که این پدیده به ناپایداری‌های شدید و سقوط آموزش در الگوریتم‌های سنتی می‌انجامد.
+\end{itemize}
+
+الگوریتم \model{SAPO} برای حل این چالش‌ها، یک ناحیه اطمینان پیوسته، نرم و دیفرانسیل‌پذیر معرفی می‌کند که در شرایط عادی انسجام سطح توالی را حفظ کرده و در صورت وجود توکن‌های پرت، به صورت تطبیقی تنها توکن‌های مخرب را مهار می‌نماید.
+
+\subsubsection*{مبانی نظری و اشتقاق‌های کامل ریاضی الگوریتم SAPO}
+
+یک مدل زبانی خودبازگشت به عنوان خط‌مشی تصادفی $\pi_\theta$ بر روی توالی توکن‌های پاسخ $y = (y_1, y_2, \dots, y_{|y|})$ به ازای پرامپت ورودی $q \sim \mathcal{D}$ به صورت حاصل‌ضرب احتمال‌های شرطی تجزیه می‌شود:
+\begin{equation}
+	\label{eq:autoregressive_policy}
+	\pi_\theta(y \mid q) = \prod_{t=1}^{|y|} \pi_\theta(y_t \mid q, y_{<t})
+\end{equation}
+
+برای هر پرامپت $q$، گروهی متشکل از $G$ پاسخ مستقل $\{y_1, \dots, y_G\}$ از خط‌مشی رفتار $\pi_{\theta_{\text{old}}}$ نمونه‌برداری شده و پاداش‌های عددی $\{R_1, \dots, R_G\}$ محاسبه می‌شوند. مقدار مزیت نرمال‌شده گروهی ($\hat{A}_i$) برای پاسخ $i$-ام برابر است با:
+\begin{equation}
+	\label{eq:group_advantage}
+	\hat{A}_{i,t} = \hat{A}_i = \frac{R_i - \text{mean}\left(\{R_j\}_{j=1}^G\right)}{\text{std}\left(\{R_j\}_{j=1}^G\right) + 10^{-8}}
+\end{equation}
+
+نسبت اهمیت در سطح توکن به صورت زیر تعریف می‌شود:
+\begin{equation}
+	\label{eq:token_ratio}
+	r_{i,t}(\theta) \triangleq \frac{\pi_\theta(y_{i,t} \mid q, y_{i,<t})}{\pi_{\theta_{\text{old}}}(y_{i,t} \mid q, y_{i,<t})}
+\end{equation}
+
+\textbf{تابع هدف بهینه‌سازی در الگوریتم \model{SAPO}:}
+\begin{equation}
+	\label{eq:sapo_objective}
+	J_{\text{SAPO}}(\theta) = \mathbb{E}_{q \sim \mathcal{D}, \{y_i\}_{i=1}^G \sim \pi_{\theta_{\text{old}}}(\cdot \mid q)} \left[ \frac{1}{G} \sum_{i=1}^G \frac{1}{|y_i|} \sum_{t=1}^{|y_i|} f_{i,t}\left(r_{i,t}(\theta)\right) \hat{A}_{i,t} \right]
+\end{equation}
+که در آن تابع دروازه‌بندی نرم کنترل‌شده با دما $f_{i,t}(x)$ به صورت زیر تعریف می‌گردد:
+\begin{equation}
+	\label{eq:soft_gating_func}
+	f_{i,t}(x) = \sigma\left(\tau_{i,t} (x - 1)\right) \cdot \frac{4}{\tau_{i,t}}, \qquad \tau_{i,t} = \begin{cases} \tau_{\text{pos}} & \text{if } \hat{A}_{i,t} > 0 \\ \tau_{\text{neg}} & \text{if } \hat{A}_{i,t} \le 0 \end{cases}
+\end{equation}
+در این رابطه، $\sigma(u) = \frac{1}{1 + e^{-u}}$ تابع سیگموئید استاندارد است.
+
+\textbf{محاسبه تحلیلی گرادیان خط‌مشی در \model{SAPO}:}
+با اعمال عملگر گرادیان $\nabla_\theta$ به رابطه~\eqref{eq:sapo_objective} و استفاده از قاعده زنجیره‌ای:
+\begin{equation}
+	\label{eq:grad_chain_rule}
+	\nabla_\theta \left[ f_{i,t}(r_{i,t}(\theta)) \hat{A}_{i,t} \right] = f'_{i,t}(r_{i,t}(\theta)) \cdot \nabla_\theta r_{i,t}(\theta) \cdot \hat{A}_{i,t}
+\end{equation}
+
+مشتق نسبت اهمیت $\nabla_\theta r_{i,t}(\theta)$ بر اساس قاعده مشتق لگاریتمی برابر است با:
+\begin{equation}
+	\label{eq:grad_ratio}
+	\nabla_\theta r_{i,t}(\theta) = \frac{\nabla_\theta \pi_\theta(y_{i,t} \mid q, y_{i,<t})}{\pi_{\theta_{\text{old}}}(y_{i,t} \mid q, y_{i,<t})} = r_{i,t}(\theta) \nabla_\theta \log \pi_\theta(y_{i,t} \mid q, y_{i,<t})
+\end{equation}
+
+مشتق اول تابع دروازه‌بندی $f'_{i,t}(x)$ نسبت به $x$:
+\begin{equation}
+	\label{eq:f_prime_derivation}
+	f'_{i,t}(x) = \frac{4}{\tau_{i,t}} \cdot \frac{d}{dx}\left[ \sigma\left(\tau_{i,t} (x - 1)\right) \right] = \frac{4}{\tau_{i,t}} \cdot \tau_{i,t} \cdot \sigma'\left(\tau_{i,t} (x - 1)\right) = 4 \sigma'\left(\tau_{i,t} (x - 1)\right)
+\end{equation}
+
+با توجه به اتحاد مشتق تابع سیگموئید $\sigma'(u) = \sigma(u)(1 - \sigma(u))$، اگر $p_{i,t}(\theta) \triangleq \sigma(\tau_{i,t} (r_{i,t}(\theta) - 1))$ تعریف شود:
+\begin{equation}
+	\label{eq:weight_def}
+	w_{i,t}(\theta) \triangleq f'_{i,t}(r_{i,t}(\theta)) = 4 p_{i,t}(\theta) \big(1 - p_{i,t}(\theta)\big)
+\end{equation}
+
+با استفاده از تعاریف توابع هذلولوی و رابطه $\sigma(u)(1-\sigma(u)) = \frac{e^{-u}}{(1+e^{-u})^2} = \frac{1}{(e^{u/2}+e^{-u/2})^2} = \frac{1}{4\cosh^2(u/2)} = \frac{1}{4}\text{sech}^2(u/2)$، وزن گرادیان برابر می‌شود با:
+\begin{equation}
+	\label{eq:weight_sech}
+	w_{i,t}(\theta) = 4 \cdot \frac{1}{4} \text{sech}^2\left(\frac{\tau_{i,t}}{2} (r_{i,t}(\theta) - 1)\right) = \text{sech}^2\left(\frac{\tau_{i,t}}{2} (r_{i,t}(\theta) - 1)\right)
+\end{equation}
+
+بنابراین، فرم نهایی گرادیان خط‌مشی به دست می‌آید:
+\begin{equation}
+	\label{eq:final_sapo_gradient}
+	\nabla_\theta J_{\text{SAPO}}(\theta) = \mathbb{E} \left[ \frac{1}{G} \sum_{i=1}^G \frac{1}{|y_i|} \sum_{t=1}^{|y_i|} w_{i,t}(\theta) \, r_{i,t}(\theta) \, \nabla_\theta \log \pi_\theta(y_{i,t} \mid q, y_{i,<t}) \, \hat{A}_{i,t} \right]
+\end{equation}
+
+\textbf{اثبات حفظ رفتار روی خط‌مشی (\en{On-Policy Consistency}):}
+در نقطه روی خط‌مشی که $r_{i,t}(\theta) = 1$ است:
+\begin{equation}
+	p_{i,t} = \sigma(0) = \frac{1}{2} \implies w_{i,t} = 4 \left(\frac{1}{2}\right)\left(\frac{1}{2}\right) = 1
+\end{equation}
+این نتیجه اثبات می‌کند که در نقطه تعادل، گرادیان نرم \model{SAPO} دقیقاً برابر با گرادیان خط‌مشی بدون برش $r_{i,t}\hat{A}_{i,t}\nabla_\theta \log \pi_\theta$ است و ضریب $\frac{4}{\tau_{i,t}}$ در تعریف اولیه تابع $f_{i,t}$ دقیقاً جهت تضمین این شرط مقیاس‌گذاری شده است.
+
+\subsubsection*{تحلیل گرادیان لاجیت‌ها و اثبات ضرورت دمای نامتقارن ($\tau_{\text{neg}} > \tau_{\text{pos}}$)}
+
+برای درک علت برتری دمای نامتقارن، انتشار گرادیان در لایه خروجی لاجیت‌ها $\mathbf{z} = [z_1, \dots, z_{|V|}]^T \in \mathbb{R}^{|V|}$ (با اندازه دایره واژگان $|V|$) را تحلیل می‌کنیم. توزیع احتمال توکن‌ها با تابع بیشینه هموار (\en{Softmax}) محاسبه می‌شود: $\pi_\theta(v) = \frac{e^{z_v}}{\sum_{k} e^{z_k}}$.
+
+مشتق جزئی تابع اتلاف نسبت به لاجیت دلخواه $z_v$ برابر است با:
+\begin{equation}
+	\label{eq:logit_grad_chain}
+	\frac{\partial \left[ \log \pi_\theta(y_{i,t}) \hat{A}_{i,t} \right]}{\partial z_v} = \frac{\hat{A}_{i,t}}{\pi_\theta(y_{i,t})} \cdot \frac{\partial \pi_\theta(y_{i,t})}{\partial z_v}
+\end{equation}
+
+بر اساس ماتریس ژاکوبی تابع \en{Softmax}:
+\begin{align}
+	\text{اگر } v = y_{i,t} \text{ (توکن نمونه‌برداری‌شده):} \quad &\frac{\partial \pi_\theta(y_{i,t})}{\partial z_{y_{i,t}}} = \pi_\theta(y_{i,t})\big(1 - \pi_\theta(y_{i,t})\big) \label{eq:jacob_sampled} \\
+	\text{اگر } v \neq y_{i,t} \text{ (سایر توکن‌ها):} \quad &\frac{\partial \pi_\theta(y_{i,t})}{\partial z_v} = -\pi_\theta(y_{i,t}) \pi_\theta(v) \label{eq:jacob_unsampled}
+\end{align}
+
+با جایگذاری روابط فوق در رابطه~\eqref{eq:logit_grad_chain}، گرادیان لاجیت‌ها حاصل می‌شود:
+\begin{equation}
+	\label{eq:logit_gradient_cases}
+	\frac{\partial \mathcal{L}_{i,t}}{\partial z_v} = \begin{cases} 
+		\big(1 - \pi_\theta(y_{i,t})\big) \hat{A}_{i,t} & \text{if } v = y_{i,t} \quad (\text{\en{Sampled Token}}) \\ 
+		-\pi_\theta(v) \hat{A}_{i,t} & \text{if } v \neq y_{i,t} \quad (\text{\en{Unsampled Tokens}}) 
+	\end{cases}
+\end{equation}
+
+\textbf{تحلیل تئوریک رفتار نامتقارن:}
+\begin{itemize}
+	\item \textbf{در شرایط مزیت مثبت ($\hat{A}_{i,t} > 0$):} لاجیت توکن نمونه‌برداری‌شده افزایش یافته و لاجیت تمامی توکن‌های دیگر با ضریب $-\pi_\theta(v)\hat{A}_{i,t} < 0$ به آرامی کاهش می‌یابد. این فرآیند ذاتاً همگرا و متمرکز است.
+	\item \textbf{در شرایط مزیت منفی ($\hat{A}_{i,t} < 0$):} لاجیت توکن نمونه‌برداری‌شده کاهش می‌یابد؛ اما برای تمامی $|V|-1$ توکن دیگر، مقدار $-\pi_\theta(v)\hat{A}_{i,t} > 0$ مثبت می‌شود! یعنی لاجیت صدها هزار توکن نامربوط به طور همزمان افزایش می‌یابد. این پدیده باعث پخش نویز گرادیانی شدید در دایره واژگان بزرگ شده و عامل اصلی ناپایداری آموزش است.
+\end{itemize}
+
+\model{SAPO} با تنظیم $\tau_{\text{neg}} > \tau_{\text{pos}}$، نرخ تضعیف گرادیان برای نمونه‌های با مزیت منفی را سریع‌تر می‌کند و بدین ترتیب نویز مخرب ناشی از انتشار مزیت منفی را مهار می‌نماید.
+
+\subsubsection*{چارچوب یکپارچه سوروگیت و اثبات همگرایی به دروازه توالی (اتصال \model{SAPO–GSPO})}
+
+\textbf{فرض‌های تحلیلی:}
+\begin{itemize}
+	\item \textbf{فرض A1 (گام‌های کوچک و نزدیکی به خط‌مشی):} $r_{i,t}(\theta) \approx 1 \implies \log r_{i,t}(\theta) \approx r_{i,t}(\theta) - 1$.
+	\item \textbf{فرض A2 (پراکندگی پایین درون توالی):} با تعریف $z_{i,t} \triangleq \log r_{i,t}(\theta)$ و میانگین $\mu_i \triangleq \frac{1}{|y_i|} \sum_t z_{i,t} = \log s_i(\theta)$، واریانس درون‌توالی $\text{Var}_i(\theta) \triangleq \frac{1}{|y_i|}\sum_t (z_{i,t}-\mu_i)^2$ برای اکثر توالی‌ها مقداری بسیار کوچک است.
+\end{itemize}
+
+تحت فرض A1 داریم $f'_{i,t}(r_{i,t}) = \text{sech}^2\left(\frac{\tau_i}{2}(r_{i,t}-1)\right) \approx \text{sech}^2\left(\frac{\tau_i}{2} \log r_{i,t}\right) = g_{\tau_i}(z_{i,t})$ که در آن $g_\tau(z) \triangleq \text{sech}^2(\frac{\tau}{2}z)$ است.
+
+با نوشتن بسط تیلور مرتبه دوم تابع $g_{\tau_i}(z_{i,t})$ حول نقطه میانگین $\mu_i = \log s_i(\theta)$:
+\begin{equation}
+	\label{eq:taylor_expansion}
+	g_{\tau_i}(z_{i,t}) = g_{\tau_i}(\mu_i) + g'_{\tau_i}(\mu_i)(z_{i,t} - \mu_i) + \frac{1}{2} g''_{\tau_i}(\xi_{i,t})(z_{i,t} - \mu_i)^2
+\end{equation}
+با میانگین‌گیری روی تمام توکن‌های توالی، جمله خطی اول دقیقاً صفر می‌شود:
+\begin{equation}
+	\label{eq:taylor_mean}
+	\frac{1}{|y_i|} \sum_{t=1}^{|y_i|} g_{\tau_i}(z_{i,t}) = g_{\tau_i}(\mu_i) + \frac{1}{2|y_i|} \sum_{t=1}^{|y_i|} g''_{\tau_i}(\xi_{i,t})(z_{i,t} - \mu_i)^2
+\end{equation}
+
+با محاسبه مشتق دوم $g_\tau(z) = \text{sech}^2(\alpha z)$ با $\alpha = \frac{\tau}{2}$:
+\begin{equation}
+	\label{eq:second_derivative}
+	g''_\tau(z) = \alpha^2 \big( 4\text{sech}^2(\alpha z) - 6\text{sech}^4(\alpha z) \big) \implies \sup_z |g''_\tau(z)| = 2\alpha^2 = \frac{\tau^2}{2}
+\end{equation}
+
+بنابراین، کران یکنواخت اختلاف میانگین دروازه توکن‌ها و دروازه توالی $D_i(\theta)$ حاصل می‌شود:
+\begin{equation}
+	\label{eq:uniform_bound}
+	D_i(\theta) \triangleq \left| \frac{1}{|y_i|} \sum_{t=1}^{|y_i|} g_{\tau_i}(z_{i,t}) - g_{\tau_i}\big(\log s_i(\theta)\big) \right| \le \frac{1}{2} \sup_z |g''_{\tau_i}(z)| \text{Var}_i(\theta) = \frac{\tau_i^2}{4} \text{Var}_i(\theta)
+\end{equation}
+
+از آنجا که $D_i(\theta) \approx 0$ است، گرادیان \model{SAPO} به فرم سطح توالی تقلیل می‌یابد:
+\begin{equation}
+	\label{eq:sapo_gspo_reduction}
+	\nabla_\theta J_{\text{SAPO}}(\theta) \approx \mathbb{E} \left[ \frac{1}{G} \sum_{i=1}^G \text{sech}^2\left(\frac{\tau_i}{2} \log s_i(\theta)\right) \nabla_\theta \log s_i(\theta) \hat{A}_i \right]
+\end{equation}
+
+این اثبات نشان می‌دهد که \model{SAPO} در حالت عادی رفتاری کاملاً منسجم و هموار در سطح توالی (مشابه \model{GSPO}) دارد، اما در برخورد با توکن‌های پرت، به جای قطع کل گرادیان توالی، تنها توکن خطاکار را تضعیف می‌کند.
+
+\subsubsection*{تحلیل‌های تئوری اطلاعات، آمار و دینامیک‌های ناحیه اطمینان}
+
+بر اساس بسط تیلور مرتبه دوم واگرایی کولبک-لایبلر موضعی در سطح توکن:
+\begin{equation}
+	D_{\text{KL}}(\pi_{\theta_{\text{old}}} \parallel \pi_\theta) \approx \frac{1}{2} \mathbb{E}\left[ (\log r_{i,t}(\theta))^2 \right]
+\end{equation}
+در روش‌های برش سخت (\model{GRPO} و \model{GSPO})، تابع جریمه در مرزهای برش دارای ناپیوستگی در مشتق اول است که شوک‌های بهینه‌سازی ایجاد می‌کند. در مقابل، تابع دروازه‌بندی \model{SAPO} از رده توابع بی‌نهایت بار مشتق‌پذیر ($C^\infty$) بوده و یک ناحیه اطمینان پیوسته را شکل می‌دهد.
+
+بررسی‌های تجربی روی بیش از $10^5$ توالی و $10^9$ توکن نشان می‌دهد که توزیع واریانس درون‌توالی $\text{Var}_i(\theta)$ در مدل‌های متراکم (\en{Dense}) نظیر \en{Qwen3-4B} کمتر از $0.005$ و در مدل‌های ترکیبی از متخصصان (\en{MoE}) نظیر \en{Qwen3-30B-A3B} کمتر از $0.020$ است. در هر دو حالت کران خطا $D_i(\theta) \le \frac{\tau_i^2}{4}\text{Var}_i(\theta)$ زیر $0.005$ باقی مانده و تقلیل تئوریک را به طور کامل در عمل پشتیبانی می‌کند.
+
+\subsubsection*{دیاگرام معماری و جریان داده‌های الگوریتم}
+
+شکل~\ref{fig:sapo_pipeline} ساختار پردازش داده، ارزیابی گروهی، اعمال دمای نامتقارن، دروازه‌بندی نرم و به‌روزرسانی پارامترها در الگوریتم \model{SAPO} را نمایش می‌دهد.
+
+\begin{figure}[htbp]
+\centering
+\begin{latin}
+\begin{tikzpicture}[
+	node distance=1.4cm and 1.6cm,
+	promptbox/.style={rectangle, rounded corners=6pt, draw=blue!70!black, fill=blue!8, thick, inner sep=8pt, align=center, font=\small\sffamily, drop shadow},
+	rolloutbox/.style={rectangle, rounded corners=6pt, draw=teal!70!black, fill=teal!10, thick, inner sep=8pt, align=center, font=\small\sffamily, drop shadow},
+	advbox/.style={rectangle, rounded corners=6pt, draw=purple!70!black, fill=purple!8, thick, inner sep=8pt, align=center, font=\small\sffamily, drop shadow},
+	tempbox/.style={rectangle, rounded corners=6pt, draw=orange!80!black, fill=orange!12, thick, inner sep=7pt, align=center, font=\small\sffamily, drop shadow},
+	gatebox/.style={rectangle, rounded corners=6pt, draw=cyan!80!black, fill=cyan!10, thick, inner sep=8pt, align=center, font=\small\sffamily, drop shadow},
+	optbox/.style={rectangle, rounded corners=6pt, draw=red!70!black, fill=red!8, thick, inner sep=8pt, align=center, font=\small\sffamily, drop shadow},
+	arrow/.style={-{Stealth[scale=1.1]}, thick, draw=blue!80!black},
+	dasharrow/.style={-{Stealth[scale=1.1]}, thick, dashed, draw=red!70!black}
+]
+
+	% Input Prompt
+	\node[promptbox] (prompt) {\textbf{Input Query / Prompt} $q \sim \mathcal{D}$};
+
+	% Rollout Generation
+	\node[rolloutbox, below=1.2cm of prompt] (rollout) {\textbf{Group Generation Phase} ($\pi_{\theta_{\text{old}}}$)\\ Sample $G$ completions: $\{y_1, y_2, \dots, y_G\}$};
+
+	% Advantage Computation
+	\node[advbox, below=1.2cm of rollout] (adv) {\textbf{Group-Relative Advantage Normalization}\\ $\hat{A}_i = \frac{R_i - \text{mean}(\{R\})}{\text{std}(\{R\}) + \epsilon_{\text{div}}}$};
+
+	% Asymmetric Temperature Branching
+	\node[tempbox, below left=1.4cm and 0.2cm of adv] (temppos) {\textbf{Positive Advantage} ($\hat{A}_i > 0$)\\ Select $\tau_i = \tau_{\text{pos}}$ (e.g., $1.00$)};
+	\node[tempbox, below right=1.4cm and 0.2cm of adv] (tempneg) {\textbf{Negative Advantage} ($\hat{A}_i \le 0$)\\ Select $\tau_i = \tau_{\text{neg}}$ (e.g., $1.05$)};
+
+	% Soft Gating Engine
+	\node[gatebox, below=3.6cm of adv] (gate) {\textbf{SAPO Continuous Soft Gating Engine}\\ $r_{i,t}(\theta) = \frac{\pi_\theta(y_{i,t} \mid q, y_{i,<t})}{\pi_{\theta_{\text{old}}}(y_{i,t} \mid q, y_{i,<t})}, \quad f_{i,t}(r_{i,t}) = \frac{4}{\tau_i} \sigma\big(\tau_i (r_{i,t} - 1)\big)$\\ Gradient Weight: $w_{i,t}(\theta) = \text{sech}^2\left(\frac{\tau_i}{2}(r_{i,t}(\theta) - 1)\right)$};
+
+	% Policy Optimization Update
+	\node[optbox, below=1.4cm of gate] (opt) {\textbf{Minibatch Gradient Optimization}\\ $J_{\text{SAPO}}(\theta) = \frac{1}{G} \sum_{i=1}^G \frac{1}{|y_i|} \sum_{t=1}^{|y_i|} f_{i,t}(r_{i,t}) \hat{A}_i$\\ Update: $\theta \leftarrow \theta + \eta \nabla_\theta J_{\text{SAPO}}(\theta)$};
+
+	% Periodic Synchronization
+	\node[rolloutbox, left=2.2cm of adv] (sync) {\textbf{Policy Sync}\\ $\theta_{\text{old}} \leftarrow \theta$};
+
+	% Connections
+	\draw[arrow] (prompt) -- (rollout);
+	\draw[arrow] (rollout) -- node[right, font=\footnotesize] {Group Rewards} (adv);
+	\draw[arrow] (adv) -| (temppos);
+	\draw[arrow] (adv) -| (tempneg);
+	\draw[arrow] (temppos) |- (gate);
+	\draw[arrow] (tempneg) |- (gate);
+	\draw[arrow] (gate) -- node[right, font=\footnotesize] {Smooth Gradients} (opt);
+
+	% Backward Feedback
+	\draw[dasharrow] (opt) -| (sync);
+	\draw[dasharrow] (sync) |- (rollout);
+
+\end{tikzpicture}
+\end{latin}
+\caption{دیاگرام جامع جریان داده، انتخاب دمای نامتقارن، دروازه‌بندی نرم و بهینه‌سازی خط‌مشی در الگوریتم \model{SAPO}.}
+\label{fig:sapo_pipeline}
+\end{figure}
+
+\subsubsection*{شبه‌کد الگوریتم SAPO}
+
+شبه‌کد استاندارد پیاده‌سازی بهینه‌سازی خط‌مشی تطبیقی نرم در الگوریتم~\ref{alg:sapo_pseudocode} ارائه شده است.
+
+\begin{latin}
+\begin{algorithm}[H]
+\caption{Soft Adaptive Policy Optimization (SAPO)}
+\label{alg:sapo_pseudocode}
+\begin{algorithmic}[1]
+\State \textbf{Input:} Policy parameters $\theta_0$, behavior policy checkpoint $\theta_{\text{old}} = \theta_0$, prompt dataset $\mathcal{D}$, group size $G$, learning rate $\eta$, positive temperature $\tau_{\text{pos}}$, negative temperature $\tau_{\text{neg}}$, number of mini-batches $M$, epochs $K$.
+\For{$\text{iteration} = 1, 2, \dots, N_{\text{iters}}$}
+    \State Sample a batch of queries $\{q_1, q_2, \dots, q_B\} \sim \mathcal{D}$.
+    \State Initialize rollout storage buffer $\mathcal{B}_{\text{rollout}} \leftarrow \emptyset$.
+    \For{each query $q \in \{q_1, \dots, q_B\}$}
+        \State Sample $G$ responses $\{y_1, \dots, y_G\} \sim \pi_{\theta_{\text{old}}}(\cdot \mid q)$.
+        \State Compute rewards $\{R_1, \dots, R_G\}$ via task-specific environment/verifier.
+        \State Compute mean $\mu_R = \frac{1}{G}\sum_{j=1}^G R_j$ and std $\sigma_R = \sqrt{\frac{1}{G}\sum_{j=1}^G (R_j - \mu_R)^2} + 10^{-8}$.
+        \For{$i = 1, \dots, G$}
+            \State Compute group-normalized advantage: $\hat{A}_i = (R_i - \mu_R) / \sigma_R$.
+            \State Store cached old log-probabilities $\{\log \pi_{\theta_{\text{old}}}(y_{i,t} \mid q, y_{i,<t})\}_{t=1}^{|y_i|}$.
+            \State Append tuple $(q, y_i, \hat{A}_i, \{\log \pi_{\theta_{\text{old}}}(y_{i,t})\}_{t=1}^{|y_i|})$ to $\mathcal{B}_{\text{rollout}}$.
+        \EndFor
+    \EndFor
+    \State Partition $\mathcal{B}_{\text{rollout}}$ into $M$ disjoint mini-batches $\{\mathcal{M}_1, \dots, \mathcal{M}_M\}$.
+    \For{$\text{epoch} = 1, \dots, K$}
+        \For{each mini-batch $\mathcal{M}_b$}
+            \State Initialize mini-batch loss: $\mathcal{L}_{\text{mini}}(\theta) \leftarrow 0$.
+            \For{each sample $(q, y_i, \hat{A}_i, \text{log-probs}) \in \mathcal{M}_b$}
+                \State Select asymmetric temperature: $\tau_i \leftarrow \tau_{\text{pos}}$ if $\hat{A}_i > 0$ else $\tau_{\text{neg}}$.
+                \State Compute current log-probabilities $\{\log \pi_\theta(y_{i,t} \mid q, y_{i,<t})\}_{t=1}^{|y_i|}$.
+                \State Initialize sequence objective: $\mathcal{L}_{\text{seq}} \leftarrow 0$.
+                \For{$t = 1, \dots, |y_i|$}
+                    \State Compute token ratio: $r_{i,t}(\theta) = \exp\left( \log \pi_\theta(y_{i,t}) - \log \pi_{\theta_{\text{old}}}(y_{i,t}) \right)$.
+                    \State Compute soft gate: $f_{i,t}(r_{i,t}) = \frac{4}{\tau_i} \cdot \sigma\left(\tau_i (r_{i,t}(\theta) - 1)\right)$.
+                    \State $\mathcal{L}_{\text{seq}} \leftarrow \mathcal{L}_{\text{seq}} + f_{i,t}(r_{i,t}(\theta)) \cdot \hat{A}_i$.
+                \EndFor
+                \State $\mathcal{L}_{\text{mini}}(\theta) \leftarrow \mathcal{L}_{\text{mini}}(\theta) - \frac{1}{|y_i|} \mathcal{L}_{\text{seq}}$.
+            \EndFor
+            \State Update parameters: $\theta \leftarrow \theta - \eta \cdot \nabla_\theta \left( \frac{1}{|\mathcal{M}_b|} \mathcal{L}_{\text{mini}}(\theta) \right)$.
+        \EndFor
+    \EndFor
+    \State Synchronize behavior policy checkpoint: $\theta_{\text{old}} \leftarrow \theta$.
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+\end{latin}
+
+\subsubsection*{نتایج تجربی و ارزیابی بنچمارک‌ها}
+
+عملکرد الگوریتم \model{SAPO} در مقایسه با \model{GRPO-R2} و \model{GSPO} روی مدل استدلال‌گر \en{Qwen3-30B-A3B-Base} در جدول~\ref{tab:sapo_math_benchmarks} خلاصه شده است.
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه عملکرد نهایی و پایداری در بنچمارک‌های استدلال ریاضی (\en{Pass@1} روی ۱۶ نمونه) \cite{gao2025sapo}.}
+\label{tab:sapo_math_benchmarks}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{الگوریتم} & \textbf{\en{AIME 2025}} & \textbf{\en{HMMT 2025}} & \textbf{\en{BeyondAIME}} & \textbf{وضعیت پایداری آموزش} \\
+\midrule
+\model{GRPO-R2} \cite{shao2024deepseekmath, zheng2025group} & 76.5\% & 57.0\% & 51.5\% & سقوط در گام 750 (\en{Collapse}) \\
+\model{GSPO} \cite{zheng2025group} & 79.0\% & 61.0\% & 54.0\% & سقوط در گام 1250 (\en{Collapse}) \\
+\textbf{\model{SAPO} (پیشنهادی)} & \textbf{82.2\%} & \textbf{64.5\%} & \textbf{58.8\%} & \textbf{کاملاً پایدار ($>1750$ گام)} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{تحلیل ابلیشن دمای نامتقارن ($\tau_{\text{neg}}$ در برابر $\tau_{\text{pos}}$):}
+جدول~\ref{tab:sapo_temp_ablation} تأثیر تنظیم دماهای مختلف را نشان می‌دهد. بر اساس این نتایج، تعیین دمای بالاتر برای توکن‌های با مزیت منفی ($\tau_{\text{neg}} > \tau_{\text{pos}}$) نقش حیاتی در جلوگیری از انحرافات گرادیانی و تثبیت آموزش ایفا می‌کند.
+
+\begin{table}[htbp]
+\centering
+\caption{تحلیل ابلیشن تنظیمات دما در الگوریتم \model{SAPO} روی مدل \en{Qwen3-30B-A3B} \cite{gao2025sapo}.}
+\label{tab:sapo_temp_ablation}
+\begin{tabular}{lccl}
+\toprule
+\textbf{پیکربندی دما} & \textbf{مقادیر} & \textbf{دقت در \en{AIME25}} & \textbf{دینامیک آموزش} \\
+\midrule
+$\tau_{\text{neg}} < \tau_{\text{pos}}$ & $\tau_{\text{neg}} = 0.95, \, \tau_{\text{pos}} = 1.00$ & 71.0\% & ناپایداری بسیار شدید و سقوط زودهنگام \\
+$\tau_{\text{neg}} = \tau_{\text{pos}}$ & $\tau_{\text{neg}} = 1.00, \, \tau_{\text{pos}} = 1.00$ & 78.5\% & پایداری متوسط با افت‌های مقطعی \\
+\textbf{$\tau_{\text{neg}} > \tau_{\text{pos}}$ (اصلی)} & $\mathbf{\tau_{\text{neg}} = 1.05, \, \tau_{\text{pos}} = 1.00}$ & \textbf{82.2\%} & \textbf{بالاترین پایداری و رشد پیوسته} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{آموزش مدل‌های چندوجهی (\en{Qwen3-VL}):}
+در ارزیابی‌های مقیاس بزرگ روی سری مدل‌های چندوجهی \en{Qwen3-VL-30B-A3B} در چهار بنچمارک چندوجهی و متنی شامل \en{AIME25} (با ۳۲ نمونه)، \en{LiveCodeBench v6} \cite{jain2024livecodebench} (با ۸ نمونه)، \en{ZebraLogic} \cite{lin2025zebralogic} و \en{MathVision} \cite{wang2024measuring}، الگوریتم \model{SAPO} تحت بودجه محاسباتی یکسان موفق شد به امتیاز اعتبارسنجی تجمیعی \textbf{0.76} دست یابد و با اختلاف معنادار از \model{GSPO} (با امتیاز 0.745) و \model{GRPO-R2} (با امتیاز 0.738) پیشی بگیرد.
+
+\subsubsection*{جمع‌بندی}
+
+الگوریتم \model{SAPO} با جایگزین کردن برش سخت ناپیوسته با یک ناحیه اطمینان نرم ($\text{sech}^2$) و اعمال مکانیزم تنظیم دمای نامتقارن برای مهار نویز گرادیان‌های منفی، پایداری بهینه‌سازی خط‌مشی را متحول ساخته است. این الگوریتم بدون نیاز به سازوکارهای پرهزینه نظیر بازپخش مسیریابی (\en{Routing Replay}) در مدل‌های \en{MoE}، بالاترین دقت و بهره‌وری داده را به نمایش گذاشته و به عنوان چارچوبی استاندارد برای آموزش مدل‌های پیشرفته نسل جدید زبانی و چندوجهی شناخته می‌شود.
