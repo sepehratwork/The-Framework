@@ -383,6 +383,118 @@ Ilya Loshchilov and Frank Hutter.
 \newblock {\em International Conference on Learning Representations (ICLR)},
   2019.
 
+\bibitem{lambert2024tulu3}
+Nathan Lambert, Jacob Morrison, Valentina Pyatkin, Shengyi Huang, Hamish
+  Ivison, Faeze Brahman, Lester James~V Miranda, Alisa Liu, Nouha Dziri, Xinxi
+  Lyu, et~al.
+\newblock T{\"u}lu 3: Pushing frontiers in open language model post-training.
+\newblock {\em arXiv preprint arXiv:2411.15124}, 2024.
+
+\bibitem{christiano2017deep}
+Paul~F Christiano, Jan Leike, Tom Brown, Miljan Martic, Shane Legg, and Dario
+  Amodei.
+\newblock Deep reinforcement learning from human preferences.
+\newblock {\em Advances in Neural Information Processing Systems}, 30, 2017.
+
+\bibitem{stiennon2020learning}
+Nisan Stiennon, Long Ouyang, Jeffrey Wu, Daniel Ziegler, Ryan Lowe, Chelsea
+  Voss, Alec Radford, Dario Amodei, and Paul~F Christiano.
+\newblock Learning to summarize with human feedback.
+\newblock {\em Advances in Neural Information Processing Systems},
+  33:3008--3021, 2020.
+
+\bibitem{gao2023scaling}
+Leo Gao, John Schulman, and Jacob Hilton.
+\newblock Scaling laws for reward model overoptimization.
+\newblock {\em International Conference on Machine Learning}, pages
+  10835--10866, 2023.
+
+\bibitem{singhal2024long}
+Prasann Singhal, Tanya Goyal, Jiacheng Xu, and Greg Durrett.
+\newblock A long way to go: Investigating length correlations in rlhf.
+\newblock {\em arXiv preprint arXiv:2403.07862}, 2024.
+
+\bibitem{cobbe2021training}
+Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, Heewoo Jun, Lukasz
+  Kaiser, Matthias Plappert, Jerry Tworek, Jacob Hilton, Reiichiro Nakano,
+  et~al.
+\newblock Training verifiers to solve math word problems.
+\newblock {\em arXiv preprint arXiv:2110.14168}, 2021.
+
+\bibitem{hendrycks2021measuring}
+Dan Hendrycks, Collin Burns, Saurav Kadavath, Akul Arora, Steven Basart, Eric
+  Tang, Dawn Song, and Jacob Steinhardt.
+\newblock Measuring mathematical problem solving with the math dataset.
+\newblock {\em arXiv preprint arXiv:2103.03874}, 2021.
+
+\bibitem{zhou2023instruction}
+Jeffrey Zhou, Tianjian Lu, Swaroop Mishra, Siddhartha Brahma, Sujoy Basu,
+  Yi~Luan, Denny Zhou, and Le~Hou.
+\newblock Instruction-following evaluation for large language models.
+\newblock {\em arXiv preprint arXiv:2311.07911}, 2023.
+
+\bibitem{zelikman2022star}
+Eric Zelikman, Yuhuai Wu, Jesse Mu, and Noah Goodman.
+\newblock Star: Bootstrapping reasoning with reasoning.
+\newblock {\em Advances in Neural Information Processing Systems},
+  35:15476--15488, 2022.
+
+\bibitem{zelikman2024quiet}
+Eric Zelikman, Georges Harik, Yining Shao, Varuna Jayasiri, Nick Haber, and
+  Noah~D Goodman.
+\newblock Quiet-star: Language models can teach themselves to think before
+  speaking.
+\newblock {\em arXiv preprint arXiv:2403.09629}, 2024.
+
+\bibitem{hoffman2023training}
+Matthew~D Hoffman, Du~Phan, David Dohan, Sholto Douglas, Tuan~Anh Le, Aaron
+  Parisi, Pavel Sountsov, Charles Sutton, Sharad Vikram, and Rif~A Saurous.
+\newblock Training chain-of-thought via latent-variable inference.
+\newblock In {\em Thirty-seventh Conference on Neural Information Processing
+  Systems}, 2023.
+
+\bibitem{gehring2024rlef}
+Jonas Gehring, Kunhao Zheng, Jade Copet, Valerio Mella, Taco Cohen, and Gabriel
+  Synnaeve.
+\newblock Rlef: Grounding code llms in execution feedback with reinforcement
+  learning.
+\newblock {\em arXiv preprint arXiv:2410.02089}, 2024.
+
+\bibitem{kazemnejad2024vineppo}
+Amirhossein Kazemnejad, Milad Aghajohari, Eva Portelance, Alessandro Sordoni,
+  Siva Reddy, Aaron Courville, and Nicolas~Le Roux.
+\newblock Vineppo: Unlocking rl potential for llm reasoning through refined
+  credit assignment.
+\newblock {\em arXiv preprint arXiv:2410.01679}, 2024.
+
+\bibitem{kwon2023efficient}
+Woosuk Kwon, Zhuohan Li, Siyuan Zhuang, Ying Sheng, Lianmin Zheng, Cody~Hao Yu,
+  Joseph~E Gonzalez, Hao Zhang, and Ion Stoica.
+\newblock Efficient memory management for large language model serving with
+  pagedattention.
+\newblock In {\em Proceedings of the 29th ACM SIGOPS Symposium on Operating
+  Systems Principles}, pages 611--626, 2023.
+
+\bibitem{rajbhandari2020zero}
+Samyam Rajbhandari, Jeff Rasley, Olatunji Ruwase, and Yuxiong He.
+\newblock Zero: Memory optimizations toward training trillion parameter models.
+\newblock In {\em SC20: International Conference for High Performance
+  Computing, Networking, Storage and Analysis}, pages 1--16. IEEE, 2020.
+
+\bibitem{noukhovitch2024asynchronous}
+Michael Noukhovitch, Shengyi Huang, Sophie Xhonneux, Arian Hosseini, Rishabh
+  Agarwal, and Aaron Courville.
+\newblock Asynchronous rlhf: Faster and more efficient off-policy rl for
+  language models.
+\newblock {\em arXiv preprint arXiv:2410.18252}, 2024.
+
+\bibitem{huang2024implementation}
+Shengyi Huang, Michael Noukhovitch, Arian Hosseini, Kashif Rasul, Weixun Wang,
+  and Lewis Tunstall.
+\newblock The n+ implementation details of rlhf with ppo: A case study on tl;dr
+  summarization.
+\newblock In {\em First Conference on Language Modeling}, 2024.
+
 \bibitem{wang2016sample}
 Ziyu Wang, Victor Bapst, Nicolas Heess, Volodymyr Mnih, Remi Munos, Koray
   Kavukcuoglu, and Nando de~Freitas.
