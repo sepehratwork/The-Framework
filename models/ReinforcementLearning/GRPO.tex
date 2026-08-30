@@ -1,1 +1,288 @@
-\item \textbf asd
+\subsection{الگوریتم بهینه‌سازی نسبی خط‌مشی گروهی (\en{Group Relative Policy Optimization - GRPO})}
+
+الگوریتم \model{GRPO} که توسط تیم \en{DeepSeek-AI} در سال ۲۰۲۴ معرفی شد \cite{shao2024deepseekmath}، یکی از پیشرفته‌ترین و کارآمدترین الگوریتم‌های یادگیری تقویتی در حوزه هم‌ترازسازی مدل‌های زبانی بزرگ (\en{LLMs}) برای مسائل استدلالی پیچیده و ریاضیات به شمار می‌رود. این الگوریتم با بازتعریف شیوه محاسبه مزیت و حذف کامل مدل منتقد (\en{Critic Model})، بار حافظه و محاسبات الگوریتم‌های سنتی نظیر \model{PPO} را به طور چشمگیری کاهش داده و همگرایی پایدارتری را به نمایش می‌گذارد.
+
+\subsubsection*{تاریخچه، انگیزه و ضرورت پیدایش الگوریتم}
+
+الگوریتم بهینه‌سازی تقریبی خط‌مشی (\model{PPO}) \cite{schulman2017proximal} به عنوان استاندارد اصلی در مرحله یادگیری تقویتی از بازخورد انسانی (\en{RLHF}) \cite{ouyang2022training} شناخته می‌شود. با این حال، استفاده از ساختار کنشگر-منتقد (\en{Actor-Critic}) در مدل‌های زبانی با موانع اساسی زیر همراه است:
+
+\begin{itemize}
+    \item \textbf{بار سنگین حافظه و محاسبات (\en{Memory and Compute Footprint}):} در \model{PPO} استاندارد، مدل منتقد ($V_\psi$) از نظر ابعاد پارامتری هم‌اندازه مدل خط‌مشی ($\pi_\theta$) است. بارگذاری، محاسبه گرادیان و نگهداری متغیرهای بهینه‌ساز برای هر دو مدل، حجم عظیمی از حافظه پردازشی (\en{VRAM}) را اشغال می‌کند.
+    \item \textbf{پاداش‌های تنک و عدم انطباق با تقریب ارزش توکنی (\en{Sparse Reward Mismatch}):} در استدلال‌های ریاضی، پاداش‌ها معمولاً در انتهای توالی (\en{Outcome}) یا در انتهای هر گام استدلال (\en{Process}) صادر می‌شوند. آموزش یک تابع ارزش برای پیش‌بینی ارزش تک‌تک توکن‌ها در طول یک متن طولانی، دارای واریانس بسیار بالا و خطای تقریب شدید است.
+    \item \textbf{طبیعت مقایسه‌ای مدل‌های پاداش (\en{Comparative Nature of Reward Models}):} مدل‌های پاداش ذاتاً بر اساس مقایسه نسبی بین گزینه‌ها آموزش می‌بینند. تلاش مدل منتقد برای یادگیری ارزش مطلق به صورت نقطه‌ای، همخوانی کاملی با ماهیت نسبی سیگنال‌های پاداش ندارد.
+\end{itemize}
+
+الگوریتم \model{GRPO} با حذف کامل مدل ارزش و جایگزینی آن با خط مبنای آماری حاصل از گروهی از پاسخ‌های تولیدشده برای یک پرسش یکسان، این چالش‌ها را به طور بنیادین برطرف می‌سازد.
+
+\subsubsection*{مبانی نظری و اشتقاق‌های کامل ریاضی}
+
+فرض کنید $q$ یک پرسش از توزیع داده‌های آموزشی باشد. الگوریتم \model{GRPO} به ازای هر پرسش $q$، گروهی متشکل از $G$ خروجی $\{o_1, o_2, \dots, o_G\}$ را از خط‌مشی پیشین $\pi_{\theta_{\text{old}}}$ نمونه‌برداری می‌کند.
+
+\textbf{۱. تابع هدف بهینه‌سازی \model{GRPO}:}
+تابع هدف سراسری این الگوریتم به صورت زیر فرمول‌بندی می‌شود:
+\begin{align}
+	\mathcal{J}_{\text{GRPO}}(\theta) = \mathbb{E}_{\substack{q \sim P(Q) \\ \{o_i\}_{i=1}^G \sim \pi_{\theta_{\text{old}}}(O|q)}} \Bigg[ \frac{1}{G} \sum_{i=1}^G \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} \Bigg( &\min \Bigg( \frac{\pi_\theta(o_{i,t}|q, o_{i,<t})}{\pi_{\theta_{\text{old}}}(o_{i,t}|q, o_{i,<t})} \hat{A}_{i,t}, \nonumber \\
+	&\text{clip}\left(\frac{\pi_\theta(o_{i,t}|q, o_{i,<t})}{\pi_{\theta_{\text{old}}}(o_{i,t}|q, o_{i,<t})}, 1-\varepsilon, 1+\varepsilon\right) \hat{A}_{i,t} \Bigg) \nonumber \\
+	&- \beta \, \mathbb{D}_{\text{KL}}\left(\pi_\theta \parallel \pi_{\text{ref}}\right) \Bigg) \Bigg]
+\end{align}
+که در آن $\varepsilon$ آستانه برش برای جلوگیری از به‌روزرسانی‌های مخرب، $\beta$ ضریب جریمه واگرایی کولبک-لایبلر و $\hat{A}_{i,t}$ مزیت نرمال‌شده در سطح گروه است.
+
+\textbf{۲. اثبات نااریبی و نامنفی بودن تخمین‌گر واگرایی \en{KL}:}
+در این الگوریتم، به جای تزریق جریمه واگرایی به عنوان پاداش به ازای هر توکن، از تخمین‌گر نااریب شولمن \cite{schulman2020approximating} به صورت مستقیم در تابع زیان استفاده می‌شود:
+\begin{equation}
+	\mathbb{D}_{\text{KL}}(\pi_\theta \parallel \pi_{\text{ref}}) = \frac{\pi_{\text{ref}}(o_{i,t}|q, o_{i,<t})}{\pi_\theta(o_{i,t}|q, o_{i,<t})} - \log \frac{\pi_{\text{ref}}(o_{i,t}|q, o_{i,<t})}{\pi_\theta(o_{i,t}|q, o_{i,<t})} - 1
+\end{equation}
+
+\textit{اثبات نامنفی بودن:} فرض کنید $r = \frac{\pi_{\text{ref}}}{\pi_\theta} > 0$ باشد. تابع $f(r) = r - \log r - 1$ را در نظر می‌گیریم. مشتقات اول و دوم این تابع عبارتند از:
+\begin{equation}
+	f'(r) = 1 - \frac{1}{r}, \qquad f''(r) = \frac{1}{r^2} > 0 \quad (\forall r > 0)
+\end{equation}
+از آنجا که مشتق دوم همواره مثبت است، تابع اکیداً محدب بوده و نقطه بحرانی آن در $f'(r) = 0 \implies r = 1$ یک کمینه مطلق است:
+\begin{equation}
+	f(1) = 1 - \log(1) - 1 = 0 \implies f(r) \ge 0 \quad (\forall r > 0)
+\end{equation}
+
+\textit{اثبات نااریبی:} امید ریاضی این تخمین‌گر تحت توزیع کنونی خط‌مشی $\pi_\theta$ برابر است با:
+\begin{align}
+	\mathbb{E}_{x \sim \pi_\theta} \left[ \frac{\pi_{\text{ref}}(x)}{\pi_\theta(x)} - \log \frac{\pi_{\text{ref}}(x)}{\pi_\theta(x)} - 1 \right] &= \sum_x \pi_\theta(x) \left( \frac{\pi_{\text{ref}}(x)}{\pi_\theta(x)} - \log \frac{\pi_{\text{ref}}(x)}{\pi_\theta(x)} - 1 \right) \nonumber \\
+	&= \sum_x \pi_{\text{ref}}(x) - \sum_x \pi_\theta(x) \log \frac{\pi_{\text{ref}}(x)}{\pi_\theta(x)} - \sum_x \pi_\theta(x) \nonumber \\
+	&= 1 + \sum_x \pi_\theta(x) \log \frac{\pi_\theta(x)}{\pi_{\text{ref}}(x)} - 1 = D_{\text{KL}}(\pi_\theta \parallel \pi_{\text{ref}})
+\end{align}
+
+\textbf{۳. اشتقاق گرادیان و ضریب گرادیان (\en{Gradient Coefficient}):}
+با در نظر گرفتن شرایط خط‌مشی در گام نخست ($\pi_{\theta_{\text{old}}} \approx \pi_\theta$)، مشتق تابع هدف را نسبت به پارامترهای $\theta$ به دست می‌آوریم:
+\begin{equation}
+	\nabla_\theta \mathcal{L}_{i,t}(\theta) = \nabla_\theta \left[ \frac{\pi_\theta(o_{i,t})}{\pi_{\theta_{\text{old}}}(o_{i,t})} \hat{A}_{i,t} \right] - \beta \nabla_\theta \left[ \frac{\pi_{\text{ref}}(o_{i,t})}{\pi_\theta(o_{i,t})} - \log \frac{\pi_{\text{ref}}(o_{i,t})}{\pi_\theta(o_{i,t})} - 1 \right]
+\end{equation}
+
+با استفاده از تساوی $\nabla_\theta \pi_\theta = \pi_\theta \nabla_\theta \log \pi_\theta$:
+\begin{align}
+	\nabla_\theta \left[ \frac{\pi_\theta}{\pi_{\theta_{\text{old}}}} \hat{A}_{i,t} \right] &= \hat{A}_{i,t} \nabla_\theta \log \pi_\theta(o_{i,t}) \\
+	\nabla_\theta \left[ \frac{\pi_{\text{ref}}}{\pi_\theta} - \log \pi_{\text{ref}} + \log \pi_\theta - 1 \right] &= -\frac{\pi_{\text{ref}}}{\pi_\theta^2} \nabla_\theta \pi_\theta + \frac{1}{\pi_\theta} \nabla_\theta \pi_\theta = \left( 1 - \frac{\pi_{\text{ref}}}{\pi_\theta} \right) \nabla_\theta \log \pi_\theta(o_{i,t})
+\end{align}
+
+با تجمیع دو عبارت فوق، گرادیان کامل به صورت زیر حاصل می‌شود:
+\begin{equation}
+	\nabla_\theta \mathcal{J}_{\text{GRPO}}(\theta) = \mathbb{E} \left[ \frac{1}{G} \sum_{i=1}^G \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} \left( \hat{A}_{i,t} + \beta \left( \frac{\pi_{\text{ref}}(o_{i,t})}{\pi_\theta(o_{i,t})} - 1 \right) \right) \nabla_\theta \log \pi_\theta(o_{i,t}|q, o_{i,<t}) \right]
+\end{equation}
+بنابراین ضریب گرادیان (\en{Gradient Coefficient - GC}) در این روش برابر است با:
+\begin{equation}
+	GC_{\text{GRPO}}(q, o, t, \pi_{\theta_{\text{rm}}}) = \hat{A}_{i,t} + \beta \left( \frac{\pi_{\text{ref}}(o_{i,t}|q, o_{i,<t})}{\pi_\theta(o_{i,t}|q, o_{i,<t})} - 1 \right)
+\end{equation}
+
+\subsubsection*{رویکردهای نظارت و محاسبه مزیت در GRPO}
+
+الگوریتم \model{GRPO} امکان بهره‌گیری از دو نوع ناظر را برای تعیین پاداش فراهم می‌سازد:
+
+\textbf{۱. نظارت بر خروجی (\en{Outcome Supervision RL with GRPO}):}
+مدل پاداش به ازای هر پاسخ کامل $o_i$ یک امتیاز $r_i$ تولید می‌کند. بردار پاداش گروهی $\mathbf{r} = \{r_1, r_2, \dots, r_G\}$ به شکل زیر نرمال‌سازی می‌شود:
+\begin{equation}
+	\hat{A}_{i,t} = \tilde{r}_i = \frac{r_i - \text{mean}(\mathbf{r})}{\text{std}(\mathbf{r}) + 10^{-8}}, \quad \forall t \in \{1, \dots, |o_i|\}
+\end{equation}
+
+\textbf{۲. نظارت بر فرآیند (\en{Process Supervision RL with GRPO}):}
+مدل پاداش فرایندی (\en{PRM}) \cite{lightman2023let, wang2023math} به انتهای هر گام استدلال $j$ پاداش $r_i^{\text{index}(j)}$ اختصاص می‌دهد. با نرمال‌سازی کل پاداش‌های مرحله‌ای درون گروه:
+\begin{equation}
+	\tilde{r}_i^{\text{index}(j)} = \frac{r_i^{\text{index}(j)} - \text{mean}(\mathbf{R})}{\text{std}(\mathbf{R}) + 10^{-8}}
+\end{equation}
+سپس مزیت هر توکن در موقعیت $t$ از مجموع پاداش‌های گام‌های پسین محاسبه می‌شود:
+\begin{equation}
+	\hat{A}_{i,t} = \sum_{\substack{j=1 \\ \text{index}(j) \ge t}}^{K_i} \tilde{r}_i^{\text{index}(j)}
+\end{equation}
+
+\subsubsection*{چارچوب یکپارچه روش‌های هم‌ترازسازی}
+
+مقاله یک صورت‌بندی فراگیر ارائه می‌دهد که تمامی روش‌های تنظیم دقیق و یادگیری تقویتی را تحت معادله گرادیان زیر متحد می‌سازد:
+\begin{equation}
+	\nabla_\theta \mathcal{J}_{\mathcal{A}}(\theta) = \mathbb{E}_{(q, o) \sim \mathcal{D}} \left[ \frac{1}{|o|} \sum_{t=1}^{|o|} GC_{\mathcal{A}}(q, o, t, \pi_{\text{rf}}) \nabla_\theta \log \pi_\theta(o_t | q, o_{<t}) \right]
+\end{equation}
+
+جدول~\ref{tab:unified_paradigm} مقایسه ساختاری این روش‌ها را نشان می‌دهد:
+
+\begin{table}[htbp]
+\centering
+\caption{تحلیل ساختار روش‌های هم‌ترازسازی در چارچوب یکپارچه گرادیان \cite{shao2024deepseekmath}.}
+\label{tab:unified_paradigm}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{روش (\en{Method})} & \textbf{منبع داده ($\mathcal{D}$)} & \textbf{تابع پاداش ($\pi_{\text{rf}}$)} & \textbf{ضریب گرادیان ($GC$)} & \textbf{نوع نمونه‌برداری} \\
+\midrule
+\model{SFT} & $q, o \sim P_{\text{sft}}(Q, O)$ & انتخاب انسانی & $1$ & آفلاین ایستا \\
+\model{RFT} \cite{yuan2023scaling} & $q \sim P_{\text{sft}}(Q), \, o \sim \pi_{\text{sft}}(O|q)$ & قاعده قطعی (\en{Rule}) & $\mathbb{I}(o \text{ is correct})$ & آفلاین تصادفی \\
+\model{DPO} \cite{rafailov2023direct} & $q \sim P_{\text{sft}}(Q), \, o^+, o^- \sim \pi_{\text{sft}}(O|q)$ & ترجیح / قاعده & $\sigma\left( \beta \log \frac{\pi_\theta(o^-)}{\pi_{\text{ref}}(o^-)} - \beta \log \frac{\pi_\theta(o^+)}{\pi_{\text{ref}}(o^+)} \right)$ & آفلاین زوجی \\
+\model{Online RFT} & $q \sim P_{\text{sft}}(Q), \, o \sim \pi_\theta(O|q)$ & قاعده قطعی (\en{Rule}) & $\mathbb{I}(o \text{ is correct})$ & آنلاین تصادفی \\
+\model{PPO} \cite{schulman2017proximal} & $q \sim P_{\text{sft}}(Q), \, o \sim \pi_\theta(O|q)$ & مدل پاداش & $A_t = \text{GAE}(\{r_{\ge t}\}, V_\psi)$ & آنلاین پیوسته \\
+\textbf{\model{GRPO}} & $q \sim P_{\text{sft}}(Q), \, \{o_i\}_{i=1}^G \sim \pi_\theta(O|q)$ & مدل پاداش / فرآیند & $\hat{A}_{i,t} + \beta \left( \frac{\pi_{\text{ref}}(o_{i,t})}{\pi_\theta(o_{i,t})} - 1 \right)$ & \textbf{آنلاین گروهی} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsubsection*{تحلیل‌های تئوری اطلاعات، آمار و چرایی موفقیت الگوریتم}
+
+\begin{itemize}
+    \item \textbf{کاهش واریانس بدون منتقد:} میانگین پاداش درون‌گروهی $b(q) = \frac{1}{G} \sum_{i=1}^G r_i$ به عنوان خط مبنای نااریب عمل کرده و واریانس تخمین‌گر به میزان $\mathcal{O}(1/G)$ کاهش می‌یابد بدون آنکه نیازی به خطای تخمین مدل منتقد ($\epsilon_{\text{critic}} = V^*(s) - V_\psi(s)$) باشد.
+    \item \textbf{تحلیل معیارهای \en{Pass@K} در برابر \en{Maj@K}:} ارزیابی‌های تجربی روی بنچمارک‌های \en{GSM8K} و \en{MATH} نشان می‌دهند که یادگیری تقویتی توان بالقوه خام (\en{Pass@K}) مدل را نسبت به مرحله \en{SFT} تغییر چشمگیری نمی‌دهد؛ بلکه توزیع احتمالاتی پاسخ‌ها را کالیبره کرده و با متمرکز ساختن چگالی احتمال حول پاسخ‌های صحیح، دقت رأی‌گیری اکثریت (\en{Maj@K}) و پاسخ برتر (\en{Top-1}) را به شدت ارتقا می‌بخشد.
+\end{itemize}
+
+\subsubsection*{دیاگرام معماری و جریان داده‌های الگوریتم}
+
+شکل~\ref{fig:grpo_architecture} ساختار داده‌برداری گروهی، نرمال‌سازی آماری، محاسبه ضریب گرادیان و چرخه به‌روزرسانی بدون منتقد را در الگوریتم \model{GRPO} نمایش می‌دهد.
+
+\begin{figure}[htbp]
+\centering
+\begin{latin}
+\begin{tikzpicture}[
+	node distance=1.8cm and 2.2cm,
+	box/.style={rectangle, rounded corners=6pt, draw=blue!70!black, fill=blue!5, thick, inner sep=9pt, align=center, font=\small\sffamily, drop shadow},
+	groupbox/.style={rectangle, rounded corners=6pt, draw=purple!70!black, fill=purple!10, thick, inner sep=9pt, align=center, font=\small\sffamily, drop shadow},
+	rewardbox/.style={rectangle, rounded corners=6pt, draw=teal!70!black, fill=teal!10, thick, inner sep=9pt, align=center, font=\small\sffamily, drop shadow},
+	lossbox/.style={rectangle, rounded corners=6pt, draw=red!70!black, fill=red!5, thick, inner sep=9pt, align=center, font=\small\sffamily, drop shadow},
+	optbox/.style={rectangle, rounded corners=6pt, draw=orange!80!black, fill=orange!10, thick, inner sep=9pt, align=center, font=\small\sffamily, drop shadow},
+	arrow/.style={-{Stealth[scale=1.1]}, thick, draw=blue!80!black},
+	dasharrow/.style={-{Stealth[scale=1.1]}, thick, dashed, draw=purple!80!black}
+]
+
+	% Input Prompt
+	\node[box] (prompt) {\textbf{Input Question Batch}\\ Sample $q \sim P(Q)$};
+
+	% Group Sampling
+	\node[groupbox, below=of prompt] (sample) {\textbf{Group Exploration Engine}\\ Sample $G$ independent outputs $\{o_1, o_2, \dots, o_G\} \sim \pi_{\theta_{\text{old}}}(\cdot|q)$};
+
+	% Reward Model Evaluation
+	\node[rewardbox, below=of sample] (reward) {\textbf{Reward Scoring Function ($r_\varphi$)}\\ Compute scalar rewards $\{r_1, r_2, \dots, r_G\}$ for each completion};
+
+	% Group Normalization Engine
+	\node[groupbox, below=of reward] (stat) {\textbf{Group Statistics Normalizer (No Critic!)}\\ $\mu_{\mathbf{r}} = \frac{1}{G}\sum r_i, \quad \sigma_{\mathbf{r}} = \sqrt{\frac{1}{G}\sum (r_i - \mu_{\mathbf{r}})^2}$\\ Normalized Advantage: $\hat{A}_i = \frac{r_i - \mu_{\mathbf{r}}}{\sigma_{\mathbf{r}} + \epsilon}$};
+
+	% Split into Surrogate Objective and KL Divergence
+	\node[lossbox, below left=1.8cm and -0.8cm of stat] (surr) {\textbf{Proximal Clipped Objective}\\ $\rho_{i,t} = \frac{\pi_\theta(o_{i,t}|q, o_{<t})}{\pi_{\theta_{\text{old}}}(o_{i,t}|q, o_{<t})}$\\ $\mathcal{L}_{\text{CLIP}} = \min\left(\rho_{i,t}\hat{A}_i, \text{clip}(\rho_{i,t}, 1\pm\varepsilon)\hat{A}_i\right)$};
+
+	\node[lossbox, below right=1.8cm and -0.8cm of stat] (kldiv) {\textbf{Unbiased KL Divergence}\\ $\mathbb{D}_{\text{KL}} = \frac{\pi_{\text{ref}}}{\pi_\theta} - \log\frac{\pi_{\text{ref}}}{\pi_\theta} - 1$\\ Direct Loss Regularization};
+
+	% Total Loss
+	\node[lossbox, below=4.2cm of stat] (totalloss) {\textbf{Total GRPO Objective}\\ $\mathcal{J}_{\text{GRPO}}(\theta) = \frac{1}{G}\sum_{i=1}^G \frac{1}{|o_i|}\sum_{t=1}^{|o_i|} \left[ \mathcal{L}_{\text{CLIP}} - \beta \mathbb{D}_{\text{KL}}(\pi_\theta \parallel \pi_{\text{ref}}) \right]$};
+
+	% Optimizer
+	\node[optbox, below=of totalloss] (adam) {\textbf{AdamW Policy Optimizer}\\ Direct Update on Policy Network: $\theta \leftarrow \theta + \alpha \nabla_\theta \mathcal{J}_{\text{GRPO}}(\theta)$};
+
+	% Reference & Policy Sync
+	\node[box, left=2.8cm of sample] (sync) {\textbf{Iterative Reference Sync}\\ $\pi_{\text{ref}} \leftarrow \pi_\theta, \quad \pi_{\theta_{\text{old}}} \leftarrow \pi_\theta$};
+
+	% Connections
+	\draw[arrow] (prompt) -- node[right, font=\footnotesize] {Prompts} (sample);
+	\draw[arrow] (sample) -- node[right, font=\footnotesize] {Outputs $\{o_i\}$} (reward);
+	\draw[arrow] (reward) -- node[right, font=\footnotesize] {Raw Rewards $\{r_i\}$} (stat);
+	\draw[arrow] (stat) -| (surr);
+	\draw[arrow] (stat) -| (kldiv);
+	\draw[arrow] (surr) |- (totalloss);
+	\draw[arrow] (kldiv) |- (totalloss);
+	\draw[arrow] (totalloss) -- node[right, font=\footnotesize] {Policy Gradient} (adam);
+
+	% Replay and Sync loops
+	\draw[dasharrow] (adam) -| (sync);
+	\draw[dasharrow] (sync) |- (sample);
+
+\end{tikzpicture}
+\end{latin}
+\caption{دیاگرام جامع جریان داده‌ها، ارزیابی آماری گروهی و به‌روزرسانی بدون منتقد در الگوریتم \model{GRPO}.}
+\label{fig:grpo_architecture}
+\end{figure}
+
+\subsubsection*{شبه‌کد الگوریتم GRPO}
+
+شبه‌کد کامل فرایند بهینه‌سازی سیاست نسبی گروهی تکرارشونده در الگوریتم~\ref{alg:iterative_grpo} تشریح شده است:
+
+\begin{latin}
+\begin{algorithm}[H]
+\caption{Iterative Group Relative Policy Optimization (GRPO)}
+\label{alg:iterative_grpo}
+\begin{algorithmic}[1]
+\State \textbf{Input:} Initial policy $\pi_{\theta_{\text{init}}}$, reward model $r_\varphi$, prompt dataset $\mathcal{D}$, hyperparameters $\varepsilon, \beta, \mu, G$, iterations $I$, steps $M$.
+\State Initialize policy $\pi_\theta \leftarrow \pi_{\theta_{\text{init}}}$
+\For{$\text{iteration} = 1, \dots, I$}
+    \State Set reference policy $\pi_{\text{ref}} \leftarrow \pi_\theta$
+    \For{$\text{step} = 1, \dots, M$}
+        \State Sample batch of prompts $\mathcal{D}_b \sim \mathcal{D}$
+        \State Update old policy $\pi_{\theta_{\text{old}}} \leftarrow \pi_\theta$
+        \State Sample $G$ candidate outputs $\{o_i\}_{i=1}^G \sim \pi_{\theta_{\text{old}}}(\cdot | q)$ for each prompt $q \in \mathcal{D}_b$
+        \State Compute rewards $\{r_i\}_{i=1}^G$ using reward model $r_\varphi$
+        \State Compute group mean and standard deviation:
+        \State \quad $\mu_{\mathbf{r}} = \frac{1}{G}\sum_{i=1}^G r_i, \quad \sigma_{\mathbf{r}} = \sqrt{\frac{1}{G}\sum_{i=1}^G (r_i - \mu_{\mathbf{r}})^2 + 10^{-8}}$
+        \State Compute group relative advantages: $\hat{A}_{i,t} = \frac{r_i - \mu_{\mathbf{r}}}{\sigma_{\mathbf{r}}}$
+        \For{$\text{GRPO iteration} = 1, \dots, \mu$}
+            \State Compute ratio: $\rho_{i,t} = \frac{\pi_\theta(o_{i,t} | q, o_{i,<t})}{\pi_{\theta_{\text{old}}}(o_{i,t} | q, o_{i,<t})}$
+            \State Compute clipped advantage objective:
+            \State \quad $\mathcal{L}_{i,t}^{\text{CLIP}} = \min\left( \rho_{i,t} \hat{A}_{i,t}, \, \text{clip}(\rho_{i,t}, 1-\varepsilon, 1+\varepsilon)\hat{A}_{i,t} \right)$
+            \State Compute token-level Schulman KL penalty:
+            \State \quad $\mathbb{D}_{\text{KL}, i, t} = \frac{\pi_{\text{ref}}(o_{i,t}|q, o_{i,<t})}{\pi_\theta(o_{i,t}|q, o_{i,<t})} - \log \frac{\pi_{\text{ref}}(o_{i,t}|q, o_{i,<t})}{\pi_\theta(o_{i,t}|q, o_{i,<t})} - 1$
+            \State Maximize GRPO loss with AdamW:
+            \State \quad $\theta \leftarrow \theta + \alpha \nabla_\theta \left[ \frac{1}{G|\mathcal{D}_b|} \sum_{q \in \mathcal{D}_b} \sum_{i=1}^G \frac{1}{|o_i|} \sum_{t=1}^{|o_i|} \left( \mathcal{L}_{i,t}^{\text{CLIP}} - \beta \mathbb{D}_{\text{KL}, i, t} \right) \right]$
+        \EndFor
+        \State Update reward model $r_\varphi$ through replay mechanism with $10\%$ historical samples.
+    \EndFor
+\EndFor
+\State \textbf{Output:} Optimized Policy $\pi_\theta$
+\end{algorithmic}
+\end{algorithm}
+\end{latin}
+
+\subsubsection*{نتایج تجربی و ارزیابی بنچمارک‌ها}
+
+نتایج حاصل از اعمال الگوریتم \model{GRPO} بر روی مدل پایه \model{DeepSeekMath-Instruct 7B} در مقایسه با سایر مدل‌های باز و بسته در جدول~\ref{tab:grpo_eval_results} ارائه شده است:
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه عملکرد \model{DeepSeekMath-RL (GRPO)} با مدل‌های پیشرو در بنچمارک‌های استدلال ریاضی \cite{shao2024deepseekmath}.}
+\label{tab:grpo_eval_results}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{مدل (\en{Model})} & \textbf{تعداد پارامتر} & \textbf{\en{GSM8K (CoT)}} & \textbf{\en{MATH (CoT)}} & \textbf{\en{MGSM-zh}} & \textbf{\en{CMATH}} \\
+\midrule
+\multicolumn{6}{c}{\textbf{مدل‌های تجاری و بسته (\en{Closed-Source Models})}} \\
+\midrule
+\model{Gemini Ultra} & - & 94.4\% & 53.2\% & - & - \\
+\model{GPT-4} & - & 92.0\% & 52.9\% & - & 86.0\% \\
+\model{Inflection-2} & - & 81.4\% & 34.8\% & - & - \\
+\model{GLM-4} & - & 87.6\% & 47.9\% & - & - \\
+\midrule
+\multicolumn{6}{c}{\textbf{مدل‌های منبع‌باز (\en{Open-Source Models})}} \\
+\midrule
+\model{InternLM2-Math} & 20B & 82.6\% & 37.7\% & - & - \\
+\model{Qwen} & 72B & 78.9\% & 35.2\% & - & - \\
+\model{WizardMath-v1.1} & 7B & 83.2\% & 33.0\% & - & - \\
+\model{DeepSeekMath-Instruct} & 7B & 82.9\% & 46.8\% & 73.2\% & 84.6\% \\
+\textbf{\model{DeepSeekMath-RL (GRPO)}} & \textbf{7B} & \textbf{88.2\%} & \textbf{51.7\%} & \textbf{79.6\%} & \textbf{88.8\%} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\subsubsection*{ابرپارامترهای استاندارد گزارش‌شده در مقاله}
+
+جدول~\ref{tab:grpo_hyperparams} پیکربندی ابرپارامترهای بهینه پیاده‌سازی \model{GRPO} را نشان می‌دهد:
+
+\begin{table}[htbp]
+\centering
+\caption{ابرپارامترهای آموزش یادگیری تقویتی با \model{GRPO} در مدل \model{DeepSeekMath 7B}.}
+\label{tab:grpo_hyperparams}
+\begin{tabular}{lc}
+\toprule
+\textbf{ابرپارامتر (\en{Hyperparameter})} & \textbf{مقدار} \\
+\midrule
+نرخ یادگیری مدل خط‌مشی ($\alpha$) & $1 \times 10^{-6}$ \\
+نرخ یادگیری مدل پاداش اولیه & $2 \times 10^{-5}$ \\
+تعداد نمونه‌های خروجی در هر گروه ($G$) & 64 \\
+ضریب جریمه واگرایی کولبک-لایبلر ($\beta$) & 0.04 \\
+آستانه برش پروگزیمال ($\varepsilon$) & 0.2 \\
+اندازه دسته بهینه‌سازی (\en{Batch Size}) & 1024 \\
+حداکثر طول توالی خروجی (\en{Max Length}) & 1024 \\
+دمای نمونه‌برداری اکتشافی (\en{Sampling Temperature}) & 0.7 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{جمع‌بندی}
+الگوریتم \model{GRPO} با حذف کامل سربار محاسباتی و حافظه مدل منتقد و جایگزینی آن با نرمال‌سازی آماری در سطح گروه‌های هم‌ارز، مسیر نوینی را در یادگیری تقویتی مدل‌های زبانی گشوده است. این نوآوری به مدل \model{DeepSeekMath 7B} اجازه داد تا با صرفه‌جویی شدید در منابع سخت‌افزاری، به دقت فراتر از ۵۱٪ در بنچمارک معتبر \en{MATH} دست یافته و استانداردهای جدیدی در زمینه استدلال هوش مصنوعی پایه‌گذاری کند.

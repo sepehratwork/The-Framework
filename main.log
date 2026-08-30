@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026/Arch Linux) (preloaded format=xelatex 2026.6.29)  30 AUG 2026 14:34
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026/Arch Linux) (preloaded format=xelatex 2026.6.29)  30 AUG 2026 15:58
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1402,13 +1402,28 @@ Overfull \hbox (56.33774pt too wide) in paragraph at lines 109--148
 
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 159.
-[15] [16]) (./models/ReinforcementLearning/GRPO.tex)
-(./models/ReinforcementLearning/GSPO.tex)
-(./models/ReinforcementLearning/DAPO.tex [17] [18])
+[15] [16]) (./models/ReinforcementLearning/GRPO.tex [17] [18] [19]
+
+LaTeX Font Warning: Font shape `TU/Vazirmatn(0)/m/it' undefined
+(Font)              using `TU/Vazirmatn(0)/m/n' instead on input line 36.
+
+[20] [21]
+
+Package pgf Warning: Returning node center instead of a point on node border. D
+id you specify a point identical to the center of node ``sync''? on input line 
+185.
+
+
+Overfull \hbox (113.37971pt too wide) in paragraph at lines 145--188
+ [][][][][][] 
+ []
+
+[22] [23]) (./models/ReinforcementLearning/GSPO.tex)
+(./models/ReinforcementLearning/DAPO.tex)
 (./models/ReinforcementLearning/SAPO.tex)
 (./models/ReinforcementLearning/CISPO.tex)
 (./models/ReinforcementLearning/RLVR.tex)
-(./models/ReinforcementLearning/RLVR_GRPO.tex)) [19] (./main.bbl
+(./models/ReinforcementLearning/RLVR_GRPO.tex)) [24] [25] (./main.bbl
 Missing character: There is no م (U+0645) in font Liberation Serif Bold/OT:scri
 pt=latn;language=dflt;mapping=tex-text;!
 Missing character: There is no ن (U+0646) in font Liberation Serif Bold/OT:scri
@@ -1425,27 +1440,37 @@ Underfull \hbox (badness 1215) in paragraph at lines 91--95
 ptimal data mixtures.  \TU/LiberationSerif(0)/m/it/12 arXiv preprint[]
  []
 
-[20]
+[26]
 Underfull \hbox (badness 1412) in paragraph at lines 181--186
 []\TU/LiberationSerif(0)/m/n/12 dimensional continuous control using generalize
 d advantage estimation.  \TU/LiberationSerif(0)/m/it/12 arXiv preprint[]
  []
 
-[21]) [22] (./main.aux)
+[27]
+Underfull \hbox (badness 1102) in paragraph at lines 208--211
+[][]\TU/LiberationSerif(0)/m/n/12 John Schulman.  Approximating kl divergence. 
+ \TU/LiberationSerif(0)/m/it/12 Online blog: http://joschu.net/blog/kl-[]
+ []
+
+) [28] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
+
+
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
+
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: D8B51F553D9834E8A8DC3933454B0FA9;7642.
+(rerunfilecheck)             Checksum: 40707FCF4610666200D7A22B1FBC046C;8240.
  ) 
 Here is how much of TeX's memory you used:
- 29959 strings out of 469704
- 659318 string characters out of 5467967
- 1062410 words of memory out of 5000000
- 57544 multiletter control sequences out of 15000+600000
- 636405 words of font info for 127 fonts, out of 8000000 for 9000
+ 30050 strings out of 469704
+ 660991 string characters out of 5467967
+ 1067410 words of memory out of 5000000
+ 57627 multiletter control sequences out of 15000+600000
+ 638584 words of font info for 136 fonts, out of 8000000 for 9000
  286 hyphenation exceptions out of 8191
- 88i,15n,101p,1181b,1115s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 88i,18n,106p,1181b,1126s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (23 pages).
+Output written on main.pdf (29 pages).

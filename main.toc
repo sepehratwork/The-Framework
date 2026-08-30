@@ -28,4 +28,5 @@
 \contentsline {section}{\numberline {6}ارزیابی (\lr {Evaluation})}{11}{section.6}%
 \contentsline {section}{\numberline {7}یادگیری تقویتی (\lr {Reinforcement Learning})}{12}{section.7}%
 \contentsline {subsection}{\numberline {7.1}الگوریتم بهینه‌سازی تقریبی خط‌مشی (\lr {Proximal Policy Optimization - PPO})}{12}{subsection.7.1}%
-\contentsline {section}{\numberline {8}منابع}{20}{section.8}%
+\contentsline {subsection}{\numberline {7.2}الگوریتم بهینه‌سازی نسبی خط‌مشی گروهی (\lr {Group Relative Policy Optimization - GRPO})}{19}{subsection.7.2}%
+\contentsline {section}{\numberline {8}منابع}{26}{section.8}%

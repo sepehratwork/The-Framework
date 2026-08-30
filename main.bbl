@@ -190,6 +190,52 @@ Nicolas Heess, Srinivasan Sriram, Jay Lemmon, Josh Merel, Greg Wayne, Yuval
 \newblock Emergence of locomotion behaviours in rich environments.
 \newblock {\em arXiv preprint arXiv:1707.02286}, 2017.
 
+\bibitem{shao2024deepseekmath}
+Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu, Junxiao Song, Xiao Bi, Haowei
+  Zhang, Mingchuan Zhang, Y.~K. Li, Y.~Wu, and Daya Guo.
+\newblock Deepseekmath: Pushing the limits of mathematical reasoning in open
+  language models.
+\newblock {\em arXiv preprint arXiv:2402.03300}, 2024.
+
+\bibitem{ouyang2022training}
+Long Ouyang, Jeffrey Wu, Xu~Jiang, Diogo Almeida, Carroll Wainwright, Pamela
+  Mishkin, Chong Zhang, Sandhini Agarwal, Katarina Slama, Alex Ray, et~al.
+\newblock Training language models to follow instructions with human feedback.
+\newblock {\em Advances in Neural Information Processing Systems},
+  35:27730--27744, 2022.
+
+\bibitem{schulman2020approximating}
+John Schulman.
+\newblock Approximating kl divergence.
+\newblock {\em Online blog: http://joschu.net/blog/kl-approx.html}, 2020.
+
+\bibitem{lightman2023let}
+Hunter Lightman, Vineet Kosaraju, Yura Burda, Harri Edwards, Bowen Baker, Teddy
+  Lee, Jan Leike, John Schulman, Ilya Sutskever, and Karl Cobbe.
+\newblock Let's verify step by step.
+\newblock {\em arXiv preprint arXiv:2305.20050}, 2023.
+
+\bibitem{wang2023math}
+Peiyi Wang, Lei Li, Zhihong Shao, Runxin Xu, Damai Dai, Yifei Li, Deyu Chen,
+  Y~Wu, and Zhifang Sui.
+\newblock Math-shepherd: Verify and reinforce llms step-by-step without human
+  annotations.
+\newblock {\em arXiv preprint arXiv:2312.08935}, 2023.
+
+\bibitem{yuan2023scaling}
+Zheng Yuan, Hongyi Yuan, Chengpeng Li, Guanting Dong, Chuanqi Tan, and Chang
+  Zhou.
+\newblock Scaling relationship on learning mathematical reasoning with large
+  language models.
+\newblock {\em arXiv preprint arXiv:2308.01825}, 2023.
+
+\bibitem{rafailov2023direct}
+Rafael Rafailov, Archit Sharma, Eric Mitchell, Stefano Ermon, Christopher~D
+  Manning, and Chelsea Finn.
+\newblock Direct preference optimization: Your language model is secretly a
+  reward model.
+\newblock {\em Advances in Neural Information Processing Systems}, 36, 2023.
+
 \bibitem{wang2016sample}
 Ziyu Wang, Victor Bapst, Nicolas Heess, Volodymyr Mnih, Remi Munos, Koray
   Kavukcuoglu, and Nando de~Freitas.
