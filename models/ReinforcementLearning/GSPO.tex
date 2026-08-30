@@ -1,1 +1,259 @@
-\item \textbf asd
+\subsection{الگوریتم بهینه‌سازی توالی گروهی خط‌مشی (\en{Group Sequence Policy Optimization - GSPO})}
+
+الگوریتم \model{GSPO} که در سال ۲۰۲۵ توسط تیم کوئن (\en{Qwen Team}) در شرکت علی‌بابا (\en{Alibaba Inc.}) معرفی شد \cite{zheng2025gspo}، یک چارچوب نوین، فوق‌العاده پایدار و کارآمد در زمینه یادگیری تقویتی (\en{Reinforcement Learning}) برای مدل‌های زبانی بزرگ (\en{LLMs}) به شمار می‌رود. این الگوریتم با بازنگری در شیوه اعمال «نمونه‌برداری اهمیت» (\en{Importance Sampling}) و اصلاح خطاهای ساختاری الگوریتم‌های پیشین نظیر \model{GRPO} \cite{shao2024deepseekmath}، کلیه فرآیندهای وزن‌دهی نسبت درستی‌نمایی، برش گرادیان (\en{Clipping}) و بهینه‌سازی را از سطح «توکن» (\en{Token-level}) به سطح «توالی کامل» (\en{Sequence-level}) منتقل کرده است. این رویکرد به عنوان ستون فقرات یادگیری تقویتی در آموزش مدل‌های استدلالی پیشرفته خانواده \model{Qwen3} \cite{qwen2025technical, qwen2025qwq} به کار گرفته شده است.
+
+\subsubsection*{تاریخچه، انگیزه و ضرورت پیدایش الگوریتم}
+
+با گسترش مدل‌های زبانی استدلالی نظیر \en{OpenAI o1} \cite{openai2024learning} و \model{DeepSeek-R1} \cite{deepseek2025r1}، نقش یادگیری تقویتی در مقیاس‌پذیری زمان تفکر (\en{Test-Time Compute}) و تولید زنجیره‌های طولانی استدلال (\en{Long Chain-of-Thought}) برای حل مسائل ریاضی و برنامه‌نویسی رقابتی اثبات گردید.
+
+پیش از ابداع \model{GSPO}، روند توسعه الگوریتم‌های یادگیری تقویتی در مدل‌های زبانی با چالش‌های اساسی روبرو بود:
+\begin{itemize}
+    \item \textbf{محدودیت‌های \model{PPO} \cite{schulman2017proximal}:} الگوریتم \model{PPO} نیازمند یک مدل منتقد یا ارزش (\en{Value/Critic Model}) مجزا برای برآورد مزیت در هر توکن است. این مدل علاوه بر تحمیل بار حافظه و محاسباتی هم‌اندازه با مدل خط‌مشی اصلی، در پاسخ‌های طولانی استدلالی (چندین هزار توکن) به دلیل انباشت خطای پیش‌بینی، به شدت ناپایدار و غیرقابل اعتماد می‌گردد.
+    \item \textbf{ظهور و معضلات الگوریتم \model{GRPO} \cite{shao2024deepseekmath}:} الگوریتم \model{GRPO} با حذف مدل منتقد و جایگزینی آن با برآورد مزیت نسبی در یک گروه از پاسخ‌ها (\en{Group Relative Advantage})، نیاز به حافظه اضافی را رفع کرد. با این حال، \model{GRPO} در آموزش مدل‌های بسیار بزرگ و در استدلال‌های طولانی، مکرراً با پدیده «فروپاشی فاجعه‌بار و غیرقابل بازگشت مدل» (\en{Irreversible Model Collapse}) مواجه می‌شود \cite{qwen2025technical, minimax2025m1}. در صورت وقوع این فروپاشی، هیچ‌گونه دستکاری در ابرپارامترها یا بارگذاری مجدد چک‌پوینت‌ها کمکی به همگرایی مجدد نخواهد کرد.
+\end{itemize}
+
+نویسندگان مقاله \model{GSPO} ریشه این ناپایداری در \model{GRPO} را در دو نقص تئوریک شناسایی کردند:
+\begin{enumerate}
+    \item \textbf{نقض مبانی ریاضی نمونه‌برداری اهمیت (\en{Importance Sampling}):} اصل نمونه‌برداری اهمیت برای تخمین امید ریاضی یک تابع $f(z)$ تحت توزیع هدف $\pi_{\text{tar}}$ با استفاده از توزیع رفتاری $\pi_{\text{beh}}$ به صورت زیر بیان می‌شود:
+    \begin{equation}
+        \mathbb{E}_{z \sim \pi_{\text{tar}}}[f(z)] = \mathbb{E}_{z \sim \pi_{\text{beh}}}\left[ \frac{\pi_{\text{tar}}(z)}{\pi_{\text{beh}}(z)} f(z) \right] \approx \frac{1}{N} \sum_{k=1}^N \frac{\pi_{\text{tar}}(z^{(k)})}{\pi_{\text{beh}}(z^{(k)})} f(z^{(k)})
+    \end{equation}
+    این رابطه ریاضی از نظر آماری تنها در صورتی معتبر و بدون انحراف است که میانگین‌گیری روی تعداد زیادی نمونه ($N \gg 1$) از توزیع رفتاری صورت پذیرد. در حالی که \model{GRPO} نسبت اهمیت $\frac{\pi_\theta(y_{i,t}|x, y_{i,<t})}{\pi_{\theta_{\text{old}}}(y_{i,t}|x, y_{i,<t})}$ را برای هر تک‌توکن $t$ و با تنها یک نمونه تکی ($N = 1$) اعمال می‌کند. این کار به جای تصحیح انحراف توزیع، نویز ضرب‌شونده با واریانس بسیار بالا را وارد گرادیان کرده که با طولانی‌تر شدن زنجیره استدلال انباشته شده و مدل را نابود می‌سازد.
+    \item \textbf{عدم انطباق واحد بهینه‌سازی و واحد پاداش (\en{Mismatch Principle}):} پاداش ارزیاب $r(x, y)$ به کل توالی پاسخ اعطا می‌شود نه به تک‌تک توکن‌ها. بنابراین، اعمال تصحیح خارج از خط‌مشی (\en{Off-Policy Correction}) و عملگر برش در سطح توکن‌های مجزا، فرمول‌بندی نادرست و ناسازگاری ایجاد می‌کند.
+\end{enumerate}
+
+\subsubsection*{مبانی نظری و اشتقاق‌های کامل ریاضی GSPO}
+
+در یک مدل زبانی خودبازگشتی، درستی‌نمایی (\en{Likelihood}) یک پاسخ $y = (y_1, y_2, \dots, y_{|y|})$ به ازای پرسش ورودی $x$ تحت خط‌مشی $\pi_\theta$ برابر است با:
+\begin{equation}
+    \pi_\theta(y|x) = \prod_{t=1}^{|y|} \pi_\theta(y_t | x, y_{<t})
+\end{equation}
+
+الگوریتم \model{GSPO}، تابع هدف بهینه‌سازی را مستقیماً در سطح توالی فرمول‌بندی می‌کند:
+\begin{equation}
+    \label{eq:gspo_objective}
+    \mathcal{J}_{\text{GSPO}}(\theta) = \mathbb{E}_{x \sim \mathcal{D}, \{y_i\}_{i=1}^G \sim \pi_{\theta_{\text{old}}}(\cdot|x)} \left[ \frac{1}{G} \sum_{i=1}^G \min \left( s_i(\theta) \hat{A}_i, \, \text{clip}(s_i(\theta), 1-\varepsilon, 1+\varepsilon) \hat{A}_i \right) \right]
+\end{equation}
+که در آن $G$ اندازه گروه پاسخ‌های هم‌زمان به ازای هر پرسش بوده و مزیت گروهی $\hat{A}_i$ بر اساس امتیاز پاداش تاییدکننده $r(x, y_i) \in [0, 1]$ به صورت زیر نرمال‌سازی می‌شود:
+\begin{equation}
+    \hat{A}_i = \frac{r(x, y_i) - \text{mean}\left(\{r(x, y_i)\}_{i=1}^G\right)}{\text{std}\left(\{r(x, y_i)\}_{i=1}^G\right)}
+\end{equation}
+
+نسبت اهمیت توالی $s_i(\theta)$ بر اساس مفهوم درستی‌نمایی توالی با نرمال‌سازی طولی (\en{Length-Normalized Sequence Likelihood}) \cite{zheng2023click} تعریف می‌شود:
+\begin{equation}
+    \label{eq:seq_ratio}
+    s_i(\theta) \triangleq \left( \frac{\pi_\theta(y_i|x)}{\pi_{\theta_{\text{old}}}(y_i|x)} \right)^{\frac{1}{|y_i|}} = \exp \left( \frac{1}{|y_i|} \sum_{t=1}^{|y_i|} \log \frac{\pi_\theta(y_{i,t} | x, y_{i,<t})}{\pi_{\theta_{\text{old}}}(y_{i,t} | x, y_{i,<t})} \right)
+\end{equation}
+
+\textbf{اثبات گام‌به‌گام اشتقاق گرادیان GSPO:}
+با صرف‌نظر از عملگر غیرخطی برش جهت بررسی گرادیان بدون مرز، گرادیان تابع هدف نسبت به پارامترهای $\theta$ به صورت زیر محاسبه می‌شود:
+\begin{align}
+    \nabla_\theta \mathcal{J}_{\text{GSPO}}(\theta) &= \nabla_\theta \, \mathbb{E}_{x, \{y_i\}_{i=1}^G} \left[ \frac{1}{G} \sum_{i=1}^G s_i(\theta) \hat{A}_i \right] \nonumber \\
+    &= \mathbb{E}_{x, \{y_i\}_{i=1}^G} \left[ \frac{1}{G} \sum_{i=1}^G \hat{A}_i \, \nabla_\theta s_i(\theta) \right]
+\end{align}
+با توجه به اینکه برای هر تابع مثبت $f(\theta)$ داریم $\nabla_\theta f(\theta) = f(\theta) \nabla_\theta \log f(\theta)$، مشتق نسبت اهمیت توالی برابر است با:
+\begin{equation}
+    \nabla_\theta s_i(\theta) = s_i(\theta) \, \nabla_\theta \log s_i(\theta)
+\end{equation}
+با اعمال لگاریتم بر طرفین معادله~\eqref{eq:seq_ratio}:
+\begin{equation}
+    \log s_i(\theta) = \frac{1}{|y_i|} \sum_{t=1}^{|y_i|} \left[ \log \pi_\theta(y_{i,t} | x, y_{i,<t}) - \log \pi_{\theta_{\text{old}}}(y_{i,t} | x, y_{i,<t}) \right]
+\end{equation}
+از آنجا که جمله مربوط به $\theta_{\text{old}}$ مستقل از $\theta$ است، مشتق آن صفر می‌شود:
+\begin{equation}
+    \nabla_\theta \log s_i(\theta) = \frac{1}{|y_i|} \sum_{t=1}^{|y_i|} \nabla_\theta \log \pi_\theta(y_{i,t} | x, y_{i,<t})
+\end{equation}
+بنابراین، فرمول بسته نهایی گرادیان \model{GSPO} حاصل می‌شود:
+\begin{equation}
+    \label{eq:gspo_gradient_final}
+    \nabla_\theta \mathcal{J}_{\text{GSPO}}(\theta) = \mathbb{E}_{x, \{y_i\}_{i=1}^G} \left[ \frac{1}{G} \sum_{i=1}^G \left( \frac{\pi_\theta(y_i|x)}{\pi_{\theta_{\text{old}}}(y_i|x)} \right)^{\frac{1}{|y_i|}} \hat{A}_i \cdot \frac{1}{|y_i|} \sum_{t=1}^{|y_i|} \nabla_\theta \log \pi_\theta(y_{i,t} | x, y_{i,<t}) \right]
+\end{equation}
+
+در مقام مقایسه، گرادیان الگوریتم \model{GRPO} به صورت زیر است:
+\begin{equation}
+    \label{eq:grpo_gradient}
+    \nabla_\theta \mathcal{J}_{\text{GRPO}}(\theta) = \mathbb{E}_{x, \{y_i\}_{i=1}^G} \left[ \frac{1}{G} \sum_{i=1}^G \hat{A}_i \cdot \frac{1}{|y_i|} \sum_{t=1}^{|y_i|} \left( \frac{\pi_\theta(y_{i,t}|x, y_{i,<t})}{\pi_{\theta_{\text{old}}}(y_{i,t}|x, y_{i,<t})} \right) \nabla_\theta \log \pi_\theta(y_{i,t} | x, y_{i,<t}) \right]
+\end{equation}
+
+\textbf{تحلیل مقایسه‌ای دو گرادیان:}
+در \model{GRPO} (معادله~\eqref{eq:grpo_gradient})، گرادیان هر توکن با یک وزن نابرابر و تصادفی $\frac{\pi_\theta(y_{i,t})}{\pi_{\theta_{\text{old}}}(y_{i,t})}$ مقیاس‌بندی می‌شود که این نوسانات نامتعادل در طول هزاران گام به فروپاشی مدل می‌انجامد. اما در \model{GSPO} (معادله~\eqref{eq:gspo_gradient_final})، تمامی توکن‌های درون یک پاسخ با یک ضریب کاملاً همگن و یکنواخت ($s_i(\theta) \frac{\hat{A}_i}{|y_i|}$) وزن‌دهی می‌شوند که عامل اصلی ثبات بی‌نظیر این الگوریتم است.
+
+\subsubsection*{گونه تعمیم‌یافته برای توکن‌ها (\en{GSPO-token Variant})}
+
+برای سناریوهایی نظیر یادگیری تقویتی چندنوبته (\en{Multi-turn RL}) یا استفاده از مدل‌های پاداش فرآیندی (\en{PRM}) که نیازمند مزیت‌های متفاوت برای هر گام یا توکن ($\hat{A}_{i,t}$) هستیم، گونه \model{GSPO-token} با بهره‌گیری از عملگر سد گرادیان ($\text{sg}[\cdot]$ یا \en{Stop-Gradient}) معرفی شده است:
+\begin{equation}
+    \mathcal{J}_{\text{GSPO-token}}(\theta) = \mathbb{E} \left[ \frac{1}{G} \sum_{i=1}^G \frac{1}{|y_i|} \sum_{t=1}^{|y_i|} \min \left( s_{i,t}(\theta) \hat{A}_{i,t}, \, \text{clip}(s_{i,t}(\theta), 1-\varepsilon, 1+\varepsilon) \hat{A}_{i,t} \right) \right]
+\end{equation}
+که در آن نسبت توکن با ساختار زیر تعریف می‌شود:
+\begin{equation}
+    s_{i,t}(\theta) \triangleq \text{sg}[s_i(\theta)] \cdot \frac{\pi_\theta(y_{i,t} | x, y_{i,<t})}{\text{sg}\left[\pi_\theta(y_{i,t} | x, y_{i,<t})\right]}
+\end{equation}
+
+از آنجا که عبارت کسری از نظر مقداری دقیقاً برابر با $1$ است، مقدار عددی $s_{i,t}(\theta) = s_i(\theta)$ بوده و شرط برش در سطح کل توالی حفظ می‌شود. در زمان مشتق‌گیری، گرادیان مستقیماً روی توکن $t$ اثر می‌گذارد:
+\begin{equation}
+    \nabla_\theta \mathcal{J}_{\text{GSPO-token}}(\theta) = \mathbb{E} \left[ \frac{1}{G} \sum_{i=1}^G \left( \frac{\pi_\theta(y_i|x)}{\pi_{\theta_{\text{old}}}(y_i|x)} \right)^{\frac{1}{|y_i|}} \cdot \frac{1}{|y_i|} \sum_{t=1}^{|y_i|} \hat{A}_{i,t} \nabla_\theta \log \pi_\theta(y_{i,t} | x, y_{i,<t}) \right]
+\end{equation}
+در حالتی که مزیت تمام توکن‌ها یکسان باشد ($\hat{A}_{i,t} = \hat{A}_i$)، این گرادیان دقیقاً و به صورت تحلیلی با گرادیان \model{GSPO} اصلی هم‌ارز می‌گردد.
+
+\subsubsection*{تحلیل‌های تئوری اطلاعات، آمار و دینامیک مدل‌های MoE}
+
+\textbf{۱. کنترل واریانس و واگرایی \en{KL}:}
+بر اساس تئوری اطلاعات، نسبت درستی‌نمایی ضرب‌شونده بدون نرمال‌سازی طولی دارای واریانسی متناسب با طول پاسخ است ($\operatorname{Var} \propto \mathcal{O}(|y|)$). با اعمال میانگین هندسی در توان $\frac{1}{|y|}$، واریانس نسبت اهمیت به صورت $\mathcal{O}(1/|y|)$ میرا شده و کران واگرایی اطلاعاتی میان سیاست جدید و قدیم کنترل می‌شود.
+
+\textbf{۲. تثبیت دینامیک آموزش در معماری‌های ترکیبی از متخصصان (\en{MoE}):}
+در مدل‌های \en{MoE} نظیر \model{Qwen3-30B-A3B} با ۴۸ لایه، پس از هر به‌روزرسانی گرادیان، تخصیص حدود ۱۰٪ از روترهای متخصصان تغییر می‌کند (\en{Expert-Activation Volatility}). این پدیده باعث نوسان شدید در درستی‌نمایی محلی توکن‌ها شده و آموزش \model{GRPO} را به شکست قطعی می‌کشاند، مگر آنکه از روش پرهزینه «بازپخش مسیریابی» (\en{Routing Replay}) برای اجبار به استفاده از مسیرهای قدیمی استفاده شود. \model{GSPO} به دلیل تمرکز بر درستی‌نمایی کل توالی و عدم حساسیت به تغییرات جابجایی روترهای محلی، نیاز به \en{Routing Replay} را کاملاً منسوخ کرده و ظرفیت کامل مدل را بدون افت سرعت آزاد می‌سازد.
+
+\textbf{۳. بهینه‌سازی زیرساخت آموزش (\en{Infrastructure}):}
+تفاوت‌های دقت ممیز شناور میان موتورهای استنتاج (\en{vLLM / SGLang}) و موتورهای آموزش (\en{Megatron-LM}) در سطح تک‌توکن‌ها خطاساز است. \model{GSPO} به دلیل پایداری در سطح توالی، به مدل اجازه می‌دهد تا مستقیماً لاگ‌احتمالات خروجی از موتور استنتاج را بدون نیاز به محاسبه مجدد (\en{Recomputation}) در موتور آموزش استفاده کند.
+
+\subsubsection*{دیاگرام معماری و جریان داده‌های الگوریتم}
+
+شکل~\ref{fig:gspo_architecture} ساختار جامع خط لوله آموزش، محاسبات نسبت توالی و تفاوت بنیادین جریان داده در الگوریتم \model{GSPO} در مقایسه با روش‌های پیشین را نمایش می‌دهد.
+
+\begin{figure}[htbp]
+\centering
+\begin{latin}
+\begin{tikzpicture}[
+	node distance=1.6cm and 1.8cm,
+	promptbox/.style={rectangle, rounded corners=8pt, draw=teal!80!black, fill=teal!10, very thick, inner sep=10pt, align=center, font=\small\sffamily, drop shadow},
+	rolloutbox/.style={rectangle, rounded corners=8pt, draw=cyan!80!black, fill=cyan!8, very thick, inner sep=10pt, align=center, font=\small\sffamily, drop shadow},
+	rewardbox/.style={rectangle, rounded corners=8pt, draw=orange!80!black, fill=orange!10, very thick, inner sep=10pt, align=center, font=\small\sffamily, drop shadow},
+	seqbox/.style={rectangle, rounded corners=8pt, draw=blue!80!black, fill=blue!8, very thick, inner sep=10pt, align=center, font=\small\sffamily, drop shadow},
+	lossbox/.style={rectangle, rounded corners=8pt, draw=purple!80!black, fill=purple!8, very thick, inner sep=10pt, align=center, font=\small\sffamily, drop shadow},
+	optbox/.style={rectangle, rounded corners=8pt, draw=green!70!black, fill=green!10, very thick, inner sep=10pt, align=center, font=\small\sffamily, drop shadow},
+	arrow/.style={-{Stealth[scale=1.2]}, very thick, draw=blue!85!black},
+	dasharrow/.style={-{Stealth[scale=1.2]}, very thick, dashed, draw=red!75!black}
+]
+
+	% Nodes
+	\node[promptbox] (prompt) {\textbf{Prompt Dataset}\\ $x \sim \mathcal{D}$};
+	
+	\node[rolloutbox, below=1.2cm of prompt] (rollout) {\textbf{Inference Rollout Engine (vLLM / SGLang)}\\ Generate $G$ candidate responses: $\{y_1, y_2, \dots, y_G\} \sim \pi_{\theta_{\text{old}}}(\cdot|x)$\\ Record generation log-probs: $\log \pi_{\theta_{\text{old}}}(y_{i,t}|x, y_{i,<t})$};
+	
+	\node[rewardbox, left=1.8cm of rollout] (verifier) {\textbf{Rule-Based Verifier}\\ Evaluate responses $r(x, y_i) \in [0, 1]$\\ Group Advantage: $\hat{A}_i = \frac{r_i - \mu_r}{\sigma_r + 10^{-8}}$};
+	
+	\node[seqbox, below=1.4cm of rollout] (seqratio) {\textbf{Sequence Likelihood Engine (Megatron-LM)}\\ Forward current policy $\pi_\theta$ to get current log-probs\\ Normalized Sequence Ratio:\\ $s_i(\theta) = \exp\left( \frac{1}{|y_i|} \sum_{t=1}^{|y_i|} \log \frac{\pi_\theta(y_{i,t})}{\pi_{\theta_{\text{old}}}(y_{i,t})} \right)$};
+	
+	\node[lossbox, below=1.4cm of seqratio] (loss) {\textbf{Sequence Clipped Surrogate Loss}\\ $\mathcal{L}_i^{\text{GSPO}}(\theta) = -\min\left( s_i(\theta)\hat{A}_i, \, \text{clip}(s_i(\theta), 1\pm\varepsilon)\hat{A}_i \right)$};
+	
+	\node[optbox, below=1.2cm of loss] (opt) {\textbf{Distributed Gradient Optimizer}\\ Equal Token Gradient Weighting: $\Omega_i = \frac{s_i(\theta) \hat{A}_i}{|y_i|}$\\ Update parameters: $\theta \leftarrow \theta - \eta \nabla_\theta \mathcal{L}^{\text{GSPO}}(\theta)$};
+	
+	\node[promptbox, right=2.0cm of seqratio] (sync) {\textbf{Policy Sync}\\ $\pi_{\theta_{\text{old}}} \leftarrow \pi_\theta$};
+
+	% Connections
+	\draw[arrow] (prompt) -- node[right, font=\footnotesize] {Query $x$} (rollout);
+	\draw[arrow] (rollout) -- node[above, font=\footnotesize] {Sampled $\{y_i\}$} (verifier);
+	\draw[arrow] (rollout) -- node[right, font=\footnotesize] {Tokens \& Old Log-probs} (seqratio);
+	\draw[arrow] (verifier) |- node[near start, left, font=\footnotesize] {Normalized $\hat{A}_i$} (loss);
+	\draw[arrow] (seqratio) -- node[right, font=\footnotesize] {Sequence Ratios $s_i(\theta)$} (loss);
+	\draw[arrow] (loss) -- node[right, font=\footnotesize] {$\nabla_\theta \mathcal{L}$} (opt);
+	
+	\draw[dasharrow] (opt) -| (sync);
+	\draw[dasharrow] (sync) |- (rollout);
+
+\end{tikzpicture}
+\end{latin}
+\caption{دیاگرام جامع معماری خط لوله آموزش، محاسبه نسبت اهمیت توالی با نرمال‌سازی طولی و به‌روزرسانی گرادیان همگن در الگوریتم \model{GSPO}.}
+\label{fig:gspo_architecture}
+\end{figure}
+
+\subsubsection*{شبه‌کد الگوریتم GSPO}
+
+شبه‌کد رسمی و استاندارد پیاده‌سازی مقیاس‌پذیر الگوریتم \model{GSPO} در الگوریتم~\ref{alg:gspo_algorithm} ارائه شده است:
+
+\begin{latin}
+\begin{algorithm}[htbp]
+\caption{Group Sequence Policy Optimization (GSPO)}
+\label{alg:gspo_algorithm}
+\begin{algorithmic}[1]
+\State \textbf{Input:} Initial actor policy parameters $\theta_0$, verifier reward function $r(x, y)$, group size $G$, clipping threshold $\varepsilon$, learning rate $\eta$, number of mini-batches $K$.
+\For{$\text{iteration} = 1, 2, \dots$}
+    \State Sample a batch of queries $\{x_j\}_{j=1}^B \sim \mathcal{D}$.
+    \State Set behavior policy $\theta_{\text{old}} \leftarrow \theta$.
+    \State Initialize rollout buffer $\mathcal{B} \leftarrow \emptyset$.
+    \For{each query $x \in \{x_j\}_{j=1}^B$}
+        \State Generate $G$ responses $\{y_i\}_{i=1}^G \sim \pi_{\theta_{\text{old}}}(\cdot|x)$ using inference engine.
+        \State Compute scalar rewards $r_i = r(x, y_i)$ for $i \in \{1, \dots, G\}$.
+        \State Compute group advantage: $\hat{A}_i = \frac{r_i - \text{mean}(\{r_k\})}{\text{std}(\{r_k\}) + 10^{-8}}$.
+        \For{$i = 1, \dots, G$}
+            \State Store rollout record $(x, y_i, \hat{A}_i, \{\log \pi_{\theta_{\text{old}}}(y_{i,t}|x, y_{i,<t})\}_{t=1}^{|y_i|})$ in $\mathcal{B}$.
+        \EndFor
+    \EndFor
+    \State Partition buffer $\mathcal{B}$ into $K$ mini-batches $\{\mathcal{B}_m\}_{m=1}^K$.
+    \For{each mini-batch $\mathcal{B}_m$}
+        \State Forward current policy $\pi_\theta$ to get current log-probabilities $\log \pi_\theta(y_{i,t}|x, y_{i,<t})$.
+        \State Compute length-normalized sequence importance ratio for each sample:
+        \State \quad $s_i(\theta) = \exp\left( \frac{1}{|y_i|} \sum_{t=1}^{|y_i|} \left( \log \pi_\theta(y_{i,t}|x, y_{i,<t}) - \log \pi_{\theta_{\text{old}}}(y_{i,t}|x, y_{i,<t}) \right) \right)$.
+        \State Compute sequence clipped surrogate loss:
+        \State \quad $\mathcal{L}(\theta) = -\frac{1}{|\mathcal{B}_m|} \sum_{i \in \mathcal{B}_m} \min\left( s_i(\theta)\hat{A}_i, \, \text{clip}(s_i(\theta), 1-\varepsilon, 1+\varepsilon)\hat{A}_i \right)$.
+        \State Perform backward pass and parameter update:
+        \State \quad $\theta \leftarrow \theta - \eta \, \nabla_\theta \mathcal{L}(\theta)$.
+    \EndFor
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+\end{latin}
+
+\subsubsection*{نتایج تجربی و ارزیابی بنچمارک‌ها}
+
+ارزیابی تجربی \model{GSPO} بر روی مدل پایه \model{Qwen3-30B-A3B-Base} در مقایسه با \model{GRPO} در بنچمارک‌های استاندارد استدلالی، برنامه‌نویسی و ریاضی در جدول~\ref{tab:gspo_benchmark_results} آورده شده است.
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه عملکرد و پایداری الگوریتم‌های \model{GRPO} و \model{GSPO} بر روی مدل \model{Qwen3-30B-A3B} (برگرفته از \cite{zheng2025gspo}).}
+\label{tab:gspo_benchmark_results}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{الگوریتم یادگیری تقویتی} & \textbf{AIME '24 (Pass@1)} & \textbf{LiveCodeBench (Pass@1)} & \textbf{CodeForces (Elo)} & \textbf{پایداری در آموزش MoE} \\
+\midrule
+\model{GRPO} (بدون Routing Replay) & ناموفق (فروپاشی) & ناموفق (فروپاشی) & ناموفق (فروپاشی) & کاملاً ناپایدار \\
+\model{GRPO} (با Routing Replay) & 77.2\% & 63.4\% & 1920 & نیازمند سربار حافظه \\
+\textbf{\model{GSPO} (رویکرد پیشنهادی)} & \textbf{82.6\%} & \textbf{68.1\%} & \textbf{2065} & \textbf{پایداری کامل و ذاتی} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\textbf{پارادوکس کسر توکن‌های برش‌خورده (\en{Clipping Fraction Paradox}):}
+جدول~\ref{tab:clipping_paradox} مقایسه جالب میانگین توکن‌های برش‌خورده را نشان می‌دهد. با وجود اینکه \model{GSPO} حدود دو مرتبه بزرگی توکن‌های بیشتری را برش می‌زند (۱۵٪ در برابر ۰.۱۳٪)، راندمان نمونه‌ای بسیار بالاتری ارائه می‌دهد؛ امری که نشان می‌دهد گرادیان‌های توکنی \model{GRPO} سراسر نویز مخرب بوده‌اند.
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه کسر توکن‌های برش‌خورده در طول آموزش \cite{zheng2025gspo}.}
+\label{tab:clipping_paradox}
+\begin{tabular}{lcc}
+\toprule
+\textbf{شاخص مقایسه‌ای} & \textbf{الگوریتم \model{GRPO}} & \textbf{الگوریتم \model{GSPO}} \\
+\midrule
+کسر توکن‌های برش‌خورده (\en{Clipping Fraction}) & 0.0013 (0.13\%) & \textbf{0.1500 (15.0\%)} \\
+نحوه اعمال برش & سطح تک‌توکن & سطح کل توالی \\
+راندمان بهره‌وری نمونه (\en{Sample Efficiency}) & پایین (انباشت نویز) & بسیار بالا \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{ابرپارامترهای استاندارد گزارش‌شده در مقاله}
+
+جدول~\ref{tab:gspo_hyperparams} ابرپارامترهای بهینه‌سازی آموزش \model{GSPO} را در مقایسه با \model{GRPO} نشان می‌دهد:
+
+\begin{table}[htbp]
+\centering
+\caption{ابرپارامترهای استاندارد آموزش RL برای مدل \model{Qwen3-30B-A3B}.}
+\label{tab:gspo_hyperparams}
+\begin{tabular}{lc}
+\toprule
+\textbf{ابرپارامتر} & \textbf{مقدار در الگوریتم \model{GSPO}} \\
+\midrule
+محدوده برش چپ و راست ($\varepsilon_{\text{left}}, \varepsilon_{\text{right}}$) & $3 \times 10^{-4}, \; 4 \times 10^{-4}$ \\
+محدوده برش در الگوریتم پایه \model{GRPO} & $0.20, \; 0.27$ \\
+اندازه گروه پاسخ‌ها به ازای پرسش ($G$) & 8 \\
+تعداد مینی‌بچ‌ها به ازای هر دسته داده‌برداری ($K$) & 4 \\
+نوع توزیع وزن گرادیان درون توالی & همگن با ضریب $s_i(\theta) \hat{A}_i / |y_i|$ \\
+نیاز به استراتژی \en{Routing Replay} & \textbf{خیر (حذف کامل)} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{جمع‌بندی}
+الگوریتم \model{GSPO} با حل ناسازگاری ریاضی نمونه‌برداری اهمیت و اعمال وزن‌دهی و برش همگن در سطح کل توالی، معضل فروپاشی فاجعه‌بار آموزش را برای همیشه برطرف ساخته است. این الگوریتم با حذف نیاز به \en{Routing Replay} در مدل‌های تنک \en{MoE} و افزایش چشمگیر راندمان محاسباتی در زیرساخت‌های توزیع‌شده، به عنوان استاندارد نوین مقیاس‌پذیری یادگیری تقویتی در مدل‌های زبانی استدلالی شناخته می‌شود.

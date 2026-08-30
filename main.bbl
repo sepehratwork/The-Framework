@@ -236,6 +236,46 @@ Rafael Rafailov, Archit Sharma, Eric Mitchell, Stefano Ermon, Christopher~D
   reward model.
 \newblock {\em Advances in Neural Information Processing Systems}, 36, 2023.
 
+\bibitem{zheng2025gspo}
+Chujie Zheng, Shixuan Liu, Mingze Li, Xiong-Hui Chen, Bowen Yu, Chang Gao, Kai
+  Dang, Yuqiong Liu, Rui Men, An~Yang, Jingren Zhou, and Junyang Lin.
+\newblock Group sequence policy optimization.
+\newblock {\em arXiv preprint arXiv:2507.18071}, 2025.
+
+\bibitem{qwen2025technical}
+{Team Qwen}.
+\newblock Qwen3 technical report.
+\newblock {\em arXiv preprint arXiv:2505.09388}, 2025.
+
+\bibitem{qwen2025qwq}
+{Team Qwen}.
+\newblock Qwq-32b: Embracing the power of reinforcement learning.
+\newblock \url{https://qwenlm.github.io/blog/qwq-32b/}, 2025.
+
+\bibitem{openai2024learning}
+OpenAI.
+\newblock Learning to reason with llms.
+\newblock \url{https://openai.com/index/learning-to-reason-with-llms/}, 2024.
+
+\bibitem{deepseek2025r1}
+DeepSeek-AI.
+\newblock Deepseek-r1: Incentivizing reasoning capability in llms via
+  reinforcement learning.
+\newblock {\em arXiv preprint arXiv:2501.12948}, 2025.
+
+\bibitem{minimax2025m1}
+MiniMax.
+\newblock Minimax-m1: Scaling test-time compute efficiently with lightning
+  attention.
+\newblock {\em arXiv preprint arXiv:2506.13585}, 2025.
+
+\bibitem{zheng2023click}
+Chujie Zheng, Pei Ke, Zheng Zhang, and Minlie Huang.
+\newblock Click: Controllable text generation with sequence likelihood
+  contrastive learning.
+\newblock In {\em Findings of the Association for Computational Linguistics:
+  ACL 2023}, pages 65--78, 2023.
+
 \bibitem{wang2016sample}
 Ziyu Wang, Victor Bapst, Nicolas Heess, Volodymyr Mnih, Remi Munos, Koray
   Kavukcuoglu, and Nando de~Freitas.

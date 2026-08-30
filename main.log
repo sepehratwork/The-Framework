@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026/Arch Linux) (preloaded format=xelatex 2026.6.29)  30 AUG 2026 15:58
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026/Arch Linux) (preloaded format=xelatex 2026.6.29)  30 AUG 2026 16:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1418,12 +1418,43 @@ Overfull \hbox (113.37971pt too wide) in paragraph at lines 145--188
  [][][][][][] 
  []
 
-[22] [23]) (./models/ReinforcementLearning/GSPO.tex)
-(./models/ReinforcementLearning/DAPO.tex)
+[22] [23]) (./models/ReinforcementLearning/GSPO.tex
+Overfull \hbox (2.43163pt too wide) in paragraph at lines 1--1
+[]|[]\TU/Vazirmatn(0)/b/n/17.28 الگوریتم بهینه‌سازی توالی گروهی خط‌مشی ([]\TU/L
+iberationSerif(0)/b/n/17.28 Group Sequence[][] 
+ []
+
+[24]
+Overfull \hbox (2.1113pt too wide) in paragraph at lines 22--23
+[]\TU/Vazirmatn(0)/m/it/12 ([]\TU/LiberationSerif(0)/m/n/12 Off-Policy Correcti
+on[]\TU/Vazirmatn(0)/m/it/12 ) و عملگر برش در سطح توکن‌های مجزا، فرمول‌بندی ناد
+رست و ناسازگاری[]
+ []
+
+[25]
+Overfull \hbox (9.36203pt too wide) in paragraph at lines 42--43
+[][]\TU/Vazirmatn(0)/m/it/12 نسبت اهمیت توالی $\OML/cmm/m/it/12 s[]\OT1/cmr/m/n
+/12 (\OML/cmm/m/it/12 ^^R\OT1/cmr/m/n/12 )$ \TU/Vazirmatn(0)/m/it/12 بر اساس مف
+هوم درستی‌نمایی توالی با نرمال‌سازی طولی ([]\TU/LiberationSerif(0)/m/n/12 Lengt
+h-Normalized[][]
+ []
+
+[26]
+Overfull \hbox (3.93292pt too wide) in paragraph at lines 103--105
+[][]\TU/LiberationSerif(0)/b/n/12 Qwen3-30B-A3B[] \TU/Vazirmatn(0)/m/it/12 با ۴
+۸ لایه، پس از هر به‌روزرسانی گرادیان، تخصیص حدود ۱۰٪ از روترهای متخصصان[]
+ []
+
+[27]
+Overfull \hbox (160.23457pt too wide) in paragraph at lines 126--155
+ [][][][][][] 
+ []
+
+[28] [29]) (./models/ReinforcementLearning/DAPO.tex)
 (./models/ReinforcementLearning/SAPO.tex)
 (./models/ReinforcementLearning/CISPO.tex)
-(./models/ReinforcementLearning/RLVR.tex)
-(./models/ReinforcementLearning/RLVR_GRPO.tex)) [24] [25] (./main.bbl
+(./models/ReinforcementLearning/RLVR.tex [30])
+(./models/ReinforcementLearning/RLVR_GRPO.tex)) [31] (./main.bbl
 Missing character: There is no م (U+0645) in font Liberation Serif Bold/OT:scri
 pt=latn;language=dflt;mapping=tex-text;!
 Missing character: There is no ن (U+0646) in font Liberation Serif Bold/OT:scri
@@ -1440,19 +1471,25 @@ Underfull \hbox (badness 1215) in paragraph at lines 91--95
 ptimal data mixtures.  \TU/LiberationSerif(0)/m/it/12 arXiv preprint[]
  []
 
-[26]
+[32]
 Underfull \hbox (badness 1412) in paragraph at lines 181--186
 []\TU/LiberationSerif(0)/m/n/12 dimensional continuous control using generalize
 d advantage estimation.  \TU/LiberationSerif(0)/m/it/12 arXiv preprint[]
  []
 
-[27]
+[33]
 Underfull \hbox (badness 1102) in paragraph at lines 208--211
 [][]\TU/LiberationSerif(0)/m/n/12 John Schulman.  Approximating kl divergence. 
  \TU/LiberationSerif(0)/m/it/12 Online blog: http://joschu.net/blog/kl-[]
  []
 
-) [28] (./main.aux)
+
+Underfull \hbox (badness 10000) in paragraph at lines 256--259
+[][]\TU/LiberationSerif(0)/m/n/12 OpenAI.  Learning to reason with llms.  [][][
+]$[][][][][] [] [] [] [][][][][][] [] [][][] [] [][][][][] []$[][]
+ []
+
+[34]) [35] (./main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
@@ -1462,15 +1499,15 @@ L3 programming layer <2026-01-19>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 40707FCF4610666200D7A22B1FBC046C;8240.
+(rerunfilecheck)             Checksum: 040B46B585FD3BE1764655B662708EBD;8846.
  ) 
 Here is how much of TeX's memory you used:
- 30050 strings out of 469704
- 660991 string characters out of 5467967
- 1067410 words of memory out of 5000000
- 57627 multiletter control sequences out of 15000+600000
- 638584 words of font info for 136 fonts, out of 8000000 for 9000
+ 30142 strings out of 469704
+ 662740 string characters out of 5467967
+ 1068258 words of memory out of 5000000
+ 57717 multiletter control sequences out of 15000+600000
+ 638592 words of font info for 137 fonts, out of 8000000 for 9000
  286 hyphenation exceptions out of 8191
- 88i,18n,106p,1181b,1126s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 88i,18n,106p,1181b,1138s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (29 pages).
+Output written on main.pdf (36 pages).

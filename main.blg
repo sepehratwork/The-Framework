@@ -3,44 +3,49 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: unsrt.bst
 Database file #1: references.bib
-You've used 39 entries,
+Repeated entry---line 300 of file references.bib
+ : @article{shao2024deepseekmath
+ :                              ,
+I'm skipping whatever remains of this entry
+You've used 46 entries,
             1791 wiz_defined-function locations,
-            623 strings with 12000 characters,
-and the built_in function-call counts, 8948 in all, are:
-= -- 620
-> -- 777
-< -- 4
-+ -- 273
-- -- 234
-* -- 639
-:= -- 1645
-add.period$ -- 117
-call.type$ -- 39
-change.case$ -- 39
+            651 strings with 13057 characters,
+and the built_in function-call counts, 10216 in all, are:
+= -- 718
+> -- 849
+< -- 5
++ -- 301
+- -- 255
+* -- 696
+:= -- 1860
+add.period$ -- 138
+call.type$ -- 46
+change.case$ -- 46
 chr.to.int$ -- 0
-cite$ -- 39
-duplicate$ -- 358
-empty$ -- 653
-format.name$ -- 234
-if$ -- 1850
+cite$ -- 46
+duplicate$ -- 419
+empty$ -- 780
+format.name$ -- 255
+if$ -- 2132
 int.to.chr$ -- 0
-int.to.str$ -- 39
-missing$ -- 39
-newline$ -- 198
-num.names$ -- 39
-pop$ -- 107
+int.to.str$ -- 46
+missing$ -- 44
+newline$ -- 233
+num.names$ -- 46
+pop$ -- 137
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 171
+skip$ -- 202
 stack$ -- 0
-substring$ -- 251
-swap$ -- 77
-text.length$ -- 4
+substring$ -- 275
+swap$ -- 92
+text.length$ -- 5
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 59
-width$ -- 41
-write$ -- 401
+while$ -- 69
+width$ -- 48
+write$ -- 472
+(There was 1 error message)
