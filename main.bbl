@@ -1,4 +1,4 @@
-\begin{thebibliography}{10}
+\begin{thebibliography}{100}
 
 \bibitem{li2025farseer}
 Houyi Li, Wenzhen Zheng, Qiufeng Wang, Zhenyu Ding, Haoying Wang, Zili Wang,
@@ -115,6 +115,68 @@ Chaojun Xiao, Jie Cai, Weilin Zhao, Biyuan Lin, Guoyang Zeng, Jie Zhou, Zhi
 \newblock Densing law of llms.
 \newblock {\em Nature Machine Intelligence}, pages 1--11, 2025.
 
+\bibitem{sutton2018reinforcement}
+Richard~S. Sutton and Andrew~G. Barto.
+\newblock {\em Reinforcement Learning: An Introduction}.
+\newblock MIT Press, 2nd edition, 2018.
+
+\bibitem{kakade2002approximately}
+Sham Kakade and John Langford.
+\newblock Approximately optimal approximate reinforcement learning.
+\newblock {\em International Conference on Machine Learning (ICML)},
+  2:267--274, 2002.
+
+\bibitem{sutton2000policy}
+Richard~S. Sutton, David McAllester, Satinder Singh, and Yishay Mansour.
+\newblock Policy gradient methods for reinforcement learning with function
+  approximation.
+\newblock In {\em Advances in Neural Information Processing Systems (NIPS)},
+  volume~12, pages 1057--1063, 2000.
+
+\bibitem{williams1992simple}
+Ronald~J Williams.
+\newblock Simple statistical gradient-following algorithms for connectionist
+  reinforcement learning.
+\newblock {\em Machine Learning}, 8(3-4):229--256, 1992.
+
+\bibitem{bagnell2003covariant}
+J.~Andrew Bagnell and Jeff Schneider.
+\newblock Covariant policy search.
+\newblock In {\em International Joint Conference on Artificial Intelligence
+  (IJCAI)}, pages 1019--1024, 2003.
+
+\bibitem{kakade2002natural}
+Sham Kakade.
+\newblock A natural policy gradient.
+\newblock In {\em Advances in Neural Information Processing Systems (NIPS)},
+  volume~14, pages 1531--1538, 2002.
+
+\bibitem{schulman2015trust}
+John Schulman, Sergey Levine, Philipp Moritz, Michael Jordan, and Pieter
+  Abbeel.
+\newblock Trust region policy optimization.
+\newblock {\em International Conference on Machine Learning (ICML)}, pages
+  1889--1897, 2015.
+
+\bibitem{geist2019theory}
+Matthieu Geist, Bruno Scherrer, and Olivier Pietquin.
+\newblock A theory of regularized markov decision processes.
+\newblock In {\em International Conference on Machine Learning (ICML)},
+  volume~97 of {\em PMLR}, pages 2160--2169, 2019.
+
+\bibitem{scherrer2014approximate}
+Bruno Scherrer.
+\newblock Approximate policy iteration schemes: A comparison.
+\newblock In {\em International Conference on Machine Learning (ICML)},
+  volume~32 of {\em JMLR W\&CP}, pages 1314--1322, 2014.
+
+\bibitem{scherrer2012use}
+Bruno Scherrer and Boris Lesner.
+\newblock On the use of non-stationary policies for stationary infinite-horizon
+  markov decision processes.
+\newblock In {\em Advances in Neural Information Processing Systems (NIPS)},
+  volume~25, 2012.
+
 \bibitem{schulman2017proximal}
 John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Radford, and Oleg Klimov.
 \newblock Proximal policy optimization algorithms.
@@ -146,31 +208,12 @@ Yan Duan, Xi~Chen, Rein Houthooft, John Schulman, and Pieter Abbeel.
 \newblock {\em International Conference on Machine Learning (ICML)}, pages
   1329--1338, 2016.
 
-\bibitem{williams1992simple}
-Ronald~J Williams.
-\newblock Simple statistical gradient-following algorithms for connectionist
-  reinforcement learning.
-\newblock {\em Machine Learning}, 8(3-4):229--256, 1992.
-
 \bibitem{mnih2016asynchronous}
 Volodymyr Mnih, Adria~Puigdomenech Badia, Mehdi Mirza, Alex Graves, Timothy
   Lillicrap, Tim Harley, David Silver, and Koray Kavukcuoglu.
 \newblock Asynchronous methods for deep reinforcement learning.
 \newblock {\em International Conference on Machine Learning (ICML)}, pages
   1928--1937, 2016.
-
-\bibitem{kakade2002approximately}
-Sham Kakade and John Langford.
-\newblock Approximately optimal approximate reinforcement learning.
-\newblock {\em International Conference on Machine Learning (ICML)},
-  2:267--274, 2002.
-
-\bibitem{schulman2015trust}
-John Schulman, Sergey Levine, Philipp Moritz, Michael Jordan, and Pieter
-  Abbeel.
-\newblock Trust region policy optimization.
-\newblock {\em International Conference on Machine Learning (ICML)}, pages
-  1889--1897, 2015.
 
 \bibitem{kingma2014adam}
 Diederik~P Kingma and Jimmy Ba.
@@ -566,5 +609,18 @@ Junteng Liu, Yuanxiang Fan, Zhuo Jiang, Han Ding, Yongyi Hu, Chi Zhang, et~al.
 \newblock Synlogic: Synthesizing verifiable reasoning data at scale for
   learning logical reasoning and beyond.
 \newblock {\em arXiv preprint arXiv:2505.19641}, 2025.
+
+\bibitem{bagnell2003policy}
+J.~Andrew Bagnell, Sham~M. Kakade, Andrew~Y. Ng, and Jeff Schneider.
+\newblock Policy search by dynamic programming.
+\newblock In {\em Advances in Neural Information Processing Systems (NIPS)},
+  volume~16, 2003.
+
+\bibitem{scherrer2014local}
+Bruno Scherrer and Matthieu Geist.
+\newblock Local policy search in a convex space and conservative policy
+  iteration as boosted policy search.
+\newblock In {\em European Conference on Machine Learning (ECML)}, volume 8725
+  of {\em LNAI}, pages 35--50, 2014.
 
 \end{thebibliography}

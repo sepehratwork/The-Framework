@@ -1,1 +1,306 @@
-\item \textbf asd
+\item
+\subsection*{مبانی و تئوری الگوریتم‌های مبتنی بر خط‌مشی (\en{Policy-Based RL Theory})}
+
+\subsubsection*{مقدمه و انگیزه‌های بنیادین}
+روش‌های یادگیری تقویتی سنتی مبتنی بر ارزش (\en{Value-Based})، نظیر \en{Q-Learning}، خط‌مشی را از طریق بیشینه‌سازی مقادیر عمل ($a = \operatorname{argmax}_a Q(s,a)$) استخراج می‌کنند. این رویکردها با چالش‌های نظری و محاسباتی متعددی روبه‌رو هستند~\cite{sutton2018reinforcement}:
+\begin{itemize}
+    \item \textbf{انقطاع در خط‌مشی (\en{Discontinuity}):} تغییرات بسیار کوچک در مقادیر تقریب‌زده‌شده $Q(s, a)$ می‌تواند منجر به تغییرات ناگهانی و ناپیوسته در خط‌مشی انتخابی شود که مانع از همگرایی پایدار در فضاهای پارامتری پیوسته می‌گردد~\cite{kakade2002approximately}.
+    \item \textbf{فضاهای عمل پیوسته (\en{Continuous Action Spaces}):} حل مسئله بیشینه‌سازی پیوسته $\max_{a \in \mathcal{A}} Q(s, a)$ در هر گام محاسباتی، به‌ویژه با تقریب‌زننده‌های عصبی، بسیار پرهزینه است.
+    \item \textbf{خط‌مشی‌های تصادفی بهینه (\en{Stochastic Policies}):} در محیط‌های با مشاهدات جزئی (\en{POMDPs}) و در شرایط تقریب تابع، خط‌مشی بهینه ممکن است ماهیتاً تصادفی باشد (مانند بازی‌های با اطلاعات ناقص یا راهروی کوتاه با اعمال معکوس~\cite{sutton2018reinforcement}).
+\end{itemize}
+
+الگوریتم‌های مبتنی بر خط‌مشی (\en{Policy-Based}) با پارامترسازی مستقیم خط‌مشی $\pi_\theta(a|s)$ توسط بردار پارامتر $\theta \in \mathbb{R}^d$، تابع هدف عملکردی $J(\theta)$ را به صورت هموار و مستقیم بهینه‌سازی می‌کنند.
+
+% --- TikZ Diagram 1: Taxonomy and Architecture ---
+\begin{center}
+\begin{tikzpicture}[
+    auto,
+    block/.style={
+        rectangle, 
+        draw=blue!70!black, 
+        fill=blue!5, 
+        rounded corners=6pt, 
+        thick, 
+        text centered, 
+        minimum height=3.5em, 
+        text width=3.8cm,
+        font=\small\bfseries,
+        drop shadow
+    },
+    accentblock/.style={
+        rectangle, 
+        draw=teal!70!black, 
+        fill=teal!8, 
+        rounded corners=6pt, 
+        thick, 
+        text centered, 
+        minimum height=3.5em, 
+        text width=3.8cm,
+        font=\small\bfseries,
+        drop shadow
+    },
+    critblock/.style={
+        rectangle, 
+        draw=orange!80!black, 
+        fill=orange!10, 
+        rounded corners=6pt, 
+        thick, 
+        text centered, 
+        minimum height=3.5em, 
+        text width=3.8cm,
+        font=\small\bfseries,
+        drop shadow
+    },
+    line/.style={
+        draw=blue!80!black, 
+        -Latex, 
+        very thick, 
+        rounded corners=4pt
+    }
+]
+
+    % Nodes
+    \node [block] (mdp) {فرآیند تصمیم‌گیری مارکوف\\ $\mathcal{M} = \langle \mathcal{S}, \mathcal{A}, \mathcal{P}, r, \gamma \rangle$};
+    
+    \node [accentblock, right=2.2cm of mdp] (pgt) {قضیه گرادیان خط‌مشی\\ \en{Policy Gradient Theorem}\\ $\nabla J(\theta) \propto \mathbb{E}[\nabla \ln \pi_\theta Q^\pi]$};
+    
+    \node [critblock, above right=1.2cm and 2.2cm of pgt] (rf) {\en{REINFORCE}\\ نمونه‌برداری مونت‌کارلو\\ بازگشت کامل $G_t$};
+    \node [critblock, below right=1.2cm and 2.2cm of pgt] (ac) {بازیگر-منتقد (\en{Actor-Critic})\\ تقریب $Q$ یا $A$ با خطای \en{TD}\\ $\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t)$};
+    
+    \node [block, below=1.8cm of pgt] (nat) {هندسه اطلاعات و گرادیان طبیعی\\ \en{Natural / Covariant Gradient}\\ $\widetilde{\nabla} J(\theta) = G(\theta)^{-1} \nabla J(\theta)$};
+    
+    \node [accentblock, right=2.2cm of nat] (trpo) {ناحیه اعتماد و بهبود یکنواخت\\ \en{CPI} و \en{TRPO}\\ $\max L_\theta \quad \text{s.t.} \quad \bar{D}_{KL} \le \delta$};
+
+    % Edges
+    \path [line] (mdp) -- (pgt);
+    \path [line] (pgt) |- (rf);
+    \path [line] (pgt) |- (ac);
+    \path [line] (pgt) -- (nat);
+    \path [line] (nat) -- (trpo);
+    \path [line] (ac) |- (trpo);
+
+\end{tikzpicture}
+\end{center}
+
+\subsubsection*{قضیه گرادیان خط‌مشی (\en{Policy Gradient Theorem})}
+فرآیند تصمیم‌گیری مارکوف را با توزیع اولیه $\rho_0$، پاداش کران‌دار $r(s,a)$ و ضریب تنزیل $\gamma \in [0, 1)$ در نظر می‌گیریم. تابع ارزش حالت $V^\pi(s)$ و ارزش حالت-عمل $Q^\pi(s,a)$ به صورت زیر تعریف می‌شوند:
+\begin{align}
+V^\pi(s) &\triangleq \mathbb{E}_{\pi} \left[ \sum_{t=0}^\infty \gamma^t r(s_t, a_t) \;\Bigg|\; s_0 = s \right], \\
+Q^\pi(s, a) &\triangleq r(s, a) + \gamma \sum_{s' \in \mathcal{S}} \mathcal{P}(s'|s, a) V^\pi(s').
+\end{align}
+همچنین تابع مزیت (\en{Advantage Function}) برابر است با $A^\pi(s, a) \triangleq Q^\pi(s, a) - V^\pi(s)$. معیار عملکرد هدف برای حالت اپیزودیک برابر با $J(\theta) \triangleq V^{\pi_\theta}(s_0)$ است.
+
+\paragraph*{اثبات تحلیلی در حالت اپیزودیک:}
+با مشتق‌گیری مستقیم نسبت به $\theta$ (برای سادگی نماد، $\pi \equiv \pi_\theta$):
+\begin{align}
+\nabla V^\pi(s) &= \nabla \left[ \sum_{a \in \mathcal{A}} \pi(a|s) Q^\pi(s, a) \right] \nonumber \\
+&= \sum_{a \in \mathcal{A}} \left[ \nabla \pi(a|s) Q^\pi(s, a) + \pi(a|s) \nabla Q^\pi(s, a) \right].
+\end{align}
+با توجه به اینکه پاداش و ماتریس انتقال محیط مستقل از $\theta$ هستند:
+\begin{equation}
+\nabla Q^\pi(s, a) = \nabla \left[ r(s, a) + \gamma \sum_{s'} \mathcal{P}(s'|s, a) V^\pi(s') \right] = \gamma \sum_{s'} \mathcal{P}(s'|s, a) \nabla V^\pi(s').
+\end{equation}
+با جایگذاری در رابطه قبل و گشودن رابطه به صورت بازگشتی روی زمان (\en{Unrolling}):
+\begin{align}
+\nabla V^\pi(s) &= \sum_{a} \nabla \pi(a|s) Q^\pi(s, a) + \gamma \sum_{s'} P_\pi(s'|s) \nabla V^\pi(s') \nonumber \\
+&= \sum_{x \in \mathcal{S}} \sum_{t=0}^\infty \gamma^t \Pr(s \to x, t, \pi) \sum_{a} \nabla \pi(a|x) Q^\pi(x, a).
+\end{align}
+با تعریف توزیع اشغال حالات تنزیل‌شده $\rho_\pi(s) \triangleq \sum_{t=0}^\infty \gamma^t \Pr(s_0 \to s, t, \pi)$، گرادیان عملکرد به دست می‌آید~\cite{sutton2000policy}:
+\begin{equation}
+\nabla J(\theta) = \sum_{s \in \mathcal{S}} \rho_\pi(s) \sum_{a \in \mathcal{A}} \nabla \pi_\theta(a|s) Q^\pi(s, a) = \mathbb{E}_{s \sim \rho_\pi, a \sim \pi_\theta} \left[ \nabla_\theta \ln \pi_\theta(a|s) Q^\pi(s, a) \right].
+\end{equation}
+
+\paragraph*{حالت نامتناهی با پاداش میانگین (\en{Continuing / Average-Reward Case}):}
+برای مسائل پیوسته، عملکرد با نرخ پاداش میانگین $r(\pi) \triangleq \lim_{h \to \infty} \frac{1}{h} \sum_{t=1}^h \mathbb{E}[R_t]$ تعریف می‌شود. با تعریف تابع ارزش دیفرانسیلی $V^\pi(s) = \sum_a \pi(a|s) [r(s,a) - r(\pi) + \sum_{s'} \mathcal{P}(s'|s,a)V^\pi(s')]$ و ضرب در توزیع ایستا $\mu(s)$، رابطه زیر با خنثی شدن تغییرات ارزش حاصل می‌شود~\cite{sutton2018reinforcement}:
+\begin{equation}
+\nabla J(\theta) = \nabla r(\pi) = \sum_{s \in \mathcal{S}} \mu(s) \sum_{a \in \mathcal{A}} \nabla \pi_\theta(a|s) Q^\pi(s, a).
+\end{equation}
+
+\subsubsection*{الگوریتم \en{REINFORCE} و خط مبنا (\en{Baseline})}
+الگوریتم \en{REINFORCE}~\cite{williams1992simple} از بازگشت تجربی مسیر $G_t = \sum_{k=t+1}^T \gamma^{k-t-1} R_k$ به عنوان برآوردگر نااریب $Q^\pi(S_t, A_t)$ استفاده می‌کند:
+\begin{equation}
+\theta_{t+1} = \theta_t + \alpha \gamma^t G_t \nabla_\theta \ln \pi_\theta(A_t | S_t).
+\end{equation}
+برای کاهش واریانس، یک تابع خط مبنا $b(s)$ مستقل از عمل تفریق می‌گردد. از آنجا که:
+\begin{equation}
+\sum_{a \in \mathcal{A}} \nabla \pi_\theta(a|s) b(s) = b(s) \nabla_\theta \sum_{a \in \mathcal{A}} \pi_\theta(a|s) = b(s) \nabla_\theta (1) = \mathbf{0},
+\end{equation}
+تفریق خط مبنا هیچ اریبی در تخمین گرادیان ایجاد نکرده و واریانس را به شدت کاهش می‌دهد. انتخاب $b(s) = V(s)$ ضریب گرادیان را به مزیت $A(s, a)$ تبدیل می‌کند~\cite{sutton2018reinforcement}.
+
+\subsubsection*{هندسه اطلاعات و گرادیان خط‌مشی هم‌وردا (\en{Covariant Policy Search})}
+گرادیان استاندارد اقلیدسی به شدت وابسته به نحوه پارامترسازی است (\en{Non-Covariant}). برای تحقق استقلال از پارامترسازی، بگنل و اشنایدر~\cite{bagnell2003covariant} منیفلد آماری توزیع کل مسیرها (\en{Path Space}) را تعریف کردند:
+\begin{equation}
+P(\xi; \theta) = \rho_0(s_0) \prod_{t=0}^{T-1} \pi_\theta(a_t | s_t) \mathcal{P}(s_{t+1} | s_t, a_t).
+\end{equation}
+طبق \textbf{قضیه چنتسوف (\en{Chentsov's Theorem})}، تنها متریک ریمانی که نسبت به تبدیل‌های آماری و تعویض متغیرها ناوردا است، \textbf{متریک فیشر-رائو (\en{Fisher-Rao Metric})} است~\cite{bagnell2003covariant, kakade2002natural}:
+\begin{equation}
+G(\theta) = \mathbb{E}_{\xi \sim P(\cdot; \theta)} \left[ \nabla_\theta \ln P(\xi; \theta) \nabla_\theta \ln P(\xi; \theta)^\top \right] = \mathbb{E}_{s \sim d_{\rho_0, \pi}} \left[ \sum_{a \in \mathcal{A}} \pi_\theta(a|s) \nabla_\theta \ln \pi_\theta(a|s) \nabla_\theta \ln \pi_\theta(a|s)^\top \right].
+\end{equation}
+جهت صعود بیشترین شیب هم‌وردا (\en{Natural Policy Gradient}) به صورت زیر حاصل می‌شود:
+\begin{equation}
+\widetilde{\nabla} J(\theta) = G(\theta)^{-1} \nabla J(\theta).
+\end{equation}
+کاکاده~\cite{kakade2002natural} نشان داد که اگر تابع ارزش با تقریب‌زننده خطی سازگار (\en{Compatible Function Approximation}) $f_w(s, a) = w^\top \nabla_\theta \ln \pi_\theta(a|s)$ تقریب زده شود، وزن‌های بهینه کمترین مربعات دقیقاً منطبق بر گرادیان طبیعی هستند: $w^* = \widetilde{\nabla} J(\theta)$.
+
+\subsubsection*{تکرار خط‌مشی محافظه‌کارانه (\en{CPI}) و کران‌های بهبود}
+کاکاده و لنگفورد~\cite{kakade2002approximately} اتحاد تفاوت عملکرد (\en{Performance Difference Lemma}) را برای هر دو خط‌مشی دلخواه $\pi$ و $\tilde{\pi}$ اثبات کردند:
+\begin{equation}
+\eta(\tilde{\pi}) - \eta(\pi) = \sum_{s \in \mathcal{S}} \rho_{\tilde{\pi}}(s) \sum_{a \in \mathcal{A}} \tilde{\pi}(a|s) A^\pi(s, a).
+\end{equation}
+با تقریب توزیع حالات توسط خط‌مشی فعلی، تقریب محلی زیر تعریف می‌شود:
+\begin{equation}
+L_\pi(\tilde{\pi}) \triangleq \eta(\pi) + \sum_{s \in \mathcal{S}} \rho_\pi(s) \sum_{a \in \mathcal{A}} \tilde{\pi}(a|s) A^\pi(s, a).
+\end{equation}
+در الگوریتم \en{CPI}، به‌روزرسانی خط‌مشی به صورت ترکیب تصادفی $\pi_{\text{new}} = (1 - \alpha)\pi + \alpha \pi'$ با سیاست حریصانه $\pi'$ صورت می‌گیرد. با استفاده از نظریه جفت‌شدگی متغیرهای تصادفی (\en{$\alpha$-Coupling})، کران بهبود زیر اثبات می‌شود~\cite{kakade2002approximately}:
+\begin{equation}
+\eta(\pi_{\text{new}}) \ge L_\pi(\pi_{\text{new}}) - \frac{2\gamma\epsilon}{(1 - \gamma)^2} \alpha^2, \quad \text{where} \quad \epsilon = \max_s |\mathbb{E}_{a \sim \pi'} [A^\pi(s, a)]|.
+\end{equation}
+
+\subsubsection*{بهینه‌سازی در ناحیه اعتماد (\en{TRPO})}
+شولمن و همکاران~\cite{schulman2015trust} کران بهبود \en{CPI} را با استفاده از تئوری اختلال اپراتوری به تمامی فضاهای خط‌مشی تصادفی بر حسب واگرایی تغییرات کل ($D_{TV}$) و واگرایی کولبک-لایبلر ($D_{KL}$) تعمیم دادند:
+\begin{equation}
+\eta(\pi_{\text{new}}) \ge L_{\pi_{\text{old}}}(\pi_{\text{new}}) - \frac{4\epsilon\gamma}{(1 - \gamma)^2} \max_{s} D_{TV}(\pi_{\text{old}}(\cdot|s) \parallel \pi_{\text{new}}(\cdot|s))^2.
+\end{equation}
+با استفاده از نامساوی پینسکر ($D_{TV}^2 \le \frac{1}{2} D_{KL}$)، مسئله بهینه‌سازی در ناحیه اعتماد (\en{Trust Region}) به فرم زیر حاصل می‌شود:
+\begin{equation}
+\max_{\theta} L_{\theta_{\text{old}}}(\theta) \quad \text{subject to} \quad \bar{D}_{KL}^{\rho_{\theta_{\text{old}}}}(\theta_{\text{old}}, \theta) \le \delta.
+\end{equation}
+حل تقریبی این مسئله درجه دوم مقید توسط روش گرادیان مزدوج (\en{Conjugate Gradient}) و ضرب ماتریس فیشر-بردار (\en{Fisher-Vector Product}) به فرم زیر اجرا می‌گردد~\cite{schulman2015trust}:
+\begin{equation}
+\theta_{\text{new}} = \theta_{\text{old}} + \sqrt{\frac{2\delta}{g^\top A^{-1} g}} A^{-1} g, \quad g = \nabla_\theta L_{\theta_{\text{old}}}(\theta), \quad A = \nabla_\theta^2 \bar{D}_{KL}.
+\end{equation}
+
+\begin{latin}
+\begin{algorithm}[H]
+\caption{Trust Region Policy Optimization (TRPO)}
+\begin{algorithmic}[1]
+\Require Initial policy parameters $\theta_0$, KL step size limit $\delta$, line search backtrack coefficient $\zeta \in (0, 1)$
+\For{$k = 0, 1, 2, \dots$}
+    \State Collect trajectory rollouts $\mathcal{D}_k = \{\tau_i\}$ using policy $\pi_{\theta_k}$.
+    \State Estimate advantages $\hat{A}^{\pi_{\theta_k}}(s_t, a_t)$ using GAE or state-value baseline.
+    \State Compute objective gradient: $g_k = \nabla_\theta L_{\theta_k}(\theta)|_{\theta = \theta_k}$.
+    \State Compute Fisher Information Matrix-vector product function $v \mapsto A_k v = \nabla_\theta \left( (\nabla_\theta \bar{D}_{KL})^\top v \right)$.
+    \State Solve $A_k x_k \approx g_k$ using the Conjugate Gradient algorithm.
+    \State Compute maximal step length: $\beta_k = \sqrt{2\delta / (x_k^\top A_k x_k)}$.
+    \State Update direction: $\Delta \theta_k = \beta_k x_k$.
+    \State Perform backtracking line search: find smallest integer $j \ge 0$ such that:
+    \State \quad $L_{\theta_k}(\theta_k + \zeta^j \Delta \theta_k) > 0$ and $\bar{D}_{KL}(\theta_k, \theta_k + \zeta^j \Delta \theta_k) \le \delta$.
+    \State Update parameter: $\theta_{k+1} = \theta_k + \zeta^j \Delta \theta_k$.
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+\end{latin}
+
+\subsubsection*{تئوری فرآیندهای مارکوف منظم‌شده (\en{Regularized MDPs})}
+گایست، شرر و پیتکین~\cite{geist2019theory} با معرفی عملگرهای بلمن منظم‌شده از طریق تبدیل لژاندر-فنچل (\en{Legendre-Fenchel Conjugate})، تئوری یکپارچه‌ای برای منظم‌سازی آنتروپی و واگرایی برگمن ارائه دادند:
+\begin{align}
+T_{\pi, \Omega} V &\triangleq T_\pi V - \Omega(\pi) = r_\pi - \Omega(\pi) + \gamma P_\pi V, \\
+T_{*,\Omega} V &\triangleq \max_{\pi \in \Delta(\mathcal{A})} T_{\pi, \Omega} V = \Omega^*(q), \quad \text{where} \quad q(s, a) = r(s, a) + \gamma \mathbb{E}_{s'}[V(s')].
+\end{align}
+عملگرهای $T_{\pi, \Omega}$ و $T_{*,\Omega}$ هر دو $\gamma$-انقباض در نرم بی‌نهایت هستند. در الگوریتم فرود آینه‌ای تکرار خط‌مشی اصلاح‌شده (\en{MD-MPI})، با جایگزینی $\Omega(\pi)$ با واگرایی برگمن $D_\Omega(\pi \parallel \pi_k)$ نسبت به خط‌مشی مرحله قبل:
+\begin{equation}
+\pi_{k+1} = \operatorname{argmax}_\pi \left( \langle q_k, \pi \rangle - D_\Omega(\pi \parallel \pi_k) \right).
+\end{equation}
+با استفاده از \textbf{اتحاد سه‌نقطه‌ای برگمن (\en{Three-Point Identity})}، نرخ همگرایی میانگین حسرت (\en{Regret}) به فرم زیر اثبات می‌شود~\cite{geist2019theory}:
+\begin{equation}
+\frac{1}{K} \sum_{k=1}^K \|V^* - V^{\pi_k}\|_\infty \le \frac{1 - \gamma^K}{(1 - \gamma)^2} \left[ \frac{2\gamma \|V^* - V_0\|_\infty + \max_\pi \|D_\Omega(\pi \parallel \pi_0)\|_\infty}{K} \right] = \mathcal{O}\left(\frac{1}{K}\right).
+\end{equation}
+
+\subsubsection*{مقایسه ساختاریافته الگوریتم‌های تکرار خط‌مشی تقریبی}
+شرر~\cite{scherrer2014approximate} چهار خانواده الگوریتم‌های تکرار خط‌مشی تقریبی را از منظر ضرایب تمرکزپذیری (\en{Concentrability Coefficients}) مقایسه کرده است:
+\begin{itemize}
+    \item $C_{\pi^*} \triangleq \| \frac{d_{\mu, \pi^*}}{\nu} \|_\infty$ (تنها توزیع خط‌مشی بهینه $\pi^*$ را می‌سنجد و بهترین ضریب است).
+    \item $C^{(1, 0)} \triangleq (1 - \gamma) \sum_{i=0}^\infty \gamma^i \sup_{\pi_1, \dots, \pi_i} \| \frac{\mu P_{\pi_1} \dots P_{\pi_i}}{\nu} \|_\infty$.
+    \item $C^{(2, 1, 0)}$ بدترین ضریب است که خطاهای تمام خط‌مشی‌ها را در بدترین حالت ترکیب می‌کند.
+\end{itemize}
+
+% --- TikZ Diagram 2: Concentrability Hierarchy ---
+\begin{center}
+\begin{tikzpicture}[
+    node distance=1.6cm and 2.5cm,
+    cnode/.style={
+        rectangle, 
+        draw=blue!80!black, 
+        fill=blue!8, 
+        rounded corners=5pt, 
+        thick, 
+        text centered, 
+        minimum width=2.4cm, 
+        minimum height=2.2em,
+        font=\small\bfseries,
+        drop shadow
+    },
+    bestnode/.style={
+        rectangle, 
+        draw=green!60!black, 
+        fill=green!15, 
+        rounded corners=5pt, 
+        very thick, 
+        text centered, 
+        minimum width=2.8cm, 
+        minimum height=2.4em,
+        font=\small\bfseries,
+        drop shadow
+    },
+    worstnode/.style={
+        rectangle, 
+        draw=red!70!black, 
+        fill=red!10, 
+        rounded corners=5pt, 
+        thick, 
+        text centered, 
+        minimum width=2.4cm, 
+        minimum height=2.2em,
+        font=\small\bfseries,
+        drop shadow
+    },
+    harrow/.style={
+        -Latex, 
+        thick, 
+        draw=blue!70!black
+    }
+]
+
+    % Tree of concentrability
+    \node [bestnode] (cstar) {$C_{\pi^*}$ \scriptsize(بهترین ضریب)};
+    
+    \node [cnode, below left=1.2cm and 1.5cm of cstar] (c1star) {$C^{(1)}_{\pi^*}$};
+    \node [cnode, below right=1.2cm and 1.5cm of cstar] (c10) {$C^{(1,0)}$};
+    
+    \node [cnode, below=1.2cm of c1star] (c1m) {$C^{(1,m)}$};
+    \node [cnode, below=1.2cm of c10] (c2mm) {$C^{(2,m,m)}$};
+    
+    \node [worstnode, below right=1.2cm and 0.4cm of c1m] (c210) {$C^{(2,1,0)}$};
+    \node [worstnode, below left=1.2cm and 0.4cm of c2mm] (c2m0) {$C^{(2,m,0)}$ \scriptsize(بدترین)};
+
+    \path [harrow] (cstar) -- (c1star);
+    \path [harrow] (cstar) -- (c10);
+    \path [harrow] (c1star) -- (c1m);
+    \path [harrow] (c10) -- (c2mm);
+    \path [harrow] (c1m) -- (c210);
+    \path [harrow] (c2mm) -- (c2m0);
+    \path [harrow] (c10) -- (c2m0);
+    \path [harrow] (c1star) -- (c210);
+
+\end{tikzpicture}
+\end{center}
+
+\begin{table}[H]
+\centering
+\caption{مقایسه مشخصه‌های نظری الگوریتم‌های تکرار خط‌مشی تقریبی~\cite{scherrer2014approximate}}
+\vspace{2mm}
+\label{tab:api_cpi_comparison}
+\small
+\begin{tabular}{lcccc}
+\toprule
+\textbf{الگوریتم} & \textbf{کران خطای عملکرد} ($\mu(V^* - V^{\pi_k})$) & \textbf{تعداد تکرارها} & \textbf{پیچیدگی حافظه} & \textbf{نوع خط‌مشی} \\
+\midrule
+\textbf{\en{API}} & $\frac{C^{(2,1,0)}}{(1-\gamma)^2} \epsilon$ & $\mathcal{O}\left(\frac{1}{1-\gamma} \ln \frac{1}{\epsilon}\right)$ & $\mathcal{O}(1)$ & ایستا و قطعی \\
+\textbf{\en{CPI}} & $\frac{C_{\pi^*}}{(1-\gamma)^2} \epsilon$ & $\mathcal{O}\left(\frac{1}{\epsilon^2}\right)$ & $\mathcal{O}\left(\frac{1}{\epsilon^2}\right)$ & ایستا و تصادفی (مخلوط) \\
+\textbf{$\text{\en{PSDP}}_\infty$} & $\frac{C_{\pi^*}}{(1-\gamma)^2} \epsilon \ln \frac{1}{\epsilon}$ & $\mathcal{O}\left(\frac{1}{1-\gamma} \ln \frac{1}{\epsilon}\right)$ & $\mathcal{O}\left(\frac{1}{1-\gamma} \ln \frac{1}{\epsilon}\right)$ & غیرایستا (حلقه‌ای) \\
+\textbf{$\text{\en{NSPI}}(m)$} & $\left(C_{\pi^*} + \frac{\gamma^m C^{(2,m,0)}}{m(1-\gamma^m)}\right) \frac{\epsilon \ln(1/\epsilon)}{(1-\gamma)^2}$ & $\mathcal{O}\left(\frac{1}{1-\gamma} \ln \frac{1}{\epsilon}\right)$ & $\mathcal{O}(m)$ & $m$-دوره‌ای غیرایستا \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+همان‌طور که در جدول مشاهده می‌شود، الگوریتم $\text{\en{PSDP}}_\infty$ بهترین ویژگی‌های هر دو روش \en{API} (همگرایی سریع لگاریتمی) و \en{CPI} (ضریب تمرکزپذیری بهینه $C_{\pi^*}$) را ترکیب می‌کند. الگوریتم $\text{\en{NSPI}}(m)$ نیز با معرفی حافظه با اندازه ثابت $m$، خطای ناشی از تقریب را با ضریب هندسی کاهشی $\gamma^m$ کنترل کرده و تعادل کاملی میان مصرف حافظه و کیفیت عملکرد بر قرار می‌سازد~\cite{scherrer2014approximate, scherrer2012use}.
