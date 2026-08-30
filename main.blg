@@ -47,46 +47,54 @@ Repeated entry---line 576 of file references.bib
  : @article{ouyang2022training
  :                            ,
 I'm skipping whatever remains of this entry
+Repeated entry---line 716 of file references.bib
+ : @article{shao2024deepseekmath
+ :                              ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 723 of file references.bib
+ : @article{yu2025dapo
+ :                    ,
+I'm skipping whatever remains of this entry
 Warning--can't use both volume and number fields in chen2023sufficiency
-You've used 84 entries,
+You've used 91 entries,
             1791 wiz_defined-function locations,
-            804 strings with 21748 characters,
-and the built_in function-call counts, 19877 in all, are:
-= -- 1346
-> -- 1730
+            832 strings with 23172 characters,
+and the built_in function-call counts, 21360 in all, are:
+= -- 1430
+> -- 1891
 < -- 12
-+ -- 608
-- -- 524
-* -- 1406
-:= -- 3587
-add.period$ -- 253
-call.type$ -- 84
-change.case$ -- 84
++ -- 664
+- -- 573
+* -- 1517
+:= -- 3881
+add.period$ -- 274
+call.type$ -- 91
+change.case$ -- 91
 chr.to.int$ -- 0
-cite$ -- 85
-duplicate$ -- 813
-empty$ -- 1512
-format.name$ -- 524
-if$ -- 4158
+cite$ -- 92
+duplicate$ -- 869
+empty$ -- 1610
+format.name$ -- 573
+if$ -- 4452
 int.to.chr$ -- 0
-int.to.str$ -- 84
-missing$ -- 82
-newline$ -- 423
-num.names$ -- 84
-pop$ -- 274
+int.to.str$ -- 91
+missing$ -- 89
+newline$ -- 458
+num.names$ -- 91
+pop$ -- 295
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 392
+skip$ -- 413
 stack$ -- 0
 substring$ -- 530
-swap$ -- 193
+swap$ -- 200
 text.length$ -- 12
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 1
-while$ -- 126
-width$ -- 86
-write$ -- 863
-(There were 11 error messages)
+while$ -- 133
+width$ -- 93
+write$ -- 933
+(There were 13 error messages)

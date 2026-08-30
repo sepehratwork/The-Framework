@@ -1,1 +1,281 @@
-\item \textbf asd
+\subsection{الگوریتم یادگیری تقویتی با پاداش‌های قابل اعتبارسنجی و بهینه‌سازی گروهی (\en{OlmoRL: RLVR + GRPO})}
+
+الگوریتم \model{OlmoRL} که در جریان توسعه خانواده مدل‌های زبانی باز \model{Olmo 3} توسط مؤسسه هوش مصنوعی آلن (\en{Ai2}) در سال ۲۰۲۵ معرفی شد \cite{olmo32025}، یک چارچوب پیشرفته در حوزه پس‌آموزش (\en{Post-Training}) استدلالی به شمار می‌رود. این الگوریتم با ارتقا و بازمهندسی الگوریتم بهینه‌سازی خط‌مشی نسبی گروهی (\en{Group Relative Policy Optimization - GRPO}) \cite{shao2024deepseekmath} و تلفیق آن با یادگیری تقویتی مبتنی بر پاداش‌های قابل اعتبارسنجی (\en{Reinforcement Learning with Verifiable Rewards - RLVR})، امکان آموزش پایدار و مقیاس‌پذیر مدل‌های زبانی را برای تولید زنجیره‌های طولانی تفکر (\en{Long Thinking Traces}) تا سقف ۳۲۷۶۸ توکن بدون نیاز به شبکه نقاد (\en{Critic Network}) فراهم می‌سازد.
+
+\subsubsection*{تاریخچه، انگیزه و ضرورت پیدایش الگوریتم}
+
+توسعه مدل‌های استدلالی متن‌باز در سال‌های اخیر با چالش‌های بنیادین در مرحله یادگیری تقویتی روبرو بوده است:
+\begin{itemize}
+    \item \textbf{محدودیت‌های ساختاری الگوریتم \model{PPO}:} الگوریتم سنتی \model{PPO} \cite{schulman2017proximal} نیازمند نگهداری یک شبکه نقاد مستقل هم‌اندازه با مدل زبانی جهت تخمین تابع ارزش $V(s)$ است. در مدل‌های زبانی بزرگ، این شبکه معادل با دوبرابر شدن مصرف حافظه گرافیکی (\en{VRAM}) بوده و تخمین ارزش برای توالی‌های متنی بسیار طولانی با نوسانات شدید و ناپایداری همراه است.
+    \item \textbf{نارسایی‌های الگوریتم \model{GRPO} اولیه در توالی‌های طولانی:} اگرچه \model{GRPO} \cite{shao2024deepseekmath} با جایگزینی خط مبنای گروهی (\en{Group Baseline}) نیاز به نقاد را مرتفع ساخت، اما در مواجهه با زنجیره‌های تفکر طولانی با معضلاتی نظیر «سوگیری طول» (\en{Length Bias})، «سوگیری دشواری ناشی از نرمال‌سازی انحراف معیار» \cite{liu2025drgrpo} و «اتلاف محاسبات در دسته‌های با گرادیان صفر» مواجه می‌شود \cite{yu2025dapo}.
+    \item \textbf{رانش توزیع در استنتاج ناهمگام (\en{Off-Policy Drift}):} در سیستم‌های توزیع‌شده مقیاس‌بزرگ، عدم انطباق آماری میان موتور استنتاج سریع نظیر \en{vLLM} و موتور آموزش (\en{Learner})، تخمین نسبت اهمیت را مخدوش می‌سازد \cite{yao2025offpolicy}.
+\end{itemize}
+
+الگوریتم \model{OlmoRL} با هدف برطرف ساختن این موانع، افزایش پایداری در طول دوره‌های طولانی آموزش، بیشینه‌سازی بهره‌وری توان محاسباتی سخت‌افزار (\en{MFU}) و گسترش مرزهای استدلال مدل به فراتر از داده‌های نظارت‌شده طراحی شده است.
+
+\subsubsection*{مبانی نظری و اشتقاق‌های کامل ریاضی}
+
+مدل زبانی به عنوان خط‌مشی تصادفی پارامتریزه شده $\pi_\theta$ تعریف می‌شود که به ازای پرامپت ورودی $x = (x_1, \dots, x_M)$، توالی توکن‌های پاسخ $y = (y_1, \dots, y_T)$ را به صورت خودبازگشتی تولید می‌کند:
+\begin{equation}
+	\pi_\theta(y | x) = \prod_{t=1}^T \pi_\theta(y_t | x, y_{<t})
+\end{equation}
+که در آن $y_{<t} = (y_1, \dots, y_{t-1})$ تاریخچه توکن‌های پیشین است.
+
+هدف یادگیری تقویتی، بیشینه‌سازی امید ریاضی پاداش اسکالر $r(x, y)$ تحت توزیع خط‌مشی است:
+\begin{equation}
+	J(\theta) = \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi_\theta(\cdot | x)} [r(x, y)] = \sum_{x} P(x) \sum_{y} \pi_\theta(y | x) r(x, y)
+\end{equation}
+
+با اعمال عملگر گرادیان و استفاده از قاعده مشتق لگاریتمی ($\nabla_\theta \pi = \pi \nabla_\theta \log \pi$):
+\begin{align}
+	\nabla_\theta J(\theta) &= \sum_{x} P(x) \sum_{y} \nabla_\theta \pi_\theta(y | x) r(x, y) \nonumber \\
+	&= \sum_{x} P(x) \sum_{y} \pi_\theta(y | x) \nabla_\theta \log \pi_\theta(y | x) r(x, y) \nonumber \\
+	&= \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi_\theta(\cdot | x)} \left[ \nabla_\theta \log \pi_\theta(y | x) r(x, y) \right]
+\end{align}
+
+با باز کردن رابطه برای تک‌تک توکن‌های توالی پاسخ:
+\begin{equation}
+	\nabla_\theta \log \pi_\theta(y | x) = \sum_{t=1}^T \nabla_\theta \log \pi_\theta(y_t | x, y_{<t})
+\end{equation}
+
+جهت کاهش واریانس، یک خط مبنای مستقل از پاسخ $b(x)$ کسر می‌گردد:
+\begin{equation}
+	\nabla_\theta J(\theta) = \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi_\theta(\cdot | x)} \left[ \sum_{t=1}^T \nabla_\theta \log \pi_\theta(y_t | x, y_{<t}) \left( r(x, y) - b(x) \right) \right]
+\end{equation}
+
+در رویکرد گروهی \model{GRPO}، به ازای هر پرامپت $x$، تعداد $G$ پاسخ مستقل $\{y_1, y_2, \dots, y_G\}$ توسط خط‌مشی پیشین $\pi_{\theta_{\text{old}}}$ تولید می‌شود. الگوریتم \model{OlmoRL} هفت اصلاح بنیادی را بر این پایه پیاده‌سازی می‌کند:
+
+\textbf{۱. حذف نرمال‌سازی با انحراف معیار (\en{No Standard Deviation Normalization}):}
+در \model{GRPO} اولیه، مزیت از تقسیم بر انحراف معیار گروه ($\sigma$) حاصل می‌شد. طبق تحلیل‌های \cite{liu2025drgrpo}، این عمل باعث می‌شود در مسائل بسیار سخت یا بسیار آسان که واریانس گروه ناچیز است، مزیت منفجر شده و خط‌مشی دچار بی‌ثباتی گردد. در \model{OlmoRL} مزیت صرفاً به عنوان اختلاف پاداش با میانگین گروه تعریف می‌شود:
+\begin{equation}
+	A_{i,t} = r(x, y_i) - \text{mean}\left( \{r(x, y_k)\}_{k=1}^G \right) = r(x, y_i) - \frac{1}{G}\sum_{k=1}^G r(x, y_k)
+\end{equation}
+
+\textbf{۲. نرمال‌سازی در سطح توکن (\en{Token-Level Normalization}):}
+به دلیل تنوع طول زنجیره‌های استدلال، میانگین‌گیری در سطح نمونه منجر به وزن‌دهی نابرابر به توکن‌ها می‌شود. \model{OlmoRL} مجموع خطاهای دسته را بر کل توکن‌های معتبر تمام خروجی‌های گروه تقسیم می‌کند: $\frac{1}{\sum_{i=1}^G |y_i|}$ \cite{yu2025dapo}.
+
+\textbf{۳. برش نامتقارن گرادیان (\en{Clip-Higher}):}
+نسبت احتمالات گرادیان توکن $t$ به صورت زیر تعریف می‌شود:
+\begin{equation}
+	r_{i,t}(\theta) = \frac{\pi_\theta(y_{i,t} | x, y_{i,<t})}{\pi_{\theta_{\text{old}}}(y_{i,t} | x, y_{i,<t})}
+\end{equation}
+به منظور فراهم‌سازی امکان به‌روزرسانی‌های بزرگ‌تر در جهات مثبت، برش نامتقارن با مقادیر $\varepsilon_{\text{low}} = 0.2$ و $\varepsilon_{\text{high}} = 0.272$ اعمال می‌گردد \cite{yu2025dapo}:
+\begin{equation}
+	\text{clip}\left(r_{i,t}(\theta), 1 - \varepsilon_{\text{low}}, 1 + \varepsilon_{\text{high}}\right)
+\end{equation}
+
+\textbf{۴. تصحیح نمونه‌برداری ترجیحی منقطع (\en{Truncated Importance Sampling - TIS}):}
+جهت جبران رانش احتمال میان خروجی موتور استنتاج $\pi_{\text{vllm}}$ و موتور یادگیرنده $\pi(\cdot; \theta_{\text{old}})$، ضریب تصحیح زیر اعمال می‌شود \cite{yao2025offpolicy}:
+\begin{equation}
+	w_{i,t}^{\text{TIS}} = \min \left( \frac{\pi(y_{i,t} | x, y_{i,<t}; \theta_{\text{old}})}{\pi_{\text{vllm}}(y_{i,t} | x, y_{i,<t}; \theta_{\text{old}})}, \; \rho \right)
+\end{equation}
+که در آن $\rho$ سقف مجاز بازوزن‌دهی است.
+
+\textbf{۵. حذف جریمه صریح واگرایی کولبک-لایبلر (\en{No-KL Objective}):}
+ترم جریمه صریح $D_{\text{KL}}$ از تابع هزینه حذف شده تا آزادی اکتشاف مدل در یافتن زنجیره‌های استدلال جدید محدود نگردد \cite{yu2025dapo, liu2025drgrpo}.
+
+\textbf{۶. فیلتر کردن سیگنال‌های گرادیان صفر (\en{Zero Gradient Signal Filtering}):}
+گروه‌هایی که پاداش تمام نمونه‌های آن‌ها یکسان باشد ($A_{i,t} = 0$)، پیش از گام پس‌انتشار به طور کامل حذف می‌گردند.
+
+\textbf{۷. نمونه‌برداری فعال پویا (\en{Active Dynamic Sampling}):}
+صف توزیع‌شده به صورت بلادرنگ پرامپت‌های فیلترشده را جایگزین می‌کند تا اندازه دسته آموزشی همواره ثابت بماند.
+
+\subsubsection*{تابع هدف نهایی الگوریتم OlmoRL}
+
+با تجمیع روابط فوق، تابع هدف نهایی بهینه‌سازی در \model{OlmoRL} به صورت رابطه ریاضی زیر تعریف می‌شود:
+\begin{equation}
+	J(\theta) = \frac{1}{\sum_{i=1}^G |y_i|} \sum_{i=1}^G \sum_{t=1}^{|y_i|} \min \left( \frac{\pi(y_{i,t} | x, y_{i,<t}; \theta_{\text{old}})}{\pi_{\text{vllm}}(y_{i,t} | x, y_{i,<t}; \theta_{\text{old}})}, \, \rho \right) \cdot \min \left( r_{i,t}(\theta) A_{i,t}, \, \text{clip}(r_{i,t}(\theta), 1 - \varepsilon_{\text{low}}, 1 + \varepsilon_{\text{high}}) A_{i,t} \right)
+\end{equation}
+
+\subsubsection*{معماری سیستم پاداش‌های قابل اعتبارسنجی (\en{RLVR}) و اعتبارسنج‌ها}
+
+الگوریتم \model{OlmoRL} ساختار اعتبارسنجی خودکار را به چهار دامنه مختلف تعمیم می‌دهد:
+\begin{itemize}
+    \item \textbf{دامنه ریاضیات (\en{Math Verifier}):} پاسخ مدل از طریق تطبیق عبارات و ارزیابی هم‌ارزی نمادین جبری توسط کتابخانه \en{SymPy} اعتبارسنجی می‌شود ($r \in \{0, 1\}$).
+    \item \textbf{دامنه کدنویسی (\en{Code Verifier}):} کد تولیدی در محیط‌های ایزوله و موازی بر بستر \en{AWS Lambda} \cite{zeng2025acecoder} اجرا شده و پاداش بر مبنای نرخ قبولی تست‌ها (\en{Pass Rate}) یا قبولی کامل تعیین می‌گردد.
+    \item \textbf{پیروی دقیق از دستورالعمل (\en{Precise Instruction Following}):} ارزیابی پایبندی به قیود ساختاری (مانند تعداد کلمات، پاراگراف‌ها و فرمت خروجی) از طریق توابع قطعی چارچوب \en{IF-RLVR} \cite{pyatkin2025generalizing} انجام می‌پذیرد.
+    \item \textbf{مکالمه عمومی (\en{General Chat}):} ارزیابی کیفی پاسخ‌های متنی آزاد با استفاده از مدل داور \model{Qwen3-32B} در بازه مقداری $[0, 1]$ صورت می‌گیرد.
+\end{itemize}
+
+\subsubsection*{تحلیل‌های آماری، تئوری اطلاعات و پویایی‌های آموزش}
+
+\begin{itemize}
+    \item \textbf{پویایی طول پاسخ‌ها (\en{Length Dynamics}):} در مراحل اولیه آموزش، طول توالی تفکر مدل کاهش اندکی می‌یابد و سپس با کشف مسیرهای استدلالی پیچیده نظیر خودآزمایی و بازگشت از خطا، طول پاسخ‌ها به تدریج افزایش یافته و به سقف ۳۲K توکن نزدیک می‌شود.
+    \item \textbf{تنظیم‌کنندگی ضمنی آموزش چنددامنه‌ای (\en{Multi-Domain Regularization}):} آموزش همزمان بر روی ترکیب داده‌های ریاضی، کد، دستورالعمل و چت، پاداش ظاهری فاز آموزش را در مقایسه با آموزش تک‌دامنه‌ای اندکی کاهش می‌دهد، اما مانع از بیش‌برازش و هک پاداش (\en{Reward Hacking}) شده و عملکرد تعمیم‌یافته مدل در بنچمارک‌های نهایی را تثبیت می‌کند.
+    \item \textbf{اثبات عدم آلودگی داده‌ها با آزمون کنترل منفی (\en{Spurious Rewards}):} در یک آزمایش کنترل منفی بر پایه پروتکل \cite{shao2025spurious}، پاداش‌های تصادفی به مدل تخصیص یافت؛ عدم مشاهده هیچ‌گونه بهبود در بنچمارک‌ها اثبات کرد که پیشرفت‌های \model{OlmoRL} ناشی از یادگیری واقعی استدلال است و نه فعال‌سازی حافظه آلوده.
+\end{itemize}
+
+\subsubsection*{معماری زیرساخت محاسباتی و مهندسی سیستم}
+
+اجرای \model{OlmoRL} برای زنجیره‌های استدلال تا ۳۲K توکن نیازمند نوآوری‌های زیرساختی متعددی بوده است:
+\begin{itemize}
+    \item \textbf{دسته‌بندی پیوسته (\en{Continuous Batching}):} با توجه به میانگین طول توالی ۱۴۶۲۸ توکن و سقف ۳۲۷۶۸ توکن، استفاده از دسته‌بندی ایستا منجر به اتلاف محاسباتی معادل $\frac{L_{\text{max}} - L_{\text{avg}}}{L_{\text{max}}} \approx 54\%$ می‌شد. دسته‌بندی پیوسته این اتلاف را به صفر رسانده است.
+    \item \textbf{به‌روزرسانی‌های پروازی وزن‌ها (\en{In-flight Weight Updates}):} با الهام از \en{PipelineRL} \cite{piche2025pipelinerl}، وزن‌های جدید مدل یادگیرنده بدون متوقف ساختن موتور استنتاج و بدون تخلیه حافظه کَش \en{KV-Cache} به بازیگران تزریق می‌شود که شتاب ۴ برابری در توان عملیاتی ایجاد کرده است.
+\end{itemize}
+
+\subsubsection*{دیاگرام معماری و جریان داده‌های الگوریتم}
+
+شکل~\ref{fig:olmorl_architecture} ساختار تعاملی میان استخر بازیگران، صف پویا، اعتبارسنج‌های خودکار، فیلتر داده‌ها و یادگیرنده توزیع‌شده در الگوریتم \model{OlmoRL} را نمایش می‌دهد.
+
+\begin{figure}[htbp]
+\centering
+\begin{latin}
+\begin{tikzpicture}[
+	node distance=1.4cm and 1.8cm,
+	basebox/.style={rectangle, rounded corners=6pt, thick, inner sep=8pt, align=center, font=\small\sffamily, drop shadow},
+	promptbox/.style={basebox, draw=teal!70!black, fill=teal!8},
+	actorbox/.style={basebox, draw=blue!70!black, fill=blue!8},
+	verifierbox/.style={basebox, draw=purple!70!black, fill=purple!8},
+	filterbox/.style={basebox, draw=orange!80!black, fill=orange!10},
+	learnerbox/.style={basebox, draw=red!70!black, fill=red!8},
+	arrow/.style={-{Stealth[scale=1.1]}, thick, draw=blue!80!black},
+	dasharrow/.style={-{Stealth[scale=1.1]}, thick, dashed, draw=red!70!black}
+]
+
+	% Data and Queue
+	\node[promptbox] (dataset) {\textbf{Dolci-Think-RL Dataset}\\ Math, Code, Precise IF, General Chat Prompts};
+	\node[promptbox, below=1.0cm of dataset] (queue) {\textbf{Active Dynamic Prompt Queue}\\ Continuously refilled prompt queue};
+
+	% Actors
+	\node[actorbox, below=1.2cm of queue] (actors) {\textbf{Inference Actors Pool (vLLM Engine)}\\ 56 to 160 GPUs $\cdot$ Continuous Batching\\ Generates $G=8$ rollouts per prompt (Up to 32K tokens)};
+
+	% Verifiers
+	\node[verifierbox, below=1.2cm of actors] (verifiers) {\textbf{Verifiable Rewards Pipeline (RLVR)}\\ \textbf{Math:} SymPy $\quad\vert\quad$ \textbf{Code:} AWS Lambda $\quad\vert\quad$ \textbf{IF:} Rule Functions $\quad\vert\quad$ \textbf{Chat:} LM-Judge};
+
+	% Filter & Advantage
+	\node[filterbox, below=1.2cm of verifiers] (engine) {\textbf{Zero Gradient Signal Filter \& Advantage Engine}\\ Discard batches with zero variance $\cdot$ Advantage: $A_{i,t} = r_i - \text{mean}(r)$};
+
+	% Learner
+	\node[learnerbox, below=1.2cm of engine] (learner) {\textbf{Distributed Policy Learner (DeepSpeed / HSDP)}\\ Token-Level Loss $\cdot$ Truncated Importance Sampling (TIS)\\ Asymmetric Clipping $[1-\varepsilon_{\text{low}}, 1+\varepsilon_{\text{high}}]$ $\cdot$ Gradient Update $\theta$};
+
+	% Paths
+	\draw[arrow] (dataset) -- node[right, font=\footnotesize] {Sample prompts} (queue);
+	\draw[arrow] (queue) -- node[right, font=\footnotesize] {Dispatch batches} (actors);
+	\draw[arrow] (actors) -- node[right, font=\footnotesize] {Generated rollouts $\{y_1, \dots, y_G\}$} (verifiers);
+	\draw[arrow] (verifiers) -- node[right, font=\footnotesize] {Computed rewards $r(x, y_i)$} (engine);
+	\draw[arrow] (engine) -- node[right, font=\footnotesize] {Filtered non-zero advantage batches} (learner);
+
+	% Asynchronous Weight Sync Loop
+	\draw[dasharrow] (learner.east) -- ++(1.8,0) |- node[near start, right, font=\footnotesize] {In-flight weight update $\theta_{\text{old}} \leftarrow \theta$} (actors.east);
+
+	% Queue refill loop
+	\draw[dasharrow] (engine.west) -- ++(-1.8,0) |- node[near start, left, font=\footnotesize] {Active dynamic refill} (queue.west);
+
+\end{tikzpicture}
+\end{latin}
+\caption{معماری جامع زیرساخت توزیع‌شده، پایپ‌لاین اعتبارسنجی پاداش‌ها و جریان بهینه‌سازی در الگوریتم \model{OlmoRL}.}
+\label{fig:olmorl_architecture}
+\end{figure}
+
+\subsubsection*{شبه‌کد الگوریتم OlmoRL}
+
+شبه‌کد فرآیند کامل نمونه‌برداری پویا، اعتبارسنجی، فیلتر داده‌ها و به‌روزرسانی پارامترها در الگوریتم~\ref{alg:olmorl_algorithm} ارائه شده است:
+
+\begin{latin}
+\begin{algorithm}[H]
+\caption{OlmoRL: Group Relative Policy Optimization with Verifiable Rewards}
+\label{alg:olmorl_algorithm}
+\begin{algorithmic}[1]
+\State \textbf{Input:} Initial policy $\theta_0$, inference engine $\pi_{\text{vllm}}$, group size $G=8$, target batch size $B$, clipping bounds $(\varepsilon_{\text{low}}, \varepsilon_{\text{high}})$, TIS cap $\rho$, learning rate $\eta$.
+\For{$\text{step} = 1, 2, \dots$}
+    \State Initialize batch container $\mathcal{B} \leftarrow \emptyset$.
+    \While{$|\mathcal{B}| < B$}
+        \State Fetch prompt $x$ from active queue.
+        \State Sample $G$ completions $\{y_1, \dots, y_G\} \sim \pi_{\text{vllm}}(\cdot | x)$ with length up to $32\text{K}$.
+        \For{each completion $y_i$}
+            \State Compute reward $r(x, y_i)$ via domain-specific verifier (SymPy, Sandbox, Rules, or Judge).
+        \EndFor
+        \State Compute group mean reward: $\bar{r} = \frac{1}{G} \sum_{k=1}^G r(x, y_k)$.
+        \If{$r(x, y_1) == r(x, y_2) == \dots == r(x, y_G)$}
+            \State \textbf{continue} \Comment{Zero Gradient Signal Filtering}
+        \EndIf
+        \State Compute advantages: $A_i = r(x, y_i) - \bar{r}, \quad \forall i \in \{1, \dots, G\}$.
+        \State Add tuple $(x, \{y_i\}, \{A_i\})$ to $\mathcal{B}$.
+    \EndWhile
+    \State Compute total valid tokens: $N_{\text{tokens}} = \sum_{(x, \{y_i\}, \cdot) \in \mathcal{B}} \sum_{i=1}^G |y_i|$.
+    \State Zero model gradients: $\nabla_\theta J \leftarrow 0$.
+    \For{each $(x, \{y_i\}, \{A_i\}) \in \mathcal{B}$}
+        \For{$i = 1$ \textbf{to} $G$}
+            \For{$t = 1$ \textbf{to} $|y_i|$}
+                \State Compute ratio: $r_{i,t}(\theta) = \frac{\pi_\theta(y_{i,t} | x, y_{i,<t})}{\pi_{\theta_{\text{old}}}(y_{i,t} | x, y_{i,<t})}$.
+                \State Compute TIS weight: $w_{i,t}^{\text{TIS}} = \min\left( \frac{\pi(y_{i,t} | x, y_{i,<t}; \theta_{\text{old}})}{\pi_{\text{vllm}}(y_{i,t} | x, y_{i,<t}; \theta_{\text{old}})}, \, \rho \right)$.
+                \State Compute clipped surrogate:
+                \State \quad $\text{obj}_{i,t} = \min \left( r_{i,t}(\theta) A_i, \; \text{clip}(r_{i,t}(\theta), 1 - \varepsilon_{\text{low}}, 1 + \varepsilon_{\text{high}}) A_i \right)$.
+                \State Accumulate loss: $\mathcal{L} \leftarrow \mathcal{L} - \frac{1}{N_{\text{tokens}}} w_{i,t}^{\text{TIS}} \cdot \text{obj}_{i,t}$.
+            \EndFor
+        \EndFor
+    \EndFor
+    \State Perform gradient step: $\theta \leftarrow \theta - \eta \, \text{Adam}(\nabla_\theta \mathcal{L})$.
+    \State Asynchronously update inference actor weights: $\pi_{\text{vllm}} \leftarrow \theta$ without clearing KV cache.
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+\end{latin}
+
+\subsubsection*{نتایج تجربی، ارزیابی بنچمارک‌ها و تحلیل ابلیشن}
+
+جدول~\ref{tab:olmorl_infra_ablation} تاثیر مولفه‌های مهندسی \model{OlmoRL} بر شتاب محاسباتی و جدول~\ref{tab:olmo3_think_results} عملکرد مدل پرچم‌دار \model{Olmo 3 Think-32B} را در مقایسه با برترین مدل‌های هم‌رده نمایش می‌دهند.
+
+\begin{table}[htbp]
+\centering
+\caption{تحلیل ابلیشن زیرساخت \model{OlmoRL} و تاثیر آن بر سرعت آموزش و بهره‌وری سخت‌افزار \cite{olmo32025}.}
+\label{tab:olmorl_infra_ablation}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{پیکربندی زیرساخت} & \textbf{مجموع توکن‌ها (\en{Mtok})} & \textbf{سرعت (\en{Tokens/sec})} & \textbf{\en{MFU (\%)}} & \textbf{\en{MBU (\%)}} \\
+\midrule
+زیرساخت پایه \model{OLMo 2} & 6.34 & 881 & 0.30 & 12.90 \\
++ دسته‌بندی پیوسته (\en{Continuous Batching}) & 7.02 & 975 & 0.33 & 14.29 \\
++ بهینه‌سازی نخ‌های پردازشی (\en{Better Threading}) & 9.77 & 1358 & 0.46 & 19.89 \\
+\textbf{+ به‌روزرسانی پروازی وزن‌ها (\model{OlmoRL})} & \textbf{21.23} & \textbf{2949} & \textbf{1.01} & \textbf{43.21} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه عملکرد مدل استدلالی \model{Olmo 3 Think-32B} در بنچمارک‌های استاندارد \cite{olmo32025}.}
+\label{tab:olmo3_think_results}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{بنچمارک} & \textbf{\model{Olmo 3 SFT}} & \textbf{\model{Olmo 3 DPO}} & \textbf{\model{Olmo 3 Think}} & \textbf{\model{Qwen 3 32B}} & \textbf{\model{Qwen 2.5 32B}} & \textbf{\model{Gemma 3 27B}} \\
+\midrule
+MATH & 95.6 & 95.9 & \textbf{96.1} & 95.4 & 80.2 & 87.4 \\
+AIME 2024 & 73.5 & 76.0 & \textbf{76.8} & 80.8 & 15.7 & 28.9 \\
+AIME 2025 & 66.2 & 70.7 & \textbf{72.5} & 70.9 & 13.4 & 22.9 \\
+LiveCodeBench v3 & 75.8 & 81.9 & \textbf{83.5} & 90.2 & 49.9 & 39.0 \\
+HumanEvalPlus & 90.0 & 91.6 & \textbf{91.4} & 91.2 & 82.6 & 79.2 \\
+BigBenchHard & 88.8 & 89.1 & \textbf{89.8} & 90.6 & 80.9 & 82.4 \\
+IFEval & 83.9 & 80.6 & \textbf{89.0} & 86.5 & 81.9 & 85.4 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{ابرپارامترهای استاندارد گزارش‌شده در مقاله}
+
+جدول~\ref{tab:olmorl_hyperparams} مقادیر دقیق ابرپارامترهای آموزشی الگوریتم \model{OlmoRL} را برای مدل‌های مختلف نشان می‌دهد:
+
+\begin{table}[htbp]
+\centering
+\caption{ابرپارامترهای نهایی آموزش یادگیری تقویتی \model{OlmoRL} در مدل‌های خانواده \model{Olmo 3} \cite{olmo32025}.}
+\label{tab:olmorl_hyperparams}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{ابرپارامتر} & \textbf{\model{Think 7B}} & \textbf{\model{Think 32B}} & \textbf{\model{Instruct 7B}} & \textbf{\model{RL-Zero 7B}} \\
+\midrule
+تعداد کل پرامپت‌ها & 104,869 & 104,869 & 171,950 & 13,314 \\
+نرخ یادگیری (\en{Learning Rate}) & $1.0 \times 10^{-6}$ & $2.0 \times 10^{-6}$ & $1.0 \times 10^{-6}$ & $1.0 \times 10^{-6}$ \\
+برنامه نرخ یادگیری & \en{Constant} & \en{Constant} & \en{Constant} & \en{Constant} \\
+اندازه گروه ($G$) & 8 & 8 & 8 & 8 \\
+حداکثر طول پرامپت & 2,048 & 2,048 & 2,048 & 2,048 \\
+حداکثر طول پاسخ & 32,768 & 32,768 & 8,192 & 16,384 \\
+آستانه برش نامتقارن ($\varepsilon_{\text{low}}, \varepsilon_{\text{high}}$) & (0.2, 0.272) & (0.2, 0.272) & (0.2, 0.272) & (0.2, 0.272) \\
+سقف بازوزن‌دهی $\rho$ در \en{TIS} & – & 2.0 & 0.2 & 2.0 \\
+دمای نمونه‌برداری & 1.0 & 1.0 & 1.0 & 1.0 \\
+تعداد کارت‌های یادگیرنده / بازیگر & 16 / 56 & 64 / 160 & 8 / 56 & 8 / 64 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection*{جمع‌بندی}
+الگوریتم \model{OlmoRL} با بازنگری فرمولاسیون ریاضی محاسبه مزیت، حذف انحراف معیار جهت رفع سوگیری دشواری، تلفیق اعتبارسنجی چنددامنه‌ای قطعی و نوآوری در همگام‌سازی پروازی وزن‌ها، زیرساختی پایدار و فوق‌العاده سریع برای استخراج رفتارهای استدلالی پدیدار شونده در مدل‌های زبانی باز پدید آورده است. این چارچوب توانسته است مدل \model{Olmo 3 Think-32B} را به قدرتمندترین مدل استدلالی کاملاً متن‌باز تبدیل کند.

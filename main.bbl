@@ -495,6 +495,45 @@ Shengyi Huang, Michael Noukhovitch, Arian Hosseini, Kashif Rasul, Weixun Wang,
   summarization.
 \newblock In {\em First Conference on Language Modeling}, 2024.
 
+\bibitem{olmo32025}
+{Olmo Team}, Ali Farhadi, Noah~A. Smith, and Hannaneh Hajishirzi.
+\newblock Olmo 3: Fully open language and thinking models.
+\newblock {\em arXiv preprint}, 2025.
+
+\bibitem{liu2025drgrpo}
+Z.~Liu, C.~Chen, W.~Li, P.~Qi, T.~Pang, C.~Du, W.~S. Lee, and M.~Lin.
+\newblock Understanding r1-zero-like training: A critical perspective.
+\newblock {\em Conference on Language Modeling (COLM)}, 2025.
+
+\bibitem{yao2025offpolicy}
+F.~Yao, L.~Liu, D.~Zhang, C.~Dong, J.~Shang, and J.~Gao.
+\newblock Your efficient rl framework secretly brings you off-policy rl
+  training.
+\newblock {\em Notion Technical Report}, 2025.
+
+\bibitem{zeng2025acecoder}
+H.~Zeng, J.~Yang, Y.~Zhang, B.~Yu, S.~Wang, Z.~Liu, M.~Sun, and T.~Liu.
+\newblock Acecoder: Acing coder rl via automated test-case synthesis.
+\newblock {\em arXiv preprint arXiv:2502.01718}, 2025.
+
+\bibitem{pyatkin2025generalizing}
+Valentina Pyatkin, Saumya Malik, Victoria Graf, Hamish Ivison, Shengyi Huang,
+  Pradeep Dasigi, Nathan Lambert, and Hannaneh Hajishirzi.
+\newblock Generalizing verifiable instruction following.
+\newblock {\em arXiv preprint arXiv:2507.02833}, 2025.
+
+\bibitem{shao2025spurious}
+R.~Shao, S.~S. Li, R.~Xin, S.~Geng, Y.~Wang, S.~Oh, S.~S. Du, N.~Lambert,
+  S.~Min, R.~Krishna, et~al.
+\newblock Spurious rewards: Rethinking training signals in rlvr.
+\newblock {\em arXiv preprint arXiv:2506.10947}, 2025.
+
+\bibitem{piche2025pipelinerl}
+A.~Pich{\'e}, E.~Kamaloo, R.~Pardinas, and D.~Bahdanau.
+\newblock Pipelinerl: Faster on-policy reinforcement learning for long sequence
+  generation.
+\newblock {\em arXiv preprint arXiv:2509.19128}, 2025.
+
 \bibitem{wang2016sample}
 Ziyu Wang, Victor Bapst, Nicolas Heess, Volodymyr Mnih, Remi Munos, Koray
   Kavukcuoglu, and Nando de~Freitas.
