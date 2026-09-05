@@ -119,48 +119,53 @@ Repeated entry---line 1483 of file references.bib
  : @article{hendrycks2021math
  :                           ,
 I'm skipping whatever remains of this entry
+Repeated entry---line 1679 of file references.bib
+ : @article{liu2024regmix
+ :                       ,
+I'm skipping whatever remains of this entry
 Warning--empty journal in jordan2024muon
 Warning--can't use both volume and number fields in wang2020neural
+Warning--empty journal in bevendorff2018elastic
 Warning--can't use both volume and number fields in chen2023sufficiency
-You've used 178 entries,
+You've used 199 entries,
             1791 wiz_defined-function locations,
-            1192 strings with 40609 characters,
-and the built_in function-call counts, 43141 in all, are:
-= -- 2961
-> -- 3599
-< -- 38
-+ -- 1268
-- -- 1090
-* -- 2974
-:= -- 7577
-add.period$ -- 534
-call.type$ -- 178
-change.case$ -- 178
+            1277 strings with 45646 characters,
+and the built_in function-call counts, 48275 in all, are:
+= -- 3293
+> -- 4084
+< -- 41
++ -- 1437
+- -- 1238
+* -- 3338
+:= -- 8507
+add.period$ -- 597
+call.type$ -- 199
+change.case$ -- 199
 chr.to.int$ -- 0
-cite$ -- 181
-duplicate$ -- 1833
-empty$ -- 3402
-format.name$ -- 1090
-if$ -- 9166
+cite$ -- 203
+duplicate$ -- 2035
+empty$ -- 3773
+format.name$ -- 1238
+if$ -- 10238
 int.to.chr$ -- 0
-int.to.str$ -- 178
-missing$ -- 172
-newline$ -- 892
-num.names$ -- 178
-pop$ -- 642
+int.to.str$ -- 199
+missing$ -- 191
+newline$ -- 997
+num.names$ -- 199
+pop$ -- 719
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 948
+skip$ -- 1056
 stack$ -- 0
-substring$ -- 1235
-swap$ -- 504
-text.length$ -- 38
+substring$ -- 1347
+swap$ -- 557
+text.length$ -- 41
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 3
-while$ -- 271
-width$ -- 181
-write$ -- 1829
-(There were 29 error messages)
+warning$ -- 4
+while$ -- 301
+width$ -- 202
+write$ -- 2041
+(There were 30 error messages)
