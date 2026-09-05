@@ -1,38 +1,38 @@
 \contentsline {section}{\numberline {1}آموزش (\lr {Training})}{3}{section.1}%
 \contentsline {subsection}{\numberline {1.1}داده‌ها (\lr {Data})}{3}{subsection.1.1}%
 \contentsline {subsubsection}{\numberline {1.1.1}پیش‌آموزش (\lr {Pre-Training})}{3}{subsubsection.1.1.1}%
-\contentsline {subsubsection}{\numberline {1.1.2}پس‌آموزش (\lr {Post-Training})}{15}{subsubsection.1.1.2}%
-\contentsline {subsection}{\numberline {1.2}روش (\lr {Method})}{16}{subsection.1.2}%
-\contentsline {subsubsection}{\numberline {1.2.1}پیش‌آموزش (\lr {Pre-Training})}{16}{subsubsection.1.2.1}%
-\contentsline {subsubsection}{\numberline {1.2.2}پس‌آموزش (\lr {Post-Training})}{16}{subsubsection.1.2.2}%
-\contentsline {section}{\numberline {2}ساختار (\lr {Architecture})}{17}{section.2}%
-\contentsline {subsection}{\numberline {2.1}کدگذاری موقعیت (\lr {Positional Encoding})}{17}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}بردارکننده (\lr {Tokenizer})}{17}{subsection.2.2}%
-\contentsline {subsection}{\numberline {2.3}شبکه عصبی (\lr {MLP})}{17}{subsection.2.3}%
-\contentsline {subsection}{\numberline {2.4}تابع فعالساز (\lr {Activation Function})}{18}{subsection.2.4}%
-\contentsline {subsection}{\numberline {2.5}نرمالسازی (\lr {Normalization})}{18}{subsection.2.5}%
-\contentsline {subsection}{\numberline {2.6}مکانیزم توجه (\lr {Attention})}{18}{subsection.2.6}%
-\contentsline {subsection}{\numberline {2.7}ساختار ترنسفورمر (\lr {Transformer})}{19}{subsection.2.7}%
-\contentsline {section}{\numberline {3}بهینه سازی (\lr {Optimization})}{19}{section.3}%
-\contentsline {subsection}{\numberline {3.1}الگوریتم (\lr {Algorithm})}{19}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}تابع هزینه (\lr {Loss Function})}{20}{subsection.3.2}%
-\contentsline {section}{\numberline {4}تنظیم هایپرپارامتر (\lr {Hyperparameter Tuning})}{20}{section.4}%
-\contentsline {section}{\numberline {5}قوانین مقیاس پذیری (\lr {Scaling Laws})}{20}{section.5}%
-\contentsline {subsection}{\numberline {5.1}مقدمه}{20}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}اصلاح و توسعه قوانین مقیاس‌پذیری کلاسیک}{21}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}تاثیر معماری و شکل مدل (\lr {Model Shape \& Architecture})}{21}{subsection.5.3}%
-\contentsline {subsection}{\numberline {5.4}قوانین مقیاس‌پذیری برای مدل‌های ترکیبی از خبرگان (\lr {MoE})}{22}{subsection.5.4}%
-\contentsline {subsection}{\numberline {5.5}نقش داده‌ها: کیفیت، ترکیب و چگالی}{22}{subsection.5.5}%
-\contentsline {subsection}{\numberline {5.6}فراتر از خطای مطلق: معیارهای نوین ارزیابی}{22}{subsection.5.6}%
-\contentsline {subsection}{\numberline {5.7}نتیجه‌گیری}{23}{subsection.5.7}%
-\contentsline {section}{\numberline {6}ارزیابی (\lr {Evaluation})}{23}{section.6}%
-\contentsline {section}{\numberline {7}یادگیری تقویتی (\lr {Reinforcement Learning})}{23}{section.7}%
-\contentsline {subsection}{\numberline {7.1}الگوریتم بهینه‌سازی تقریبی خط‌مشی (\lr {Proximal Policy Optimization - PPO})}{28}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}الگوریتم بهینه‌سازی نسبی خط‌مشی گروهی (\lr {Group Relative Policy Optimization - GRPO})}{35}{subsection.7.2}%
-\contentsline {subsection}{\numberline {7.3}الگوریتم بهینه‌سازی توالی گروهی خط‌مشی (\lr {Group Sequence Policy Optimization - GSPO})}{40}{subsection.7.3}%
-\contentsline {subsection}{\numberline {7.4}الگوریتم بهینه‌سازی خط‌مشی با برش مجزا و نمونه‌برداری پویا (\lr {Decoupled Clip and Dynamic Sampling Policy Optimization - DAPO})}{47}{subsection.7.4}%
-\contentsline {subsection}{\numberline {7.5}الگوریتم بهینه‌سازی خط‌مشی تطبیقی نرم (\lr {Soft Adaptive Policy Optimization - SAPO})}{53}{subsection.7.5}%
-\contentsline {subsection}{\numberline {7.6}الگوریتم بهینه‌سازی خط‌مشی با ضریب اهمیت برش‌خورده (\lr {Clipped IS-weight Policy Optimization - CISPO})}{59}{subsection.7.6}%
-\contentsline {subsection}{\numberline {7.7}الگوریتم یادگیری تقویتی با پاداش‌های اعتبارسنجی‌پذیر (\lr {Reinforcement Learning with Verifiable Rewards - RLVR})}{65}{subsection.7.7}%
-\contentsline {subsection}{\numberline {7.8}الگوریتم یادگیری تقویتی با پاداش‌های قابل اعتبارسنجی و بهینه‌سازی گروهی (\lr {OlmoRL: RLVR + GRPO})}{70}{subsection.7.8}%
-\contentsline {section}{\numberline {8}منابع}{78}{section.8}%
+\contentsline {subsubsection}{\numberline {1.1.2}پس‌آموزش (\lr {Post-Training})}{18}{subsubsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.2}روش (\lr {Method})}{19}{subsection.1.2}%
+\contentsline {subsubsection}{\numberline {1.2.1}پیش‌آموزش (\lr {Pre-Training})}{19}{subsubsection.1.2.1}%
+\contentsline {subsubsection}{\numberline {1.2.2}پس‌آموزش (\lr {Post-Training})}{19}{subsubsection.1.2.2}%
+\contentsline {section}{\numberline {2}ساختار (\lr {Architecture})}{19}{section.2}%
+\contentsline {subsection}{\numberline {2.1}کدگذاری موقعیت (\lr {Positional Encoding})}{19}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}بردارکننده (\lr {Tokenizer})}{20}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}شبکه عصبی (\lr {MLP})}{20}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}تابع فعالساز (\lr {Activation Function})}{21}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}نرمالسازی (\lr {Normalization})}{21}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}مکانیزم توجه (\lr {Attention})}{21}{subsection.2.6}%
+\contentsline {subsection}{\numberline {2.7}ساختار ترنسفورمر (\lr {Transformer})}{22}{subsection.2.7}%
+\contentsline {section}{\numberline {3}بهینه سازی (\lr {Optimization})}{22}{section.3}%
+\contentsline {subsection}{\numberline {3.1}الگوریتم (\lr {Algorithm})}{22}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}تابع هزینه (\lr {Loss Function})}{22}{subsection.3.2}%
+\contentsline {section}{\numberline {4}تنظیم هایپرپارامتر (\lr {Hyperparameter Tuning})}{23}{section.4}%
+\contentsline {section}{\numberline {5}قوانین مقیاس پذیری (\lr {Scaling Laws})}{23}{section.5}%
+\contentsline {subsection}{\numberline {5.1}مقدمه}{23}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}اصلاح و توسعه قوانین مقیاس‌پذیری کلاسیک}{23}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}تاثیر معماری و شکل مدل (\lr {Model Shape \& Architecture})}{24}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}قوانین مقیاس‌پذیری برای مدل‌های ترکیبی از خبرگان (\lr {MoE})}{24}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}نقش داده‌ها: کیفیت، ترکیب و چگالی}{25}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}فراتر از خطای مطلق: معیارهای نوین ارزیابی}{25}{subsection.5.6}%
+\contentsline {subsection}{\numberline {5.7}نتیجه‌گیری}{26}{subsection.5.7}%
+\contentsline {section}{\numberline {6}ارزیابی (\lr {Evaluation})}{26}{section.6}%
+\contentsline {section}{\numberline {7}یادگیری تقویتی (\lr {Reinforcement Learning})}{26}{section.7}%
+\contentsline {subsection}{\numberline {7.1}الگوریتم بهینه‌سازی تقریبی خط‌مشی (\lr {Proximal Policy Optimization - PPO})}{31}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}الگوریتم بهینه‌سازی نسبی خط‌مشی گروهی (\lr {Group Relative Policy Optimization - GRPO})}{38}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}الگوریتم بهینه‌سازی توالی گروهی خط‌مشی (\lr {Group Sequence Policy Optimization - GSPO})}{43}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}الگوریتم بهینه‌سازی خط‌مشی با برش مجزا و نمونه‌برداری پویا (\lr {Decoupled Clip and Dynamic Sampling Policy Optimization - DAPO})}{50}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}الگوریتم بهینه‌سازی خط‌مشی تطبیقی نرم (\lr {Soft Adaptive Policy Optimization - SAPO})}{56}{subsection.7.5}%
+\contentsline {subsection}{\numberline {7.6}الگوریتم بهینه‌سازی خط‌مشی با ضریب اهمیت برش‌خورده (\lr {Clipped IS-weight Policy Optimization - CISPO})}{62}{subsection.7.6}%
+\contentsline {subsection}{\numberline {7.7}الگوریتم یادگیری تقویتی با پاداش‌های اعتبارسنجی‌پذیر (\lr {Reinforcement Learning with Verifiable Rewards - RLVR})}{68}{subsection.7.7}%
+\contentsline {subsection}{\numberline {7.8}الگوریتم یادگیری تقویتی با پاداش‌های قابل اعتبارسنجی و بهینه‌سازی گروهی (\lr {OlmoRL: RLVR + GRPO})}{73}{subsection.7.8}%
+\contentsline {section}{\numberline {8}منابع}{81}{section.8}%
