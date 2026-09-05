@@ -1,1 +1,102 @@
-\item \textbf asd
+\item \model{MiniMax-M2}
+
+\paragraph*{مقدمه و ساختار کلی دادگان پیش‌آموزش}
+فاز پیش‌آموزش (\en{Pre-training}) در مدل زبانی \model{MiniMax-M2} با تکیه بر اصل راهنمای «فعال‌سازی حداقلی برای آزادسازی بیشترین هوش دنیای واقعی» (\en{Mini Activations Unleashing Max Real-World Intelligence}) طراحی شده است. معماری این مدل یک ترنسفورمر فقط دکودر با ۲۲۹.۹ میلیارد پارامتر کل است که در هر گام محاسباتی تنها ۹.۸ میلیارد پارامتر فعال می‌گردد (۲۵۶ متخصص ریزدانه با مسیریابی سیگموئید و فعال‌سازی هم‌زمان ۸ متخصص). فرایند پیش‌آموزش پایه بر روی مجموعه‌ای بالغ بر \textbf{۲۹.۲ تریلیون توکن} (\en{29.2T tokens}) با سقف بافت بومی ۱۹۲ هزار توکن (\en{192K native context window}) صورت پذیرفته است \cite{minimax2026m2}. این بودجه کل توکن‌ها به صورت دومرحله‌ای بهینه‌سازی شده است:
+\begin{equation}
+    |\mathcal{D}_{\text{pretrain}}| = |\mathcal{D}_{\text{constant}}| + |\mathcal{D}_{\text{decay}}| = 19.9\text{T} + 9.3\text{T} = 29.2\text{T}
+\end{equation}
+\begin{itemize}
+    \item \textbf{فاز نرخ یادگیری ثابت (\en{Constant Phase}):} شامل ۱۹.۹ تریلیون توکن (معادل ۶۸.۱۵٪ از کل داده‌ها) که تمرکز آن بر تثبیت بازنمایی‌های دانش عمومی، مبانی استدلال و یادگیری ساختار زبان در طول بافت‌های اولیه ($8\text{K}$) است.
+    \item \textbf{فاز زوال و بسط زمینه (\en{Decay Phase}):} شامل ۹.۳ تریلیون توکن (معادل ۳۱.۸۵٪ از کل داده‌ها) که ضمن کاهش نرخ یادگیری، با تزریق داده‌های سنتز‌شده بافت‌بلند، تعمیم مدل تا سقف $192\text{K}$ توکن را محقق می‌سازد.
+\end{itemize}
+
+\paragraph*{ترکیب‌بندی و پالایش پیکره داده‌ها (\en{Data Construction \& Filtering})}
+پیکره متنی پیش‌آموزش از منابع متعددی شامل متون پالایش‌شده وب، مقالات دانشگاهی، کتاب‌ها، کدهای برنامه‌نویسی و دادگان ساختاریافته پرسش و پاسخ گردآوری شده است. با توجه به هدف‌گذاری مدل بر روی رفتارهای عاملی (\en{Agentic Workflows})، تدابیر کیفی زیر اعمال گردید:
+\begin{itemize}
+    \item \textbf{بیش‌نمونه‌برداری راهبردی (\en{Domain Upsampling}):} داده‌های مربوط به کد (\en{Code})، ریاضیات (\en{Mathematics}) و علوم پایه، فناوری، مهندسی و ریاضیات (\en{STEM}) به صورت چشمگیری فراتر از نرخ توزیع طبیعی خود در وب بیش‌نمونه‌برداری شدند تا توانایی استنتاج منطقی ارتقا یابد.
+    \item \textbf{پالایش دوبخشی کیفیت داده‌ها (\en{Model-Based Quality Filtering}):} اسناد خام ورودی از دو فیلتر ترکیبی عبور می‌کنند: ۱) مدل‌های امتیازدهی پاداش متنی (\en{Model-Based Reward Scoring}) جهت سنجش چگالی اطلاعاتی و سبک نگارش؛ ۲) طبقه‌بندهای کمکی چندبعدی (\en{Auxiliary Classifiers}) جهت اعتبارسنجی تخصصی و موضوعی اسناد.
+    \item \textbf{استراتژی نمونه‌برداری متعادل (\en{Balanced Sampling Strategy}):} به منظور پرهیز از افت تنوع موضوعی، داده‌های دارای رتبه کیفی بالا وزن‌دهی مثبت شده (\en{Upweighting})، در حالی که پوشش جامع زبان‌شناختی و دانش حاشیه‌ای جهان به دقت محافظت می‌گردد.
+\end{itemize}
+
+\paragraph*{پیش‌بینی چندتوکنی و اهداف آموزشی (\en{Multi-Token Prediction \& Objectives})}
+به منظور غنی‌سازی سیگنال‌های نظارتی در طول مصرف توکن‌های پیش‌آموزش و تسریع استنتاج از طریق کدگشایی فرضی (\en{Speculative Decoding}) \cite{leviathan2023fast}، ماژول پیش‌بینی چندتوکنی (\en{MTP}) \cite{gloeckle2024better, deepseek2024v3} در طول آموزش فعال گردیده است:
+\begin{equation}
+    \mathcal{L}_{\text{total}}(\theta) = \mathcal{L}_{\text{NTP}}(\theta) + \lambda_{\text{MTP}} \sum_{k=1}^{K} \mathcal{L}_{\text{MTP}}^{(k)}(\theta)
+\end{equation}
+\begin{itemize}
+    \item \textbf{زمان‌بندی وزن زیان (\en{MTP Loss Weight Annealing}):} در فاز پیش‌آموزش اولیه با یک ماژول ($K=1$)، ضریب تلفات ابتدا روی $\lambda_{\text{MTP}} = 0.3$ تنظیم شده و در طول فاز زوال تا سقف $0.1$ کاهش می‌یابد.
+    \item \textbf{توسعه ماژول با کپی وزن‌ها (\en{Expansion via Weight Copying}):} در ادامه پیش‌آموزش، ماژول \en{MTP} با کپی وزن‌های مدل اصلی به سه ماژول ($K=3$) ارتقا می‌یابد. در گام نخست، مدل اصلی فریز شده و فقط ماژول‌های \en{MTP} تا تثبیت خطا آموزش می‌بینند و سپس آموزش مشترک کل شبکه از سر گرفته می‌شود.
+\end{itemize}
+
+\paragraph*{برنامه درسی طول بافت و داده‌های بلندکانتکست (\en{Context Curriculum \& Long-Context Data})}
+فرایند تعمیم مدل به بافت فوق‌طولانی $192\text{K}$ توکنی در طول فاز زوال ($9.3\text{T}$ توکن) با برنامه آموزشی تدریجی زیر صورت پذیرفته است:
+\begin{equation}
+    8\text{K} \longrightarrow 32\text{K} \longrightarrow 192\text{K}
+\end{equation}
+به منظور پوشش بهینه پنجره‌های زمینه گسترده بدون اتلاف محاسباتی، سه رویکرد مهندسی داده پیاده‌سازی شده است:
+\begin{itemize}
+    \item \textbf{الحاق کدهای پروژه‌ای باکیفیت (\en{Code Concatenation}):} تجمیع فایل‌های متنی وابسته در مخازن کد به نحوی که روابط ارجاعی و ساختار پروژه حفظ گردد.
+    \item \textbf{اسناد بلند ذاتاً ساختاریافته (\en{Naturally Long-Form PDFs}):} انتخاب گزارش‌های تحلیلی، متون قانونی و کتب با پیوستگی استدلالی طبیعی در طول توالی‌های بالا.
+    \item \textbf{بسته‌بندی اسناد هم‌موضوع (\en{Thematically Related Document Packing}):} ادغام هوشمند اسناد دارای ارتباط معنایی در یک توالی واحد به منظور حذف کامل توکن‌های پرکننده (\en{Padding}) و تمرین استدلال بین‌سندی.
+\end{itemize}
+
+\paragraph*{ارزیابی‌های تجربی و مطالعات ابطال در مقیاس پیش‌آموزش (\en{Pre-Training Evaluations \& Ablations})}
+کیفیت پیکره پیش‌آموزش و انتخاب‌های معماری مدل پایه \model{MiniMax-M2} طی دو ارزیابی جامع سنجیده شده است:
+
+\textbf{۱. مطالعه ابطال روی بودجه ۵۰۰ میلیارد توکنی:} در جدول \ref{tab:minimax_m2_ablation_500b}، کارایی یادگیری از داده‌های پیش‌آموزش تحت سه پیکربندی مجزا بر روی ۵۰۰ میلیارد توکن سنجیده شده است. نتایج حاکی از آن است که ترکیب متخصصان ریزدانه (\en{Fine-Grained}) \cite{dai2024deepseekmoe} و ماژول \en{MTP} \cite{gloeckle2024better} با ثابت نگه داشتن حجم داده‌ها و پارامترهای فعال ($2\text{B}$)، بازدهی استخراج دانش از داده‌ها را در بنچمارک استدلال ریاضی \en{MATH} از $19.6$ به $24.1$ (رشد نسبی ۲۲.۹٪) و در کدنویسی \en{HumanEval} از $29.7$ به $32.5$ ارتقا داده است.
+
+\begin{table}[htbp]
+\centering
+\caption{مطالعه ابطال طراحی متخصصان ریزدانه و ماژول \en{MTP} بر روی ۵۰۰ میلیارد توکن پیش‌آموزش \cite{minimax2026m2}}
+\label{tab:minimax_m2_ablation_500b}
+\resizebox{0.92\textwidth}{!}{%
+\begin{tabular}{llccc}
+\toprule
+\textbf{مشخصات / بنچمارک} & \textbf{تنظیمات (\en{Shots})} & \textbf{پایه (\en{Baseline})} & \textbf{همراه با \en{MTP}} & \textbf{همراه با \en{Fine-Grained}} \\
+\midrule
+پارامترهای فعال & -- & 2B & 2B & 2B \\
+کل پارامترها & -- & 17.8B & 17.8B & 17.8B \\
+بودجه توکن‌های آموزش & -- & 500B & 500B & 500B \\
+تعداد کل متخصصان (\en{num\_experts}) & -- & 32 & 32 & 128 \\
+تعداد متخصصان فعال (\en{topk}) & -- & 2 & 2 & 8 \\
+\midrule
+\en{MATH} \cite{hendrycks2021math} & 4-shot & 19.6 & 21.3 & \textbf{24.1} \\
+\en{MMLU} \cite{hendrycks2021mmlu} & 5-shot & 39.8 & 39.7 & \textbf{40.2} \\
+\en{ARC-Challenge} \cite{clark2018think} & 25-shot & 27.4 & 27.5 & \textbf{27.8} \\
+\en{KorBench} \cite{ma2025kor} & 3-shot & 14.1 & \textbf{15.0} & 14.8 \\
+\en{HumanEval} \cite{chen2021evaluating} & 0-shot & 29.7 & 30.1 & \textbf{32.5} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\textbf{۲. مقایسه توجه کامل در برابر توجه پنجره‌ای لغزان (\en{Full Attention vs. Hybrid SWA}):}
+تیم \model{MiniMax} برای بهینه‌سازی پردازش داده‌های بلندکانتکست، مکانیزم توجه پنجره‌ای لغزان ترکیبی (\en{Hybrid SWA}) \cite{beltagy2020longformer} را در مقیاس معماری \model{M2} در برابر توجه کامل چندسری (\en{Full Attention}) \cite{ainslie2023gqa, su2024roformer} مورد آزمون قرار داد. مطابق جدول \ref{tab:minimax_m2_pretrain_swa_eval}، علیرغم هم‌سطح بودن عملکرد در کانتکست‌های کوتاه ($32\text{K}$)، مکانیزم \en{SWA} در بنچمارک‌های بافت‌بلند نظیر \en{RULER 128K CWE} با افت ۱۸ نمره‌ای ($90.0 \to 72.0$) و در ترجمه کانتکست‌محور \en{MTOB} با افت شدید مواجه شد. این تحلیل آماری ثابت کرد که بهره‌برداری کامل از داده‌های بلندکانتکست در پیش‌آموزش مستلزم حفظ ساختار توجه کامل است.
+
+\begin{table}[htbp]
+\centering
+\caption{ارزیابی پیش‌آموزش در مقیاس معماری \model{MiniMax-M2}: توجه کامل در برابر توجه پنجره‌ای لغزان (\en{Hybrid SWA}) \cite{minimax2026m2}}
+\label{tab:minimax_m2_pretrain_swa_eval}
+\resizebox{0.85\textwidth}{!}{%
+\begin{tabular}{llcc}
+\toprule
+\textbf{دسته آزمون} & \textbf{بنچمارک} & \textbf{پایه: توجه کامل (\en{Baseline})} & \textbf{همراه با \en{SWA}} \\
+\midrule
+\multirow{3}{*}{\textbf{دانش عمومی و استدلال}} 
+& \en{HELMET ICL} \cite{yen2024helmet} & \textbf{75.8} & 72.7 \\
+& \en{MMLU} \cite{hendrycks2021mmlu} & 85.5 & \textbf{85.6} \\
+& \en{MATH} \cite{hendrycks2021math} & \textbf{60.3} & \textbf{60.3} \\
+\midrule
+\multirow{4}{*}{\textbf{بازیابی در بافت طولانی}} 
+& \en{RULER 128K CWE} \cite{hsieh2024ruler} & \textbf{90.0} & 72.0 \\
+& \en{RULER 128K MQ} \cite{hsieh2024ruler} & \textbf{99.0} & 93.0 \\
+& \en{RULER 32K CWE} \cite{hsieh2024ruler} & \textbf{99.0} & \textbf{99.0} \\
+& \en{RULER 32K MQ} \cite{hsieh2024ruler} & \textbf{99.0} & \textbf{99.0} \\
+\midrule
+\multirow{2}{*}{\textbf{ترجمه درون‌بافتی}} 
+& \en{MTOB K-e Bleurt} \cite{tanzer2024benchmark} & \textbf{60.0} & 45.0 \\
+& \en{MTOB e-k ChrF} \cite{tanzer2024benchmark} & \textbf{44.8} & 27.2 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

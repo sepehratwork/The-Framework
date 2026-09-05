@@ -128,6 +128,104 @@ Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu, Junxiao Song, Xiao Bi, Haowei
   language models.
 \newblock {\em arXiv preprint arXiv:2402.03300}, 2024.
 
+\bibitem{minimax2026m2}
+{MiniMax}.
+\newblock The minimax-m2 series: Mini activations unleashing max real-world
+  intelligence.
+\newblock {\em arXiv preprint arXiv:2605.26494}, 2026.
+
+\bibitem{leviathan2023fast}
+Yaniv Leviathan, Matan Kalman, and Yossi Matias.
+\newblock Fast inference from transformers via speculative decoding.
+\newblock In {\em International Conference on Machine Learning}, pages
+  19274--19286, 2023.
+
+\bibitem{gloeckle2024better}
+Fabian Gloeckle, Badr~Youbi Idrissi, Baptiste Rozi{\`e}re, David Lopez-Paz, and
+  Gabriel Synnaeve.
+\newblock Better \& faster large language models via multi-token prediction.
+\newblock In {\em Proceedings of the 41st International Conference on Machine
+  Learning}, 2024.
+
+\bibitem{dai2024deepseekmoe}
+Damai Dai, Chengqi Deng, Chenggang Zhao, R.~X. Xu, Huazuo Gao, Deli Chen,
+  Jiashi Li, Wangding Zeng, Xingkai Yu, Y.~Wu, et~al.
+\newblock Deepseekmoe: Towards ultimate expert specialization in
+  mixture-of-experts language models.
+\newblock In {\em Proceedings of the 62nd Annual Meeting of the Association for
+  Computational Linguistics}, pages 2698--2717, 2024.
+
+\bibitem{hendrycks2021math}
+Dan Hendrycks, Collin Burns, Saurav Kadavath, Akul Arora, Steven Basart, Eric
+  Tang, Dawn Song, and Jacob Steinhardt.
+\newblock Measuring mathematical problem solving with the math dataset.
+\newblock In {\em NeurIPS Datasets and Benchmarks Track}, 2021.
+
+\bibitem{hendrycks2021mmlu}
+Dan Hendrycks, Collin Burns, Steven Basart, Andy Zou, Mantas Mazeika, Dawn
+  Song, and Jacob Steinhardt.
+\newblock Measuring massive multitask language understanding.
+\newblock In {\em International Conference on Learning Representations}, 2021.
+
+\bibitem{clark2018think}
+Peter Clark, Isaac Cowhey, Oren Etzioni, Tushar Khot, Ashish Sabharwal, Carissa
+  Schoenick, and Oyvind Tafjord.
+\newblock Think you have solved question answering? try arc, the ai2 reasoning
+  challenge.
+\newblock {\em arXiv preprint arXiv:1803.05457}, 2018.
+
+\bibitem{ma2025kor}
+Kaijing Ma, Xinrun Du, Yunran Wang, Haoran Zhang, Zhoufutu Wen, Xingwei Qu,
+  Jian Yang, Jiaheng Liu, Minghao Liu, Xiang Yue, et~al.
+\newblock Kor-bench: Benchmarking language models on knowledge-orthogonal
+  reasoning tasks.
+\newblock {\em arXiv preprint arXiv:2502.04356}, 2025.
+
+\bibitem{chen2021evaluating}
+Mark Chen, Jerry Tworek, Heewoo Jun, Qiming Yuan, Henrique Ponde de~Oliveira
+  Pinto, Jared Kaplan, Harri Edwards, Yuri Burda, Nicholas Joseph, Greg
+  Brockman, et~al.
+\newblock Evaluating large language models trained on code.
+\newblock {\em arXiv preprint arXiv:2107.03374}, 2021.
+
+\bibitem{beltagy2020longformer}
+Iz~Beltagy, Matthew~E Peters, and Arman Cohan.
+\newblock Longformer: The long-document transformer.
+\newblock {\em arXiv preprint arXiv:2004.05150}, 2020.
+
+\bibitem{ainslie2023gqa}
+Joshua Ainslie, James Lee-Thorp, Michiel de~Jong, Yury Zemlyanskiy, Federico
+  Lebr{\'o}n, and Sumit Sanghai.
+\newblock Gqa: Training generalized multi-query transformer models from
+  multi-head checkpoints.
+\newblock In {\em EMNLP}, 2023.
+
+\bibitem{su2024roformer}
+Jianlin Su, Murtadha Ahmed, Yu~Lu, Shengfeng Pan, Wen Bo, and Yunfeng Liu.
+\newblock Roformer: Enhanced transformer with rotary position embedding.
+\newblock {\em Neurocomputing}, 568:127063, 2024.
+
+\bibitem{yen2024helmet}
+Howard Yen, Tianyu Gao, Minmin Hou, Ke~Ding, Daniel Fleischer, Peter Izsak,
+  Moshe Wasserblat, and Danqi Chen.
+\newblock Helmet: How to evaluate long-context language models effectively and
+  thoroughly.
+\newblock {\em arXiv preprint arXiv:2410.02694}, 2024.
+
+\bibitem{hsieh2024ruler}
+Cheng-Ping Hsieh, Simeng Sun, Samuel Kriman, Shantanu Acharya, Dima Rekesh, Fei
+  Jia, and Boris Ginsburg.
+\newblock Ruler: What's the real context size of your long-context language
+  models?
+\newblock {\em arXiv preprint arXiv:2404.06654}, 2024.
+
+\bibitem{tanzer2024benchmark}
+Garrett Tanzer, Mirac Suzgun, Eline Visser, Dan Jurafsky, and Luke
+  Melas-Kyriazi.
+\newblock A benchmark for learning to translate a new language from one grammar
+  book.
+\newblock {\em arXiv preprint arXiv:2402.13846}, 2024.
+
 \bibitem{li2025farseer}
 Houyi Li, Wenzhen Zheng, Qiufeng Wang, Zhenyu Ding, Haoying Wang, Zili Wang,
   Shijie Xuyang, Ning Ding, Shuigeng Zhou, Xiangyu Zhang, et~al.

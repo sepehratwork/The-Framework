@@ -83,47 +83,51 @@ Repeated entry---line 1046 of file references.bib
  : @article{shao2024deepseekmath
  :                              ,
 I'm skipping whatever remains of this entry
+Repeated entry---line 1089 of file references.bib
+ : @article{deepseek2024v3
+ :                        ,
+I'm skipping whatever remains of this entry
 Warning--empty journal in jordan2024muon
 Warning--can't use both volume and number fields in chen2023sufficiency
-You've used 123 entries,
+You've used 138 entries,
             1791 wiz_defined-function locations,
-            968 strings with 27721 characters,
-and the built_in function-call counts, 28126 in all, are:
-= -- 1972
-> -- 2258
-< -- 25
-+ -- 801
-- -- 678
-* -- 1881
-:= -- 4973
-add.period$ -- 369
-call.type$ -- 123
-change.case$ -- 123
+            1029 strings with 31028 characters,
+and the built_in function-call counts, 31950 in all, are:
+= -- 2221
+> -- 2584
+< -- 27
++ -- 915
+- -- 777
+* -- 2148
+:= -- 5634
+add.period$ -- 414
+call.type$ -- 138
+change.case$ -- 138
 chr.to.int$ -- 0
-cite$ -- 125
-duplicate$ -- 1218
-empty$ -- 2252
-format.name$ -- 678
-if$ -- 5972
+cite$ -- 140
+duplicate$ -- 1387
+empty$ -- 2571
+format.name$ -- 777
+if$ -- 6793
 int.to.chr$ -- 0
-int.to.str$ -- 123
-missing$ -- 120
-newline$ -- 617
-num.names$ -- 123
-pop$ -- 422
+int.to.str$ -- 138
+missing$ -- 135
+newline$ -- 692
+num.names$ -- 138
+pop$ -- 487
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 607
+skip$ -- 687
 stack$ -- 0
-substring$ -- 754
-swap$ -- 311
-text.length$ -- 25
+substring$ -- 860
+swap$ -- 356
+text.length$ -- 27
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 2
-while$ -- 183
-width$ -- 126
-write$ -- 1264
-(There were 20 error messages)
+while$ -- 205
+width$ -- 141
+write$ -- 1417
+(There were 21 error messages)
