@@ -1,5 +1,36 @@
 \begin{thebibliography}{100}
 
+\bibitem{deepseek2024v3}
+{DeepSeek-AI}.
+\newblock Deepseek-v3 technical report.
+\newblock {\em arXiv preprint arXiv:2412.19437}, 2024.
+
+\bibitem{zhu2024synthesize}
+X.~Zhu, D.~Cheng, H.~Li, K.~Zhang, E.~Hua, X.~Lv, N.~Ding, Z.~Lin, Z.~Zheng,
+  and B.~Zhou.
+\newblock How to synthesize text data without model collapse?
+\newblock {\em arXiv preprint arXiv:2412.14689}, 2024.
+
+\bibitem{ding2024fewer}
+H.~Ding, Z.~Wang, G.~Paolini, V.~Kumar, A.~Deoras, D.~Roth, and S.~Soatto.
+\newblock Fewer truncations improve language modeling.
+\newblock {\em arXiv preprint arXiv:2404.10830}, 2024.
+
+\bibitem{jordan2024muon}
+K.~Jordan, Y.~Jin, V.~Boza, J.~You, F.~Cesista, L.~Newhouse, and J.~Bernstein.
+\newblock Muon: An optimizer for hidden layers in neural networks.
+\newblock 2024.
+
+\bibitem{liu2025muon}
+J.~Liu, J.~Su, X.~Yao, Z.~Jiang, G.~Lai, Y.~Du, et~al.
+\newblock Muon is scalable for llm training.
+\newblock {\em arXiv preprint arXiv:2502.16982}, 2025.
+
+\bibitem{shazeer2020glu}
+N.~Shazeer.
+\newblock Glu variants improve transformer.
+\newblock {\em arXiv preprint arXiv:2002.05202}, 2020.
+
 \bibitem{li2025farseer}
 Houyi Li, Wenzhen Zheng, Qiufeng Wang, Zhenyu Ding, Haoying Wang, Zili Wang,
   Shijie Xuyang, Ning Ding, Shuigeng Zhou, Xiangyu Zhang, et~al.
