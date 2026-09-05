@@ -96,6 +96,38 @@ Shengding Hu, Yuge Tu, Xu~Han, et~al.
   scalable training strategies.
 \newblock {\em arXiv preprint arXiv:2404.06395}, 2024.
 
+\bibitem{mistral2025magistral}
+{Mistral AI}.
+\newblock Magistral: Mistral's first reasoning model.
+\newblock {\em arXiv preprint arXiv:2506.10910}, 2025.
+
+\bibitem{mistral2024large2}
+{Mistral AI}.
+\newblock Mistral large 2.
+\newblock {\em Mistral AI Blog}, 2024.
+
+\bibitem{joulin2016fasttext}
+Armand Joulin, Edouard Grave, Piotr Bojanowski, Matthijs Douze, H{\'e}rve
+  J{\'e}gou, and Tomas Mikolov.
+\newblock Fasttext.zip: Compressing text classification models.
+\newblock {\em arXiv preprint arXiv:1612.03651}, 2016.
+
+\bibitem{guha2025openthoughts}
+Etash Guha, Ryan Marten, Sedrick Keh, Negin Raoof, Georgios Smyrnis, et~al.
+\newblock Openthoughts: Data recipes for reasoning models.
+\newblock {\em arXiv preprint arXiv:2506.04178}, 2025.
+
+\bibitem{openr1_2025}
+{Hugging Face}.
+\newblock Open r1: A fully open reproduction of deepseek-r1, 2025.
+
+\bibitem{shao2024deepseekmath}
+Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu, Junxiao Song, Xiao Bi, Haowei
+  Zhang, Mingchuan Zhang, Y.~K. Li, Y.~Wu, and Daya Guo.
+\newblock Deepseekmath: Pushing the limits of mathematical reasoning in open
+  language models.
+\newblock {\em arXiv preprint arXiv:2402.03300}, 2024.
+
 \bibitem{li2025farseer}
 Houyi Li, Wenzhen Zheng, Qiufeng Wang, Zhenyu Ding, Haoying Wang, Zili Wang,
   Shijie Xuyang, Ning Ding, Shuigeng Zhou, Xiangyu Zhang, et~al.
@@ -328,13 +360,6 @@ Nicolas Heess, Srinivasan Sriram, Jay Lemmon, Josh Merel, Greg Wayne, Yuval
   Tassa, Tom Erez, Ziyu Wang, SM~Eslami, Martin Riedmiller, et~al.
 \newblock Emergence of locomotion behaviours in rich environments.
 \newblock {\em arXiv preprint arXiv:1707.02286}, 2017.
-
-\bibitem{shao2024deepseekmath}
-Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu, Junxiao Song, Xiao Bi, Haowei
-  Zhang, Mingchuan Zhang, Y.~K. Li, Y.~Wu, and Daya Guo.
-\newblock Deepseekmath: Pushing the limits of mathematical reasoning in open
-  language models.
-\newblock {\em arXiv preprint arXiv:2402.03300}, 2024.
 
 \bibitem{ouyang2022training}
 Long Ouyang, Jeffrey Wu, Xu~Jiang, Diogo Almeida, Carroll Wainwright, Pamela
