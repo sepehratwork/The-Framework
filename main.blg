@@ -95,47 +95,72 @@ Repeated entry---line 1301 of file references.bib
  : @inproceedings{gloeckle2024better
  :                                  ,
 I'm skipping whatever remains of this entry
+Repeated entry---line 1325 of file references.bib
+ : @article{yang2024qwen25
+ :                        ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 1403 of file references.bib
+ : @article{su2024roformer
+ :                        ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 1419 of file references.bib
+ : @article{peng2023yarn
+ :                      ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 1433 of file references.bib
+ : @inproceedings{hendrycks2021mmlu
+ :                                 ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 1476 of file references.bib
+ : @article{cobbe2021training
+ :                           ,
+I'm skipping whatever remains of this entry
+Repeated entry---line 1483 of file references.bib
+ : @article{hendrycks2021math
+ :                           ,
+I'm skipping whatever remains of this entry
 Warning--empty journal in jordan2024muon
+Warning--can't use both volume and number fields in wang2020neural
 Warning--can't use both volume and number fields in chen2023sufficiency
-You've used 153 entries,
+You've used 178 entries,
             1791 wiz_defined-function locations,
-            1091 strings with 34385 characters,
-and the built_in function-call counts, 35800 in all, are:
-= -- 2490
-> -- 2896
-< -- 30
-+ -- 1025
-- -- 872
-* -- 2403
-:= -- 6286
-add.period$ -- 459
-call.type$ -- 153
-change.case$ -- 153
+            1192 strings with 40609 characters,
+and the built_in function-call counts, 43141 in all, are:
+= -- 2961
+> -- 3599
+< -- 38
++ -- 1268
+- -- 1090
+* -- 2974
+:= -- 7577
+add.period$ -- 534
+call.type$ -- 178
+change.case$ -- 178
 chr.to.int$ -- 0
-cite$ -- 155
-duplicate$ -- 1552
-empty$ -- 2884
-format.name$ -- 872
-if$ -- 7628
+cite$ -- 181
+duplicate$ -- 1833
+empty$ -- 3402
+format.name$ -- 1090
+if$ -- 9166
 int.to.chr$ -- 0
-int.to.str$ -- 153
-missing$ -- 148
-newline$ -- 767
-num.names$ -- 153
-pop$ -- 551
+int.to.str$ -- 178
+missing$ -- 172
+newline$ -- 892
+num.names$ -- 178
+pop$ -- 642
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 784
+skip$ -- 948
 stack$ -- 0
-substring$ -- 988
-swap$ -- 410
-text.length$ -- 30
+substring$ -- 1235
+swap$ -- 504
+text.length$ -- 38
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 2
-while$ -- 229
-width$ -- 156
-write$ -- 1570
-(There were 23 error messages)
+warning$ -- 3
+while$ -- 271
+width$ -- 181
+write$ -- 1829
+(There were 29 error messages)

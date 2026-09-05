@@ -315,6 +315,185 @@ Mengzhao Chen, Chaoyi Zhang, Jing Liu, Yutao Zeng, Zeyue Xue, Zhiheng Liu,
 \newblock {Scaling Law for Quantization-Aware Training}.
 \newblock {\em arXiv preprint arXiv:2505.14302}, 2025.
 
+\bibitem{bai2025qwen25vl}
+Shuai Bai, Keqin Chen, Xuejing Liu, Jialin Wang, Wenbin Ge, Sibo Song, Kai
+  Dang, Peng Wang, Shijie Wang, Jun Tang, et~al.
+\newblock {Qwen2.5-VL Technical Report}.
+\newblock {\em arXiv preprint arXiv:2502.13923}, 2025.
+
+\bibitem{yang2024qwen25}
+An~Yang, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo~Zheng, Bowen Yu,
+  Chengyuan Li, Dayiheng Liu, Fei Huang, Haoran Wei, et~al.
+\newblock Qwen2.5 technical report.
+\newblock {\em arXiv preprint arXiv:2412.15115}, 2024.
+
+\bibitem{yang2024qwen25math}
+An~Yang, Beichen Zhang, Binyuan Hui, Bofei Gao, Bowen Yu, Chengpeng Li,
+  Dayiheng Liu, Jianhong Tu, Jingren Zhou, Junyang Lin, et~al.
+\newblock {Qwen2.5-Math Technical Report: Toward Mathematical Expert Model via
+  Self-Improvement}.
+\newblock {\em arXiv preprint arXiv:2409.12122}, 2024.
+
+\bibitem{hui2024qwen25coder}
+Binyuan Hui, Jian Yang, Zeyu Cui, Jiaxi Yang, Dayiheng Liu, Lei Zhang, Tianyu
+  Liu, Jiajun Zhang, Bowen Yu, Keming Lu, et~al.
+\newblock {Qwen2.5-Coder Technical Report}.
+\newblock {\em arXiv preprint arXiv:2409.12186}, 2024.
+
+\bibitem{xie2023doremi}
+Sang~Michael Xie, Hieu Pham, Xuanyi Dong, Nan Du, Hanxiao Liu, Yifeng Lu,
+  Percy~S Liang, Quoc~V Le, Tengyu Ma, and Adams~Wei Yu.
+\newblock {DoReMi: Optimizing Data Mixtures Speeds Up Language Model
+  Pretraining}.
+\newblock In {\em Advances in Neural Information Processing Systems (NeurIPS)},
+  volume~36, pages 69798--69818, 2023.
+
+\bibitem{fan2023doge}
+Simin Fan, Matteo Pagliardini, and Martin Jaggi.
+\newblock {DoGE: Domain Reweighting with Generalization Estimation}.
+\newblock {\em arXiv preprint arXiv:2310.15393}, 2023.
+
+\bibitem{liu2024regmix}
+Qian Liu, Xiaosen Zheng, Niklas Muennighoff, Guangtao Zeng, Longxu Dou, Tianyu
+  Pang, Jing Jiang, and Min Lin.
+\newblock {RegMix: Data Mixture as Regression for Language Model Pre-training}.
+\newblock {\em arXiv preprint arXiv:2407.01492}, 2024.
+
+\bibitem{xiong2023effective}
+Wenhan Xiong, Jingyu Liu, Igor Molybog, Hejia Zhang, Prajjwal Bhargava, Rui
+  Hou, Louis Martin, Rashi Rungta, Karthik~Abinav Sankararaman, Barlas Oguz,
+  et~al.
+\newblock {Effective Long-Context Scaling of Foundation Models}.
+\newblock {\em arXiv preprint arXiv:2309.16039}, 2023.
+
+\bibitem{an2024dca}
+Chenxin An, Fei Huang, Jun Zhang, Shansan Gong, Xipeng Qiu, Chang Zhou, and
+  Lingpeng Kong.
+\newblock {Training-Free Long-Context Scaling of Large Language Models}.
+\newblock {\em arXiv preprint arXiv:2402.17463}, 2024.
+
+\bibitem{bai2023qwen}
+Jinze Bai, Shuai Bai, Yunfei Chu, Zeyu Cui, Kai Dang, Xiaodong Deng, Yang Fan,
+  Wenbin Ge, Yu~Han, Fei Huang, et~al.
+\newblock {Qwen Technical Report}.
+\newblock {\em arXiv preprint arXiv:2309.16609}, 2023.
+
+\bibitem{brown2020language}
+Tom~B Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared Kaplan, Prafulla
+  Dhariwal, Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell,
+  et~al.
+\newblock Language models are few-shot learners.
+\newblock In {\em Advances in Neural Information Processing Systems (NeurIPS)},
+  volume~33, pages 1877--1901, 2020.
+
+\bibitem{wang2020neural}
+Changhan Wang, Kyunghyun Cho, and Jiatao Gu.
+\newblock Neural machine translation with byte-level subwords.
+\newblock In {\em Proceedings of the AAAI Conference on Artificial
+  Intelligence}, volume~34, pages 9154--9160, 2020.
+
+\bibitem{sennrich2016neural}
+Rico Sennrich, Barry Haddow, and Alexandra Birch.
+\newblock Neural machine translation of rare words with subword units.
+\newblock In {\em Proceedings of the 54th Annual Meeting of the Association for
+  Computational Linguistics (ACL)}, pages 1715--1725, 2016.
+
+\bibitem{gema2024are}
+Aryo~Pradipta Gema, Joshua Ong~Jun Leang, Giwon Hong, Alessio Devoto, Alberto
+  Carlo~Maria Mancino, Rohit Saxena, Xuanli He, Yu~Zhao, Xiaotang Du, Mohammad
+  Reza~Ghasemi Madani, et~al.
+\newblock {Are We Done with MMLU?}
+\newblock {\em arXiv preprint arXiv:2406.04127}, 2024.
+
+\bibitem{wang2024mmlupro}
+Yubo Wang, Xueguang Ma, Ge~Zhang, Yuansheng Ni, Abhranil Chandra, Shiguang Guo,
+  Weiming Ren, Aaran Arulraj, Xuan He, Ziyan Jiang, et~al.
+\newblock {MMLU-Pro: A More Robust and Challenging Multi-Task Language
+  Understanding Benchmark}.
+\newblock {\em arXiv preprint arXiv:2406.01574}, 2024.
+
+\bibitem{suzgun2023challenging}
+Mirac Suzgun, Nathan Scales, Nathanael Sch{\"a}rli, Sebastian Gehrmann, Yi~Tay,
+  Hyung~Won Chung, Aakanksha Chowdhery, Quoc~V Le, Ed~H Chi, Denny Zhou, et~al.
+\newblock {Challenging BIG-Bench Tasks and Whether Chain-of-Thought Can Solve
+  Them}.
+\newblock In {\em Findings of the Association for Computational Linguistics:
+  ACL 2023}, pages 13003--13051, 2023.
+
+\bibitem{du2025supergpqa}
+Xinrun Du, Yifan Yao, Kaijing Ma, Bingli Wang, Tianyu Zheng, King Zhu, Minghao
+  Liu, Yiming Liang, Xiaolong Jin, Zhenlin Wei, et~al.
+\newblock {SuperGPQA: Scaling LLM Evaluation Across 285 Graduate Disciplines}.
+\newblock {\em arXiv preprint arXiv:2502.14739}, 2025.
+
+\bibitem{rein2023gpqa}
+David Rein, Betty~Li Hou, Asa~Cooper Stickland, Jackson Petty, Richard~Yuanzhe
+  Pang, Julien Dirani, Julian Michael, and Samuel~R Bowman.
+\newblock {GPQA: A Graduate-Level Google-Proof Q\&A Benchmark}.
+\newblock {\em arXiv preprint arXiv:2311.12022}, 2023.
+
+\bibitem{cobbe2021training}
+Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, Heewoo Jun, Lukasz
+  Kaiser, Matthias Plappert, Jerry Tworek, Jacob Hilton, Reiichiro Nakano,
+  et~al.
+\newblock Training verifiers to solve math word problems.
+\newblock {\em arXiv preprint arXiv:2110.14168}, 2021.
+
+\bibitem{liu2023evalplus}
+Jiawei Liu, Chunqiu~Steven Xia, Yuyao Wang, and Lingming Zhang.
+\newblock Is your code generated by {ChatGPT} really correct? rigorous
+  evaluation of large language models for code generation.
+\newblock {\em Advances in Neural Information Processing Systems (NeurIPS)},
+  2023.
+
+\bibitem{cassano2023multipl}
+Federico Cassano, John Gouwar, Daniel Nguyen, Sydney Nguyen, Luna
+  Phipps-Costin, Donald Pinckney, Ming-Ho Yee, Yangtian Zi, Carolyn~Jane
+  Anderson, Molly~Q Feldman, et~al.
+\newblock {MultiPL-E: A Scalable and Polyglot Approach to Benchmarking Neural
+  Code Generation}.
+\newblock {\em IEEE Transactions on Software Engineering}, 49(7):3675--3691,
+  2023.
+
+\bibitem{austin2021program}
+Jacob Austin, Augustus Odena, Maxwell~I Nye, Maarten Bosma, Henryk Michalewski,
+  David Dohan, Ellen Jiang, Carrie~J Cai, Michael Terry, Quoc~V Le, et~al.
+\newblock Program synthesis with large language models.
+\newblock {\em arXiv preprint arXiv:2108.07732}, 2021.
+
+\bibitem{gu2024cruxeval}
+Alex Gu, Baptiste Rozi{\`e}re, Hugh Leather, Armando Solar-Lezama, Gabriel
+  Synnaeve, and Sida~I Wang.
+\newblock {CRUXEval: A Benchmark for Code Reasoning, Understanding and
+  Execution}.
+\newblock {\em arXiv preprint arXiv:2401.03065}, 2024.
+
+\bibitem{shi2023language}
+Freda Shi, Mirac Suzgun, Markus Freitag, Xuezhi Wang, Suraj Srivats, Soroush
+  Vosoughi, Hyung~Won Chung, Yi~Tay, Sebastian Ruder, Denny Zhou, et~al.
+\newblock Language models are multilingual chain-of-thought reasoners.
+\newblock In {\em International Conference on Learning Representations (ICLR)},
+  2023.
+
+\bibitem{openai2024mmmlu}
+{OpenAI}.
+\newblock {Multilingual Massive Multitask Language Understanding (MMMLU)}.
+\newblock \url{https://huggingface.co/datasets/openai/MMMLU}, 2024.
+
+\bibitem{romanou2024include}
+Angelika Romanou, Negar Foroutan, Anna Sotnikova, Zeming Chen, Sree~Harsha
+  Nelaturu, Shivalika Singh, Rishabh Maheshwary, Micol Altomare, Mohamed~A
+  Haggag, Snegha A, et~al.
+\newblock {INCLUDE: Evaluating Multilingual Language Understanding with
+  Regional Knowledge}.
+\newblock {\em arXiv preprint arXiv:2411.19799}, 2024.
+
+\bibitem{liu2024deepseekv3}
+Aixin Liu, Bei Feng, Bing Xue, Bingxuan Wang, Bochao Wu, Chengda Lu, Chenggang
+  Zhao, Chengqi Deng, Chenyu Zhang, Chong Ruan, et~al.
+\newblock {DeepSeek-V3 Technical Report}.
+\newblock {\em arXiv preprint arXiv:2412.19437}, 2024.
+
 \bibitem{li2025farseer}
 Houyi Li, Wenzhen Zheng, Qiufeng Wang, Zhenyu Ding, Haoying Wang, Zili Wang,
   Shijie Xuyang, Ning Ding, Shuigeng Zhou, Xiangyu Zhang, et~al.
@@ -633,12 +812,6 @@ Qiying Yu, Zheng Zhang, Ruofei Zhu, Yufeng Yuan, Xiaochen Zuo, Yu~Yue, Weinan
 \newblock Dapo: An open-source llm reinforcement learning system at scale.
 \newblock {\em arXiv preprint arXiv:2503.14476}, 2025.
 
-\bibitem{yang2024qwen25}
-An~Yang, Baosong Yang, Beichen Zhang, Binyuan Hui, Bo~Zheng, Bowen Yu,
-  Chengyuan Li, Dayiheng Liu, Fei Huang, Haoran Wei, et~al.
-\newblock Qwen2.5 technical report.
-\newblock {\em arXiv preprint arXiv:2412.15115}, 2024.
-
 \bibitem{guo2025deepseek}
 Daya Guo, Dejian Yang, Haowei Zhang, Junxiao Song, Ruoyu Zhang, Runxin Xu,
   Qihao Zhu, Shirong Ma, Peiyi Wang, Xiao Bi, et~al.
@@ -764,13 +937,6 @@ Leo Gao, John Schulman, and Jacob Hilton.
 Prasann Singhal, Tanya Goyal, Jiacheng Xu, and Greg Durrett.
 \newblock A long way to go: Investigating length correlations in rlhf.
 \newblock {\em arXiv preprint arXiv:2403.07862}, 2024.
-
-\bibitem{cobbe2021training}
-Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian, Mark Chen, Heewoo Jun, Lukasz
-  Kaiser, Matthias Plappert, Jerry Tworek, Jacob Hilton, Reiichiro Nakano,
-  et~al.
-\newblock Training verifiers to solve math word problems.
-\newblock {\em arXiv preprint arXiv:2110.14168}, 2021.
 
 \bibitem{hendrycks2021measuring}
 Dan Hendrycks, Collin Burns, Saurav Kadavath, Akul Arora, Steven Basart, Eric

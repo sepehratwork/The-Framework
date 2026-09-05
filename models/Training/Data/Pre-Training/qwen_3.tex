@@ -1,1 +1,294 @@
-\item \textbf asd
+\item \model{Qwen3}
+
+\paragraph*{مقدمه و ساختار کلی دادگان پیش‌آموزش}
+فاز پیش‌آموزش (\en{Pre-training}) در مدل‌های زبانی خانواده \model{Qwen3} با هدف جهش در کارایی محاسباتی، تعمیق قابلیت‌های استدلال ریاضی و برنامه‌نویسی و ارتقای شگرف پوشش چندزبانه طراحی شده است. در این نسخه، مدل‌ها بر روی مقیاس بی‌سابقه‌ای بالغ بر \textbf{۳۶ تریلیون توکن} (\en{36T tokens}) آموزش دیده‌اند که نمایانگر رشد دو برابری نسبت به نسل پیشین (\en{Qwen2.5}) است:
+\begin{equation}
+    \rho_{\text{tokens}} = \frac{T_{\text{Qwen3}}}{T_{\text{Qwen2.5}}} = \frac{36 \times 10^{12}}{18 \times 10^{12}} = 2.0
+\end{equation}
+همچنین گستره زبانی دادگان از ۲۹ زبان در نسخه پیشین به \textbf{۱۱۹ زبان و گویش} بسط یافته است که حاکی از افزایش بیش از چهار برابری در تنوع زبان‌شناختی است:
+\begin{equation}
+    \rho_{\text{lang}} = \frac{N_{\text{lang}}^{\text{Qwen3}}}{N_{\text{lang}}^{\text{Qwen2.5}}} = \frac{119}{29} \approx 4.103
+\end{equation}
+پیکره پیش‌آموزش به‌گونه‌ای توازن یافته است که از ۶ مدل متراکم (\en{Dense}) در مقیاس‌های $0.6\text{B}$، $1.7\text{B}$، $4\text{B}$، $8\text{B}$، $14\text{B}$ و $32\text{B}$ و دو مدل مبتنی بر ترکیب متخصصان (\en{MoE}) شامل \en{Qwen3-30B-A3B} (با ۳ میلیارد پارامتر فعال) و مدل پرچم‌دار \en{Qwen3-235B-A22B} (دارای ۲۳۵ میلیارد پارامتر کل و ۲۲ میلیارد پارامتر فعال به ازای هر توکن) پشتیبانی نماید. هدف بهینه‌سازی در این مرحله، کمینه‌سازی خطای پیش‌بینی خودبازگشتی توکن بعدی بر روی توالی‌های متنی است:
+\begin{equation}
+    \mathcal{L}_{\text{pretrain}}(\theta) = - \sum_{t=1}^{T} \log P_\theta(x_t \mid x_1, x_2, \dots, x_{t-1})
+\end{equation}
+
+\paragraph*{گردآوری، استخراج چندوجهی و سنتز هدفمند داده‌ها (\en{Data Sourcing \& Synthesis})}
+برای تحقق پیکره ۳۶ تریلیون توکنی با چگالی دانشی بالا، از یک خط لوله سه‌گانه و ترکیبی بهره گرفته شده است:
+\begin{itemize}
+    \item \textbf{استخراج متن اسنادی بر پایه مدل‌های چندوجهی (\en{Multimodal Document Extraction}):} بخش وسیعی از اسناد علمی، دانشگاهی و کتاب‌ها در قالب پرونده‌های \en{PDF} متراکم محبوس مانده‌اند. برای بازیابی دقیق و ساختاریافته متون، ابتدا مدل بینایی-زبانی \en{Qwen2.5-VL} \cite{bai2025qwen25vl} بازتنظیم شد تا نویسه‌خوانی و درک چیدمان بصری اسناد را با دقت بالا انجام دهد. سپس خروجی حاصل با استفاده از مدل \en{Qwen2.5} \cite{yang2024qwen25} بازبینی و پالایش زبانی شد. این فرایند دومرحله‌ای به آزادسازی تریلیون‌ها توکن متنی باکیفیت و با ساختار صحیح انجامید.
+    \item \textbf{سنتز داده‌های تخصصی توسط مدل‌های خبره (\en{Domain-Specific Synthetic Data}):} به منظور تعمیق توانایی‌های استدلالی، تریلیون‌ها توکن سنتزی در قالب کتاب‌های درسی، جفت‌های پرسش‌وپاسخ استدلالی، دستورالعمل‌ها و قطعه‌کدهای برنامه‌نویسی به مجموعه افزوده شد. در این مسیر، داده‌های ریاضی به طور ویژه توسط مدل تخصصی \en{Qwen2.5-Math} \cite{yang2024qwen25math} و کدهای چندزبانه به همراه تحلیل الگوریتمی توسط مدل \en{Qwen2.5-Coder} \cite{hui2024qwen25coder} سنتز گردیدند.
+    \item \textbf{توسعه چندزبانه متوازن (\en{Multilingual Expansion}):} پوشش زبانی از ۲۹ به ۱۱۹ زبان گسترش یافت؛ داده‌های زبان‌های دارای منابع متوسط و کم با راهبردهای ترجمه معکوس و اعتبارسنجی کیفی تقویت شدند تا نمایش چندزبانه در لایه‌های بازنمایی مدل متوازن گردد.
+\end{itemize}
+
+\paragraph*{حاشیه‌نویسی چندزبانه و بهینه‌سازی توزیع داده در سطح نمونه (\en{Instance-Level Data Mixture})}
+مدیریت و مهندسی این حجم از داده نیازمند گزینش کیفی فراتر از فیلترینگ‌های سنتی است:
+\begin{itemize}
+    \item \textbf{سامانه حاشیه‌نویسی چندبعدی:} یک سیستم خودکار برچسب‌گذاری بر روی بیش از \textbf{۳۰ تریلیون توکن} اعمال شد. این سامانه داده‌ها را بر اساس چهار بعد کلیدی ارزیابی و برچسب‌گذاری می‌کند: ارزش آموزشی (\en{Educational Value})، شاخه علمی (\en{Field})، دامنه تخصصی (\en{Domain}) و انطباق با شاخص‌های ایمنی (\en{Safety}).
+    \item \textbf{بهینه‌سازی توزیع در سطح نمونه (\en{Instance-Level Optimization}):} برخلاف رویکردهای پیشین نظیر \en{DoREMI} \cite{xie2023doremi}، \en{DoGE} \cite{fan2023doge} و \en{RegMix} \cite{liu2024regmix} که وزن‌دهی به داده‌ها را در سطح منبع داده یا حوزه کلی بهینه‌سازی می‌کردند، در \model{Qwen3} ترکیب داده‌ها بر پایه برچسب‌های ریزدانه در سطح تک‌تک نمونه‌ها تنظیم شد. این فرایند با اجرای مطالعات ابلیشن گسترده بر روی مدل‌های پروکسی کوچک (\en{Small Proxy Models}) انجام گرفت تا بردار ضرایب ترکیب بهینه $w^*$ حاصل شود:
+    \begin{equation}
+        w^* = \arg\min_{w} \mathbb{E}_{x \sim \mathcal{D}_{\text{eval}}} \left[ \mathcal{L}_{\text{proxy}}(x; \theta^*(w)) \right]
+    \end{equation}
+\end{itemize}
+
+\paragraph*{برنامه درسی سه‌مرحله‌ای پیش‌آموزش (\en{Three-Stage Pre-training Curriculum})}
+فرآیند پیش‌آموزش در قالب سه فاز زمان‌بندی‌شده و ساختاریافته به اجرا درآمد:
+\begin{itemize}
+    \item \textbf{فاز ۱: مرحله عمومی (\en{General Stage - S1}):} آموزش بر روی بیش از ۳۰ تریلیون توکن با طول زمینه $L = 4{,}096$ توکن اجرا شد. این مرحله پایه دانش زبانی، استنتاج عمومی جهان و تعمیم‌پذیری متقابل در ۱۱۹ زبان و گویش را شکل داد.
+    \item \textbf{فاز ۲: مرحله استدلال (\en{Reasoning Stage - S2}):} مدل‌ها با حدود ۵ تریلیون توکن گلچین‌شده و بسیار غنی با محوریت علوم مهندسی، فناوری، ریاضیات (\en{STEM})، مسائل الگوریتمی و داده‌های سنتزی با طول توالی $4{,}096$ آموزش دیدند. در این فاز، نرخ اضمحلال یادگیری (\en{Learning Rate Decay}) تسریع گردید تا مدل در فضاهای استدلالی همگرا شود.
+    \item \textbf{فاز ۳: مرحله زمینه طولانی (\en{Long Context Stage}):} مدل‌ها با صدها میلیارد توکن بلند تا سقف طول توالی $L = 32{,}768$ توکن پیش‌آموزش دیدند. ساختار طول اسناد در این فاز شامل \textbf{۷۵٪ داده‌ها با طول بین ۱۶,۳۸۴ تا ۳۲,۷۶۸ توکن} و \textbf{۲۵٪ داده‌ها با طول بین ۴,۰۹۶ تا ۱۶,۳۸۴ توکن} بوده است. در این فاز بسامد پایه فشرده‌سازی موقعیتی دورانی (\en{RoPE}) \cite{su2024roformer} با تکنیک \en{ABF} \cite{xiong2023effective} از ۱۰,۰۰۰ به ۱,۰۰۰,۰۰۰ افزایش یافت و با سازوکارهای \en{YaRN} \cite{peng2023yarn} و توجه چندتکه‌ای دوگانه (\en{DCA}) \cite{an2024dca} ادغام شد تا پنجره بافت حین استنتاج تا سقف ۱۲۸,۰۰۰ توکن ($128\text{K}$) با حفظ پایایی بسط یابد.
+\end{itemize}
+
+\paragraph*{توکنایزیشن و بازنمایی زیرکلمات (\en{Tokenization})}
+در مدل‌های \model{Qwen3} از توکنایزر اختصاصی مبتنی بر کدگذاری جفت‌بایت در سطح بایت (\en{BBPE}) \cite{bai2023qwen, brown2020language, wang2020neural, sennrich2016neural} با اندازه واژگان $151{,}669$ استفاده شده است. این اندازه واژگان، ضریب فشرده‌سازی توکن به کلمه را در متون غیرانگلیسی به خصوص خطوط خاورمیانه و آسیایی بهینه ساخته و سربار محاسباتی طول توالی را تعدیل می‌کند.
+
+\paragraph*{ارزیابی‌های آماری و مقایسه‌ای مدل‌های پایه (\en{Base Model Evaluations})}
+اثربخشی داده‌های پیش‌آموزش و راهبردهای پالایش آن، بر روی ۱۵ بنچمارک استاندارد در ۴ حوزه وظایف عمومی (\en{MMLU} \cite{hendrycks2021mmlu}, \en{MMLU-Redux} \cite{gema2024are}, \en{MMLU-Pro} \cite{wang2024mmlupro}, \en{BBH} \cite{suzgun2023challenging}, \en{SuperGPQA} \cite{du2025supergpqa})، ریاضیات و علوم پایه (\en{GPQA} \cite{rein2023gpqa}, \en{GSM8K} \cite{cobbe2021training}, \en{MATH} \cite{hendrycks2021math})، کدنویسی (\en{EvalPlus} \cite{liu2023evalplus}, \en{MultiPL-E} \cite{cassano2023multipl}, \en{MBPP} \cite{austin2021program}, \en{CRUX-O} \cite{gu2024cruxeval}) و چندزبانه (\en{MGSM} \cite{shi2023language}, \en{MMMLU} \cite{openai2024mmmlu}, \en{INCLUDE} \cite{romanou2024include}) مورد ارزیابی دقیق قرار گرفت. 
+
+جداول \ref{tab:qwen3_235b_base} تا \ref{tab:qwen3_small_base} عملکرد کمّی مدل‌های پایه را در برابر رقبای هم‌رده و پرچم‌دار نشان می‌دهند. مهم‌ترین یافته‌های آماری به شرح زیر است:
+\begin{itemize}
+    \item \textbf{برتری مدل پرچم‌دار \en{Qwen3-235B-A22B-Base}:} این مدل با دارا بودن تنها ۲۲ میلیارد پارامتر فعال در هر توکن (تقریباً $60\%$ پارامترهای فعال و $35\%$ پارامترهای کل \en{DeepSeek-V3} \cite{liu2024deepseekv3})، در ۱۴ آزمون از ۱۵ آزمون ارزیابی‌شده رتبه اول را کسب کرده است؛ از جمله در آزمون استدلال پیشرفته \en{MATH} با ثبت امتیاز $71.84$ در مقایسه با $62.62$ مدل \en{DeepSeek-V3}، رشد نسبی $+14.72\%$ را محقق ساخته است.
+    \item \textbf{انتقال تراز کارایی در مدل‌های متراکم (\en{Dense Models}):} مدل \en{Qwen3-32B-Base} با کمتر از نیمی از پارامترهای مدل پرچم‌دار پیشین \en{Qwen2.5-72B-Base}، در ۱۰ بنچمارک از ۱۵ بنچمارک بر آن غلبه کرده و در کدنویسی (\en{EvalPlus} با امتیاز $72.05$ در برابر $65.93$) و آزمون \en{MMLU-Pro} (امتیاز $65.54$ در برابر $58.07$) برتری قاطعی به ثبت رسانده است. همچنین مدل‌های سبک‌تر \en{Qwen3-8B}، \en{4B} و \en{1.7B} توانسته‌اند مدل‌های مقیاس‌های ۲ تا ۳ برابری نسل قبل خود (\en{Qwen2.5-14B}، \en{7B} و \en{3B}) را در اکثر حوزه‌ها پشت سر بگذارند.
+    \item \textbf{بهره‌وری فوق‌العاده مدل‌های \en{MoE} کوچک:} مدل \en{Qwen3-30B-A3B-Base} با تنها ۳ میلیارد پارامتر فعال، در تمامی شاخص‌ها مدل متراکم \en{Qwen2.5-14B-Base} (با ۱۴ میلیارد پارامتر فعال) را مغلوب کرده و به کارایی نزدیک به مدل متراکم ۳۲ میلیارد پارامتری با بیش از ۱۰ برابر هزینه محاسباتی کمتر دست یافته است.
+\end{itemize}
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه عملکرد مدل پایه پرچم‌دار \en{Qwen3-235B-A22B-Base} با مدل‌های قدرتمند متن‌باز}
+\label{tab:qwen3_235b_base}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{شاخص / بنچمارک} & \textbf{\en{Qwen2.5-72B-Base}} & \textbf{\en{Qwen2.5-Plus-Base}} & \textbf{\en{Llama-4-Maverick-Base}} & \textbf{\en{DeepSeek-V3-Base}} & \textbf{\en{Qwen3-235B-A22B-Base}} \\
+\midrule
+معماری & \en{Dense} & \en{MoE} & \en{MoE} & \en{MoE} & \en{MoE} \\
+تعداد کل پارامترها & 72B & 271B & 402B & 671B & 235B \\
+پارامترهای فعال & 72B & 37B & 17B & 37B & 22B \\
+\midrule
+\multicolumn{6}{l}{\textbf{وظایف عمومی (\en{General Tasks})}} \\
+\en{MMLU} & 86.06 & 85.02 & 85.16 & \underline{87.19} & \textbf{87.81} \\
+\en{MMLU-Redux} & 83.91 & 82.69 & 84.05 & \underline{86.14} & \textbf{87.40} \\
+\en{MMLU-Pro} & 58.07 & 63.52 & \underline{63.91} & 59.84 & \textbf{68.18} \\
+\en{SuperGPQA} & 36.20 & 37.18 & 40.85 & \underline{41.53} & \textbf{44.06} \\
+\en{BBH} & 86.30 & 85.60 & 83.62 & \underline{86.22} & \textbf{88.87} \\
+\midrule
+\multicolumn{6}{l}{\textbf{ریاضیات و علوم مهندسی (\en{Math \& STEM})}} \\
+\en{GPQA} & \underline{45.88} & 41.92 & 43.94 & 41.92 & \textbf{47.47} \\
+\en{GSM8K} & 91.50 & \underline{91.89} & 87.72 & 87.57 & \textbf{94.39} \\
+\en{MATH} & 62.12 & 62.78 & \underline{63.32} & 62.62 & \textbf{71.84} \\
+\midrule
+\multicolumn{6}{l}{\textbf{کدنویسی (\en{Coding})}} \\
+\en{EvalPlus} & 65.93 & 61.43 & \underline{68.38} & 63.75 & \textbf{77.60} \\
+\en{MultiPL-E} & 58.70 & 62.16 & 57.28 & \underline{62.26} & \textbf{65.94} \\
+\en{MBPP} & \underline{76.00} & 74.60 & 75.40 & 74.20 & \textbf{81.40} \\
+\en{CRUX-O} & 66.20 & 68.50 & \underline{77.00} & 76.60 & \textbf{79.00} \\
+\midrule
+\multicolumn{6}{l}{\textbf{چندزبانه (\en{Multilingual})}} \\
+\en{MGSM} & 82.40 & 82.21 & 79.69 & \underline{82.68} & \textbf{83.53} \\
+\en{MMMLU} & 84.40 & 83.49 & 83.09 & \underline{85.88} & \textbf{86.70} \\
+\en{INCLUDE} & 69.05 & 66.97 & 73.47 & \textbf{75.17} & \underline{73.46} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه عملکرد مدل پایه متراکم \en{Qwen3-32B-Base} با مدل‌های هم‌رده}
+\label{tab:qwen3_32b_base}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{شاخص / بنچمارک} & \textbf{\en{Qwen2.5-32B-Base}} & \textbf{\en{Qwen2.5-72B-Base}} & \textbf{\en{Gemma-3-27B-Base}} & \textbf{\en{Llama-4-Scout-Base}} & \textbf{\en{Qwen3-32B-Base}} \\
+\midrule
+معماری & \en{Dense} & \en{Dense} & \en{Dense} & \en{MoE} & \en{Dense} \\
+تعداد کل پارامترها & 32B & 72B & 27B & 109B & 32B \\
+پارامترهای فعال & 32B & 72B & 27B & 17B & 32B \\
+\midrule
+\multicolumn{6}{l}{\textbf{وظایف عمومی (\en{General Tasks})}} \\
+\en{MMLU} & 83.32 & \textbf{86.06} & 78.69 & 78.27 & \underline{83.61} \\
+\en{MMLU-Redux} & 81.97 & \textbf{83.91} & 76.53 & 71.09 & \underline{83.41} \\
+\en{MMLU-Pro} & 55.10 & \underline{58.07} & 52.88 & 56.13 & \textbf{65.54} \\
+\en{SuperGPQA} & 33.55 & \underline{36.20} & 29.87 & 26.51 & \textbf{39.78} \\
+\en{BBH} & 84.48 & \underline{86.30} & 79.95 & 82.40 & \textbf{87.38} \\
+\midrule
+\multicolumn{6}{l}{\textbf{ریاضیات و علوم مهندسی (\en{Math \& STEM})}} \\
+\en{GPQA} & \underline{47.97} & 45.88 & 26.26 & 40.40 & \textbf{49.49} \\
+\en{GSM8K} & \underline{92.87} & 91.50 & 81.20 & 85.37 & \textbf{93.40} \\
+\en{MATH} & 57.70 & \textbf{62.12} & 51.78 & 51.66 & \underline{61.62} \\
+\midrule
+\multicolumn{6}{l}{\textbf{کدنویسی (\en{Coding})}} \\
+\en{EvalPlus} & \underline{66.25} & 65.93 & 55.78 & 59.90 & \textbf{72.05} \\
+\en{MultiPL-E} & 58.30 & \underline{58.70} & 45.03 & 47.38 & \textbf{67.06} \\
+\en{MBPP} & 73.60 & \underline{76.00} & 68.40 & 68.60 & \textbf{78.20} \\
+\en{CRUX-O} & \underline{67.80} & 66.20 & 60.00 & 61.90 & \textbf{72.50} \\
+\midrule
+\multicolumn{6}{l}{\textbf{چندزبانه (\en{Multilingual})}} \\
+\en{MGSM} & 78.12 & \underline{82.40} & 73.74 & 79.93 & \textbf{83.06} \\
+\en{MMMLU} & 82.40 & \textbf{84.40} & 77.62 & 74.83 & \underline{83.83} \\
+\en{INCLUDE} & 64.35 & \textbf{69.05} & \underline{68.94} & 68.09 & 67.87 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه عملکرد مدل‌های \en{Qwen3-14B-Base} و \en{Qwen3-30B-A3B-Base} با مدل‌های هم‌رده}
+\label{tab:qwen3_14b_30b_base}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{شاخص / بنچمارک} & \textbf{\en{Gemma-3-12B}} & \textbf{\en{Qwen2.5-14B}} & \textbf{\en{Qwen2.5-32B}} & \textbf{\en{Qwen2.5-Turbo}} & \textbf{\en{Qwen3-14B}} & \textbf{\en{Qwen3-30B-A3B}} \\
+\midrule
+معماری & \en{Dense} & \en{Dense} & \en{Dense} & \en{MoE} & \en{Dense} & \en{MoE} \\
+تعداد کل پارامترها & 12B & 14B & 32B & 42B & 14B & 30B \\
+پارامترهای فعال & 12B & 14B & 32B & 6B & 14B & 3B \\
+\midrule
+\multicolumn{7}{l}{\textbf{وظایف عمومی (\en{General Tasks})}} \\
+\en{MMLU} & 73.87 & 79.66 & \textbf{83.32} & 79.50 & 81.05 & \underline{81.38} \\
+\en{MMLU-Redux} & 70.70 & 76.64 & \textbf{81.97} & 77.11 & 79.88 & \underline{81.17} \\
+\en{MMLU-Pro} & 44.91 & 51.16 & 55.10 & 55.60 & \underline{61.03} & \textbf{61.49} \\
+\en{SuperGPQA} & 24.61 & 30.68 & 33.55 & 31.19 & \underline{34.27} & \textbf{35.72} \\
+\en{BBH} & 74.28 & 78.18 & \textbf{84.48} & 76.10 & 81.07 & \underline{81.54} \\
+\midrule
+\multicolumn{7}{l}{\textbf{ریاضیات و علوم مهندسی (\en{Math \& STEM})}} \\
+\en{GPQA} & 31.31 & 32.83 & \textbf{47.97} & 41.41 & 39.90 & \underline{43.94} \\
+\en{GSM8K} & 78.01 & 90.22 & \textbf{92.87} & 88.32 & \underline{92.49} & 91.81 \\
+\en{MATH} & 44.43 & 55.64 & 57.70 & 55.60 & \textbf{62.02} & \underline{59.04} \\
+\midrule
+\multicolumn{7}{l}{\textbf{کدنویسی (\en{Coding})}} \\
+\en{EvalPlus} & 52.65 & 60.70 & 66.25 & 61.23 & \textbf{72.23} & \underline{71.45} \\
+\en{MultiPL-E} & 43.03 & 54.79 & 58.30 & 53.24 & \underline{61.69} & \textbf{66.53} \\
+\en{MBPP} & 60.60 & 69.00 & 73.60 & 67.60 & \underline{73.40} & \textbf{74.40} \\
+\en{CRUX-O} & 52.00 & 61.10 & \underline{67.80} & 60.20 & \textbf{68.60} & 67.20 \\
+\midrule
+\multicolumn{7}{l}{\textbf{چندزبانه (\en{Multilingual})}} \\
+\en{MGSM} & 64.35 & 74.68 & 78.12 & 70.45 & \textbf{79.20} & \underline{79.11} \\
+\en{MMMLU} & 72.50 & 78.34 & \textbf{82.40} & 79.76 & 79.69 & \underline{81.46} \\
+\en{INCLUDE} & 63.34 & 60.26 & 64.35 & 59.25 & \underline{64.55} & \textbf{67.00} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه عملکرد مدل پایه \en{Qwen3-8B-Base} با مدل‌های هم‌رده}
+\label{tab:qwen3_8b_base}
+\resizebox{0.9\textwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{شاخص / بنچمارک} & \textbf{\en{Llama-3-8B-Base}} & \textbf{\en{Qwen2.5-7B-Base}} & \textbf{\en{Qwen2.5-14B-Base}} & \textbf{\en{Qwen3-8B-Base}} \\
+\midrule
+معماری & \en{Dense} & \en{Dense} & \en{Dense} & \en{Dense} \\
+تعداد کل پارامترها & 8B & 7B & 14B & 8B \\
+پارامترهای فعال & 8B & 7B & 14B & 8B \\
+\midrule
+\multicolumn{5}{l}{\textbf{وظایف عمومی (\en{General Tasks})}} \\
+\en{MMLU} & 66.60 & 74.16 & \textbf{79.66} & \underline{76.89} \\
+\en{MMLU-Redux} & 61.59 & 71.06 & \textbf{76.64} & \underline{76.17} \\
+\en{MMLU-Pro} & 35.36 & 45.00 & \underline{51.16} & \textbf{56.73} \\
+\en{SuperGPQA} & 20.54 & 26.34 & \underline{30.68} & \textbf{31.64} \\
+\en{BBH} & 57.70 & 70.40 & \underline{78.18} & \textbf{78.40} \\
+\midrule
+\multicolumn{5}{l}{\textbf{ریاضیات و علوم مهندسی (\en{Math \& STEM})}} \\
+\en{GPQA} & 25.80 & \underline{36.36} & 32.83 & \textbf{44.44} \\
+\en{GSM8K} & 55.30 & 85.36 & \textbf{90.22} & \underline{89.84} \\
+\en{MATH} & 20.50 & 49.80 & \underline{55.64} & \textbf{60.80} \\
+\midrule
+\multicolumn{5}{l}{\textbf{کدنویسی (\en{Coding})}} \\
+\en{EvalPlus} & 44.13 & \underline{62.18} & 60.70 & \textbf{67.65} \\
+\en{MultiPL-E} & 31.45 & 50.73 & \underline{54.79} & \textbf{58.75} \\
+\en{MBPP} & 48.40 & 63.40 & \underline{69.00} & \textbf{69.80} \\
+\en{CRUX-O} & 36.80 & 48.50 & \underline{61.10} & \textbf{62.00} \\
+\midrule
+\multicolumn{5}{l}{\textbf{چندزبانه (\en{Multilingual})}} \\
+\en{MGSM} & 38.92 & 63.60 & \underline{74.68} & \textbf{76.02} \\
+\en{MMMLU} & 59.65 & 71.34 & \textbf{78.34} & \underline{75.72} \\
+\en{INCLUDE} & 44.94 & 53.98 & \textbf{60.26} & \underline{59.40} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه عملکرد مدل پایه سبک \en{Qwen3-4B-Base} با مدل‌های هم‌رده}
+\label{tab:qwen3_4b_base}
+\resizebox{0.9\textwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+\textbf{شاخص / بنچمارک} & \textbf{\en{Gemma-3-4B-Base}} & \textbf{\en{Qwen2.5-3B-Base}} & \textbf{\en{Qwen2.5-7B-Base}} & \textbf{\en{Qwen3-4B-Base}} \\
+\midrule
+معماری & \en{Dense} & \en{Dense} & \en{Dense} & \en{Dense} \\
+تعداد کل پارامترها & 4B & 3B & 7B & 4B \\
+پارامترهای فعال & 4B & 3B & 7B & 4B \\
+\midrule
+\multicolumn{5}{l}{\textbf{وظایف عمومی (\en{General Tasks})}} \\
+\en{MMLU} & 59.51 & 65.62 & \textbf{74.16} & \underline{72.99} \\
+\en{MMLU-Redux} & 56.91 & 63.68 & \underline{71.06} & \textbf{72.79} \\
+\en{MMLU-Pro} & 29.23 & 34.61 & \underline{45.00} & \textbf{50.58} \\
+\en{SuperGPQA} & 17.68 & 20.31 & \underline{26.34} & \textbf{28.43} \\
+\en{BBH} & 51.70 & 56.30 & \underline{70.40} & \textbf{72.59} \\
+\midrule
+\multicolumn{5}{l}{\textbf{ریاضیات و علوم مهندسی (\en{Math \& STEM})}} \\
+\en{GPQA} & 24.24 & 26.26 & \underline{36.36} & \textbf{36.87} \\
+\en{GSM8K} & 43.97 & 79.08 & \underline{85.36} & \textbf{87.79} \\
+\en{MATH} & 26.10 & 42.64 & \underline{49.80} & \textbf{54.10} \\
+\midrule
+\multicolumn{5}{l}{\textbf{کدنویسی (\en{Coding})}} \\
+\en{EvalPlus} & 43.23 & 46.28 & \underline{62.18} & \textbf{63.53} \\
+\en{MultiPL-E} & 28.06 & 39.65 & \underline{50.73} & \textbf{53.13} \\
+\en{MBPP} & 46.40 & 54.60 & \underline{63.40} & \textbf{67.00} \\
+\en{CRUX-O} & 34.00 & 36.50 & \underline{48.50} & \textbf{55.00} \\
+\midrule
+\multicolumn{5}{l}{\textbf{چندزبانه (\en{Multilingual})}} \\
+\en{MGSM} & 33.11 & 47.53 & \underline{63.60} & \textbf{67.74} \\
+\en{MMMLU} & 59.62 & 65.55 & \underline{71.34} & \textbf{71.42} \\
+\en{INCLUDE} & 49.06 & 45.90 & \underline{53.98} & \textbf{56.29} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه عملکرد مدل‌های لبه‌ای \en{Qwen3-1.7B-Base} و \en{Qwen3-0.6B-Base} با مدل‌های هم‌رده}
+\label{tab:qwen3_small_base}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{شاخص / بنچمارک} & \textbf{\en{Qwen2.5-0.5B}} & \textbf{\en{Qwen3-0.6B}} & \textbf{\en{Gemma-3-1B}} & \textbf{\en{Qwen2.5-1.5B}} & \textbf{\en{Qwen3-1.7B}} \\
+\midrule
+معماری & \en{Dense} & \en{Dense} & \en{Dense} & \en{Dense} & \en{Dense} \\
+تعداد کل پارامترها & 0.5B & 0.6B & 1B & 1.5B & 1.7B \\
+پارامترهای فعال & 0.5B & 0.6B & 1B & 1.5B & 1.7B \\
+\midrule
+\multicolumn{6}{l}{\textbf{وظایف عمومی (\en{General Tasks})}} \\
+\en{MMLU} & 47.50 & 52.81 & 26.26 & \underline{60.90} & \textbf{62.63} \\
+\en{MMLU-Redux} & 45.10 & 51.26 & 25.99 & \underline{58.46} & \textbf{61.66} \\
+\en{MMLU-Pro} & 15.69 & 24.74 & 9.72 & \underline{28.53} & \textbf{36.76} \\
+\en{SuperGPQA} & 11.30 & 15.03 & 7.19 & \underline{17.64} & \textbf{20.92} \\
+\en{BBH} & 20.30 & 41.47 & 28.13 & \underline{45.10} & \textbf{54.47} \\
+\midrule
+\multicolumn{6}{l}{\textbf{ریاضیات و علوم مهندسی (\en{Math \& STEM})}} \\
+\en{GPQA} & 24.75 & \underline{26.77} & 24.75 & 24.24 & \textbf{28.28} \\
+\en{GSM8K} & 41.62 & 59.59 & 2.20 & \underline{68.54} & \textbf{75.44} \\
+\en{MATH} & 19.48 & 32.44 & 3.66 & \underline{35.00} & \textbf{43.50} \\
+\midrule
+\multicolumn{6}{l}{\textbf{کدنویسی (\en{Coding})}} \\
+\en{EvalPlus} & 31.85 & 36.23 & 8.98 & \underline{44.80} & \textbf{52.70} \\
+\en{MultiPL-E} & 18.70 & 24.58 & 5.15 & \underline{33.10} & \textbf{42.71} \\
+\en{MBPP} & 29.80 & 36.60 & 9.20 & \underline{43.60} & \textbf{55.40} \\
+\en{CRUX-O} & 12.10 & 27.00 & 3.80 & \underline{29.60} & \textbf{36.40} \\
+\midrule
+\multicolumn{6}{l}{\textbf{چندزبانه (\en{Multilingual})}} \\
+\en{MGSM} & 12.07 & 30.99 & 1.74 & \underline{32.82} & \textbf{50.71} \\
+\en{MMMLU} & 31.53 & 50.16 & 26.57 & \underline{60.27} & \textbf{63.27} \\
+\en{INCLUDE} & 24.74 & 34.26 & 25.62 & \underline{39.55} & \textbf{45.57} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
