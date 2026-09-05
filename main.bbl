@@ -65,6 +65,37 @@ Jun Jia, Zihan Chen, Xidong Wu, Chang Gao, Zihan Lin, Dong Zhang, Shengding Hu,
 \newblock Deepseek-v3.2: Pushing the frontier of open large language models.
 \newblock {\em arXiv preprint arXiv:2512.02556}, 2025.
 
+\bibitem{kimi2026k3}
+{Kimi Team}.
+\newblock Kimi k3: Open frontier intelligence.
+\newblock {\em arXiv preprint arXiv:2607.24653}, 2026.
+
+\bibitem{kimi2025k2}
+{Kimi Team}.
+\newblock Kimi k2: Open agentic intelligence.
+\newblock {\em arXiv preprint arXiv:2507.20534}, 2025.
+
+\bibitem{kimi2026k2_5}
+{Kimi Team}.
+\newblock Kimi k2.5: Visual agentic intelligence.
+\newblock {\em arXiv preprint arXiv:2602.02276}, 2026.
+
+\bibitem{kimi2025linear}
+{Kimi Team}.
+\newblock Kimi linear: An expressive, efficient attention architecture.
+\newblock {\em arXiv preprint arXiv:2510.26692}, 2025.
+
+\bibitem{peng2023yarn}
+Bowen Peng et~al.
+\newblock Yarn: Efficient context window extension of large language models.
+\newblock {\em arXiv preprint arXiv:2309.00071}, 2023.
+
+\bibitem{hu2024minicpm}
+Shengding Hu, Yuge Tu, Xu~Han, et~al.
+\newblock Minicpm: Unveiling the potential of small language models with
+  scalable training strategies.
+\newblock {\em arXiv preprint arXiv:2404.06395}, 2024.
+
 \bibitem{li2025farseer}
 Houyi Li, Wenzhen Zheng, Qiufeng Wang, Zhenyu Ding, Haoying Wang, Zili Wang,
   Shijie Xuyang, Ning Ding, Shuigeng Zhou, Xiangyu Zhang, et~al.
