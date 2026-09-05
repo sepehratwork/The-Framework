@@ -1,1 +1,84 @@
-\item \textbf asd
+\item \model{GLM-5}
+
+\paragraph*{مقدمه و ساختار کلان دادگان پایه (\en{Foundational Overview \& Token Budget})}
+مدل زبانی \model{GLM-5} \cite{glm5team2026} با هدف گذار از پارادایم کدنویسی حسی و تعاملی ساده (\en{Vibe Coding}) به سوی مهندسی عاملی خودکار و صنعتی (\en{Agentic Engineering}) بازطراحی شده است. در این راستا، مدل پایه (\en{Base Model}) بر روی پیکره عظیمی به حجم مجموع \textbf{۲۸.۵ تریلیون توکن} (\en{28.5T tokens}) آموزش داده شده است. معماری مدل پایه دارای ۷۴۴ میلیارد پارامتر کل و ۴۰ میلیارد پارامتر فعال در هر توکن است که در قالب ساختار تخصص‌یافته با ۲۵۶ متخصص (\en{MoE}) پیکربندی شده است.
+
+فرایند تغذیه داده در مدل پایه \model{GLM-5} به شکل یک خط لوله سه‌مرحله‌ای پیوسته مهندسی شده است:
+\begin{equation}
+    \mathcal{D}_{\text{Base}} = \mathcal{D}_{\text{Pre-training}} \cup \mathcal{D}_{\text{Mid-training}} \cup \mathcal{D}_{\text{DSA-Adaptation}}
+\end{equation}
+توزیع بودجه توکن‌ها در طول پنجره‌های بافت (\en{Context Window}) به شرح زیر است:
+\begin{itemize}
+    \item \textbf{پیش‌آموزش اولیه (\en{General Pre-training}):} شامل \textbf{۲۷ تریلیون توکن} با طول بافت استاندارد $4\text{K}$، تفکیک‌شده به ۱۸ تریلیون توکن متون عمومی و چندزبانه و ۹ تریلیون توکن کدهای برنامه‌نویسی و استدلال ریاضی اولیه.
+    \item \textbf{آموزش میانی (\en{Mid-training}):} شامل \textbf{۱.۵۵ تریلیون توکن} جهت آماده‌سازی شناختی بافت بلند و داده‌های عاملی در سه پله متوالی ($32\text{K}$ با حجم $1\text{T}$، $128\text{K}$ با حجم $500\text{B}$ و $200\text{K}$ با حجم $50\text{B}$).
+    \item \textbf{تطبیق توجه تنک دیپ‌سیک (\en{DSA Adaptation}):} شامل \textbf{۲۰ میلیارد توکن} با طول بافت $200\text{K}$ در قالب پیش‌آموزش پیوسته (\en{Continued Pre-Training}).
+\end{itemize}
+
+\paragraph*{ترکیب‌بندی و پالایش پیکره پیش‌آموزش اولیه (\en{Pre-Training Data Domains})}
+پیکره متنی فاز پیش‌آموزش اولیه به منظور ارتقای چگالی حقیقت‌سنجی و مهارت در استدلال، دستخوش دگرگونی‌های ساختاری در سه حوزه کلیدی شده است:
+\begin{itemize}
+    \item \textbf{پالایش وب و استخراج دانش حاشیه‌ای (\en{Web Corpus \& Long-tail Knowledge}):} افزون بر طبقه‌بندهای آماری مرسوم، یک طبقه‌بند برداری مبتنی بر تعبیه معنایی جملات بر پایه چارچوب \en{DCLM} \cite{li2025datacomplm} آموزش داده شد تا متون غنی از لحاظ مفهومی از وب باز استخراج گردند. همچنین با هدف رفع خلأ دانش دم‌بلند (\en{Long-tail Knowledge})، «طبقه‌بند دانش جهان» (\en{World Knowledge Classifier}) بهینه‌سازی‌شده با مدخل‌های ویکی‌پدیا و برچسب‌گذاری‌های مدل زبانی تعبیه گردید تا اطلاعات دانشنامه‌ای ارزشمند از صفحات وب با کیفیت متوسط بازیابی شوند.
+    \item \textbf{غنی‌سازی پیکره کد و حذف فازی تکرارها (\en{Code Corpus \& Fuzzy Deduplication}):} مخزن کدهای پیش‌آموزش با برداشت نسخه‌های تازه از پلتفرم‌های میزبانی کد و صفحات وب حاوی کد به‌روزرسانی شد. با اجرای الگوریتم‌های حذف فازی موارد تکراری (\en{Fuzzy Deduplication})، حجم توکن‌های یکتای کد به میزان \textbf{۲۸٪} افزایش یافت:
+    \begin{equation}
+        \Delta N_{\text{unique}} = \frac{N_{\text{unique}}^{\text{GLM-5}} - N_{\text{unique}}^{\text{GLM-4.5}}}{N_{\text{unique}}^{\text{GLM-4.5}}} = +28\%
+    \end{equation}
+    علاوه بر این، ناهماهنگی‌های فراداده‌ای در مخزن \en{Software Heritage} تصحیح و طبقه‌بندهای اختصاصی برای زبان‌های برنامه‌نویسی کم‌منبع (\en{Low-resource Languages}) نظیر \en{Scala}، \en{Swift} و \en{Lua} جهت نمونه‌برداری آگاه از کیفیت پیاده‌سازی شدند.
+    \item \textbf{داده‌های ریاضیات، علوم و پالایش متون ساختگی (\en{Math \& Science Curation}):} لوله‌های استخراج محتوای وب و پارس فایل‌های چندستونی \en{PDF} مقالات علمی و کتاب‌های ریاضی بهبود یافتند. در اسناد و کتب حجیم، یک الگوریتم اختصاصی «تکه‌تکه کردن و تجمیع نمره» (\en{Chunk-and-Aggregate Scoring}) به کار رفت تا نمره غنای آموزشی اسناد به درستی برآورد شود. به‌منظور جلوگیری از سقوط مدل (\en{Model Collapse}) و حفظ اصالت استدلال، خطوط لوله فیلترینگ به گونه‌ای تنظیم شدند که استفاده از هرگونه داده سنتزی، تولیدشده با هوش مصنوعی یا داده‌های الگومحور (\en{Template-based}) در فاز پیش‌آموزش ریاضیات اکیداً حذف شود.
+\end{itemize}
+
+\paragraph*{دادگان آموزش میانی و برنامه درسی طول بافت (\en{Mid-Training \& Context Scaling})}
+برای تثبیت پایداری مدل در پردازش کدبیس‌های عظیم، اسناد فوق‌طولانی و جریان‌های کاری عاملی، مرحله آموزش میانی با بسط تصاعدی طول بافت انجام پذیرفت:
+\begin{itemize}
+    \item \textbf{توالی بسط بافت (\en{Progressive Context Expansion}):} بافت مدل از طول پایه $4\text{K}$ طی سه گام پیاپی شامل مرحله $32\text{K}$ با ۱ تریلیون توکن، مرحله $128\text{K}$ با ۵۰۰ میلیارد توکن و نهایتاً مرحله $200\text{K}$ با ۵۰ میلیارد توکن ارتقا یافت.
+    \item \textbf{داده‌های مهندسی نرم‌افزار در سطح مخزن (\en{Software Engineering Data}):} مدل با الحاق ساختار کامل مخزن گیت‌هاب، تاریخچه تغییرات (\en{Commit Diffs})، گزارش باگ‌ها (\en{Issues})، درخواست‌های ادغام (\en{Pull Requests}) و فایل‌های مرتبط به صورت یک توالی پیوسته آموزش دید. با تعدیل ضوابط فیلترینگ در سطح مخزن و تشدید نظارت کیفی در سطح تک‌تک \en{Issue}ها، بالغ بر \textbf{۱۰ میلیون جفت \en{Issue--PR}} استخراج شد که پیکره نهایی آن پس از پالایش شامل \textbf{۱۶۰ میلیارد توکن یکتا} (\en{160B unique tokens}) گردید.
+    \item \textbf{مهار پدیده گم‌شدن در میانه (\en{Mitigating Lost-in-the-Middle}):} با الهام از ساختارهای \en{NextLong} \cite{gao2025nextlong} و \en{EntropyLong} \cite{jia2025entropylong}، داده‌های سنتزی برای بازتولید وابستگی‌های دوربرد طراحی شدند. متون به شدت مشابه از طریق بسته‌بندی درهم‌تنیده (\en{Interleaved Packing}) ترکیب شدند تا مدل ناچار به جست‌وجو در میانه بافت شود. در پله $200\text{K}$، داده‌های شبیه به \en{MRCR} \cite{mrcr2024} با تنوع بالا جهت تثبیت یادآوری در دیالوگ‌های طولانی تزریق شدند.
+\end{itemize}
+
+\paragraph*{داده‌های تطبیق توجه تنک دیپ‌سیک (\en{DSA Continued Pre-Training Data})}
+به جای آموزش پرهزینه توجه از مبدا، مدل متراکم انتهای فاز آموزش میانی از طریق استراتژی دونشستی «گرم‌کردن متراکم و تطبیق آموزش تنک» به سازوکار \en{DeepSeek Sparse Attention (DSA)} \cite{deepseek2025v32} مجهز گردید:
+\begin{itemize}
+    \item \textbf{مرحله گرم‌کردن نمایه‌ساز (\en{Indexer Warm-up}):} شاخص‌گذار \en{Lightning Indexer} به مدت ۱,۰۰۰ گام آموزش دید. در هر گام ۱۴ توالی به طول ۲۰۲,۷۵۲ توکن (مجموعاً ۲.۸۴ میلیارد توکن) با نرخ یادگیری بیشینه $5 \times 10^{-3}$ به مدل ارائه شد در حالی که وزن‌های پایه ثابت بودند.
+    \item \textbf{مرحله تطبیق تنک (\en{Sparse Adaptation Stage}):} آموزش پیوسته کل مدل بر روی \textbf{۲۰ میلیارد توکن} از توزیع داده‌های فاز آموزش میانی با نرخ یادگیری ثابت $1 \times 10^{-5}$ صورت پذیرفت. این استراتژی کم‌هزینه توانست عملکرد توجه تنک را بدون اتلاف کارایی بافت بلند، با مدل متراکم اولیه معادل سازد.
+\end{itemize}
+
+\paragraph*{ارزیابی‌های آماری مدل‌های پایه (\en{Base Model Evaluations})}
+نتایج ارزیابی مدل پایه پیش‌آموزش‌دیده \model{GLM-5-Base} (پیش از ورود به فازهای \en{SFT} و \en{RL}) در جدول زیر ارائه شده است. در آزمون‌های ارزیابی کد، مدل به برکت تزریق داده‌های یکتای مهندسی نرم‌افزار به امتیاز خیره‌کننده \textbf{$87.0$} در بنچمارک \en{EvalPlus} دست یافته است (رشد نسبی ۱۱.۴٪ نسبت به \model{GLM-4.5-Base} و ۳۲.۶٪ نسبت به \model{DeepSeek-V3-Base}). همچنین در آزمون حقیقت‌سنجی \en{SimpleQA}، دستاورد امتیاز \textbf{$36.0$} کارآمدی طبقه‌بندهای دانش وب را اثبات می‌کند. افت مشاهده‌شده در نمرات خام بنچمارک‌های ریاضیاتی نظیر \en{GSM8K}، پیامد مستقیم تصمیم آگاهانه تیم توسعه مبنی بر حذف داده‌های سنتزی و قالبی در پیش‌آموزش بوده که این نقص متعاقباً در فاز یادگیری تقویتی استدلالی (\en{Reasoning RL}) با کسب نمره برتر $50.4$ در \en{HLE} جبران گردیده است.
+
+\begin{table}[htbp]
+\centering
+\caption{ارزیابی جامع عملکرد مدل پایه \model{GLM-5-Base} در مقایسه با سایر مدل‌های پایه شاخص}
+\label{tab:glm_5_base_eval}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llcccc}
+\toprule
+\textbf{دسته ارزیابی} & \textbf{بنچمارک (متریک)} & \textbf{\en{DeepSeek-V3-Base}} & \textbf{\en{Kimi-K2-Base}} & \textbf{\en{GLM-4.5-Base}} & \textbf{\model{GLM-5-Base}} \\
+\midrule
+\multirow{3}{*}{\textbf{مشخصات}} & معماری & \en{MoE} & \en{MoE} & \en{MoE} & \en{MoE} \\
+& پارامترهای فعال & 37B & 32B & 32B & \textbf{40B} \\
+& پارامترهای کل & 671B & 1043B & 355B & \textbf{744B} \\
+\midrule
+\multirow{6}{*}{\textbf{انگلیسی} (\en{English})} 
+& \en{SimpleQA (EM)} & 26.6 & \underline{35.3} & 30.0 & \textbf{36.0} \\
+& \en{BBH (EM)} & \underline{88.4} & \textbf{88.7} & 86.2 & 87.4 \\
+& \en{MMLU (EM)} & 87.2 & \underline{87.8} & 86.1 & \textbf{88.3} \\
+& \en{HellaSwag (EM)} & \underline{88.9} & \textbf{94.6} & 87.1 & 88.1 \\
+& \en{PIQA (EM)} & 84.7 & — & \textbf{85.3} & \underline{84.6} \\
+& \en{TriviaQA (EM)} & \underline{82.9} & \textbf{85.1} & 80.0 & 80.9 \\
+\midrule
+\multirow{2}{*}{\textbf{کدنویسی} (\en{Code})} 
+& \en{EvalPlus (Pass@1)} & 65.6 & \underline{80.3} & 78.1 & \textbf{87.0} \\
+& \en{LiveCodeBench-Base (Pass@1)} & 24.6 & 26.3 & \underline{28.1} & \textbf{34.4} \\
+\midrule
+\multirow{2}{*}{\textbf{ریاضیات} (\en{Math})} 
+& \en{GSM8K (EM)} & \underline{87.6} & \textbf{92.1} & 79.4 & 68.8 \\
+& \en{MATH (EM)} & \underline{62.6} & \textbf{70.2} & 61.0 & 56.4 \\
+\midrule
+\multirow{4}{*}{\textbf{چینی} (\en{Chinese})} 
+& \en{CLUEWSC (EM)} & 82.7 & — & \underline{83.5} & \textbf{84.2} \\
+& \en{C-Eval (EM)} & \underline{90.1} & \textbf{92.5} & 86.9 & 88.8 \\
+& \en{C3 (EM)} & 78.6 & — & \textbf{83.1} & \underline{80.3} \\
+& \en{Chinese-SimpleQA (EM)} & 72.1 & \textbf{77.6} & 70.1 & \underline{74.6} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

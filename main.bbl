@@ -31,6 +31,40 @@ N.~Shazeer.
 \newblock Glu variants improve transformer.
 \newblock {\em arXiv preprint arXiv:2002.05202}, 2020.
 
+\bibitem{glm5team2026}
+{GLM-5 Team}, {Zhipu AI}, and {Tsinghua University}.
+\newblock Glm-5: from vibe coding to agentic engineering.
+\newblock {\em arXiv preprint arXiv:2602.15763}, 2026.
+
+\bibitem{li2025datacomplm}
+Jeffrey Li, Alex Fang, Georgios Smyrnis, Maor Ivgi, et~al.
+\newblock Datacomp-lm: In search of the next generation of training sets for
+  language models.
+\newblock {\em arXiv preprint arXiv:2406.11794}, 2025.
+
+\bibitem{gao2025nextlong}
+Chang Gao, Xidong Wu, Zihan Lin, Dong Zhang, and Shengding Hu.
+\newblock Nextlong: Toward effective long-context training without long
+  documents.
+\newblock {\em arXiv preprint arXiv:2502.00933}, 2025.
+
+\bibitem{jia2025entropylong}
+Jun Jia, Zihan Chen, Xidong Wu, Chang Gao, Zihan Lin, Dong Zhang, Shengding Hu,
+  and Baining Guo.
+\newblock Entropylong: Effective long-context training via predictive
+  uncertainty.
+\newblock {\em arXiv preprint arXiv:2502.15840}, 2025.
+
+\bibitem{mrcr2024}
+{OpenAI}.
+\newblock Multi-round context recall (mrcr) dataset.
+\newblock \url{https://huggingface.co/datasets/openai/mrcr}, 2024.
+
+\bibitem{deepseek2025v32}
+{DeepSeek-AI}, Aixin Liu, Alex Mei, et~al.
+\newblock Deepseek-v3.2: Pushing the frontier of open large language models.
+\newblock {\em arXiv preprint arXiv:2512.02556}, 2025.
+
 \bibitem{li2025farseer}
 Houyi Li, Wenzhen Zheng, Qiufeng Wang, Zhenyu Ding, Haoying Wang, Zili Wang,
   Shijie Xuyang, Ning Ding, Shuigeng Zhou, Xiangyu Zhang, et~al.

@@ -69,45 +69,45 @@ Repeated entry---line 833 of file references.bib
 I'm skipping whatever remains of this entry
 Warning--empty journal in jordan2024muon
 Warning--can't use both volume and number fields in chen2023sufficiency
-You've used 106 entries,
+You've used 112 entries,
             1791 wiz_defined-function locations,
-            905 strings with 25374 characters,
-and the built_in function-call counts, 25462 in all, are:
-= -- 1779
-> -- 2079
+            929 strings with 26420 characters,
+and the built_in function-call counts, 26519 in all, are:
+= -- 1850
+> -- 2168
 < -- 25
-+ -- 733
-- -- 627
-* -- 1763
-:= -- 4474
-add.period$ -- 319
-call.type$ -- 106
-change.case$ -- 106
++ -- 765
+- -- 653
+* -- 1822
+:= -- 4674
+add.period$ -- 337
+call.type$ -- 112
+change.case$ -- 112
 chr.to.int$ -- 0
-cite$ -- 108
-duplicate$ -- 1088
-empty$ -- 2006
-format.name$ -- 627
-if$ -- 5407
+cite$ -- 114
+duplicate$ -- 1133
+empty$ -- 2094
+format.name$ -- 653
+if$ -- 5628
 int.to.chr$ -- 0
-int.to.str$ -- 106
-missing$ -- 105
-newline$ -- 533
-num.names$ -- 106
-pop$ -- 364
+int.to.str$ -- 112
+missing$ -- 110
+newline$ -- 563
+num.names$ -- 112
+pop$ -- 385
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 554
+skip$ -- 572
 stack$ -- 0
 substring$ -- 754
-swap$ -- 294
+swap$ -- 300
 text.length$ -- 25
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 2
-while$ -- 166
-width$ -- 109
-write$ -- 1096
+while$ -- 172
+width$ -- 115
+write$ -- 1156
 (There were 16 error messages)
