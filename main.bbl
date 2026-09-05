@@ -287,6 +287,34 @@ Zhangir Azerbayev, Hailey Schoelkopf, Keiran Paster, Marco Dos~Santos, Stephen
 \newblock {Llemma: An open language model for mathematics}.
 \newblock {\em arXiv preprint arXiv:2310.10631}, 2023.
 
+\bibitem{dao2024transformers}
+Tri Dao and Albert Gu.
+\newblock {Transformers are SSMs: Generalized Models and Efficient Algorithms
+  Through Structured State Space Duality}.
+\newblock {\em arXiv preprint arXiv:2405.21060}, 2024.
+
+\bibitem{puvvada2025swan}
+Krishna~C Puvvada, Faisal Ladhak, Santiago~Akle Serano, Cheng-Ping Hsieh,
+  Shantanu Acharya, Somshubra Majumdar, Fei Jia, Samuel Kriman, Simeng Sun,
+  Dima Rekesh, and Boris Ginsburg.
+\newblock {SWAN: An Efficient and Scalable Approach for Long-Context Language
+  Modeling}.
+\newblock In {\em Proceedings of the 2025 Conference on Empirical Methods in
+  Natural Language Processing}, pages 2424--2438, 2025.
+
+\bibitem{nvblackwell2025}
+{NVIDIA Corporation}.
+\newblock {NVIDIA Blackwell Ultra Datasheet}.
+\newblock
+  \url{https://resources.nvidia.com/en-us-blackwell-architecture/blackwell-ultra-datasheet},
+  2025.
+
+\bibitem{chen2025scaling}
+Mengzhao Chen, Chaoyi Zhang, Jing Liu, Yutao Zeng, Zeyue Xue, Zhiheng Liu,
+  Yunshui Li, Jin Ma, Jie Huang, Xun Zhou, and Ping Luo.
+\newblock {Scaling Law for Quantization-Aware Training}.
+\newblock {\em arXiv preprint arXiv:2505.14302}, 2025.
+
 \bibitem{li2025farseer}
 Houyi Li, Wenzhen Zheng, Qiufeng Wang, Zhenyu Ding, Haoying Wang, Zili Wang,
   Shijie Xuyang, Ning Ding, Shuigeng Zhou, Xiangyu Zhang, et~al.
@@ -902,5 +930,10 @@ Bruno Scherrer and Matthieu Geist.
   iteration as boosted policy search.
 \newblock In {\em European Conference on Machine Learning (ECML)}, volume 8725
   of {\em LNAI}, pages 35--50, 2014.
+
+\bibitem{nemotron3_2025}
+{NVIDIA}.
+\newblock {NVIDIA Nemotron 3: Efficient and Open Intelligence}.
+\newblock {\em arXiv preprint arXiv:2512.20856}, 2025.
 
 \end{thebibliography}

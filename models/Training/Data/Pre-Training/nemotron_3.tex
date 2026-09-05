@@ -1,1 +1,121 @@
-\item \textbf asd
+\item \model{Nemotron 3}
+
+\paragraph*{مقدمه و ساختار مقیاس دادگان پیش‌آموزش}
+خانواده مدل‌های زبانی \model{Nemotron 3} (شامل نسخه‌های \en{Nano}، \en{Super} و \en{Ultra}) با تمرکز بر تعاملات کارگزارمحور (\en{Agentic AI})، پنجره زمینه فوق‌طولانی تا سقف ۱ میلیون توکن (\en{1M Context Length}) و بیشینه‌سازی توان عملیاتی استنتاج طراحی شده‌اند. زیرساخت داده‌های پیش‌آموزش (\en{Pre-training}) این خانواده بر اساس مقیاس‌های محاسباتی و داده‌ای زیر سازمان‌دهی شده است:
+\begin{itemize}
+    \item \textbf{مقیاس پیش‌آموزش پایدار با فرمت عددی \en{NVFP4}:} معماری پیوندی مانبا-متخصصان (\en{Mamba-MoE}) این مدل با پایداری کامل تا سقف \textbf{۲۵ تریلیون توکن} (\en{25T tokens}) با فرمت عددی \en{NVFP4} آموزش داده شده است.
+    \item \textbf{سبد داده‌های بازنشر عمومی:} انویدیا متعهد به انتشار وزن‌ها، نرم‌افزارهای آموزش و مجموعه‌ای بالغ بر \textbf{۱۰ تریلیون توکن} (\en{>10T tokens}) از دادگان پیش‌آموزش تحت مجوزهای باز شده است.
+    \item \textbf{دادگان ارزیابی و آزمایش‌های مقایسه‌ای (\en{Ablation Baselines}):} برای سنجش دقیق نوآوری‌هایی نظیر معماری \en{LatentMoE} و پیش‌بینی چندتوکنی (\en{MTP})، مدل‌های مقایسه‌ای با ۸ میلیارد پارامتر فعال و ۷۳ میلیارد پارامتر کل بر روی یک پیکره همگن به حجم \textbf{۱ تریلیون توکن} (\en{1T tokens}) پیش‌آموزش دیده‌اند.
+\end{itemize}
+
+تابع هدف پایه در فاز پیش‌آموزش، کمینه‌سازی میانگین منفی لگاریتم درست‌نمایی (\en{NLL}) برای پیش‌بینی توکن‌های آتی است:
+\begin{equation}
+    \mathcal{L}_{\text{LM}}(\theta) = - \frac{1}{N} \sum_{t=1}^{N} \log P_\theta(x_t \mid x_1, x_2, \dots, x_{t-1})
+\end{equation}
+
+\paragraph*{ترکیب‌بندی، گونه‌شناسی و دادگان ساختگی (\en{Data Typology \& Synthetic Data})}
+با توجه به ماهیت استدلالی و لزوم پردازش زمینه‌های چند صد هزار توکنی، داده‌های پیش‌آموزش شامل شاخه‌های متمایز زیر هستند:
+\begin{itemize}
+    \item \textbf{کدهای منبع در سطح مخزن (\en{Repository-Level Code}):} بهره‌گیری از توالی‌های کامل پروژه‌های نرم‌افزاری با طول فراتر از \textbf{۱ میلیون توکن} جهت ایجاد فهم عمیق از ساختارهای چندفایلی، وابستگی‌های متقابل و مهندسی نرم‌افزار.
+    \item \textbf{پیکره‌های طولانی گفت‌وگو و بازیابی (\en{RAG \& Dialogue}):} آماده‌سازی و چینش اسناد تخصصی چندگانه و تاریخچه‌های طولانی تعامل کارگزاران.
+    \item \textbf{تزریق داده‌های مصنوعی هدفمند (\en{Targeted Synthetic Data}):} برای فاز پیش‌آموزش مداوم (\en{CPT})، داده‌های مصنوعی سنتزشده با تمرکز بر چهار محور کلیدی طراحی شدند:
+    \begin{enumerate}
+        \item بازیابی اطلاعات در فواصل دوربرد (\en{Long-Range Retrieval})
+        \item استنتاج و استدلال چندمرحله‌ای (\en{Multi-Hop Reasoning})
+        \item تجمیع و خلاصه‌سازی داده‌ها از چندین سند مستقل (\en{Multi-Document Aggregation})
+        \item تفکر ترکیبی پیوسته در بافت‌های گسترده
+    \end{enumerate}
+\end{itemize}
+
+\paragraph*{راهبرد پیش‌آموزش مداوم و مهندسی طول بافت (\en{Continued Pre-training - CPT})}
+برای گسترش پنجره بافت به ۱ میلیون توکن در مدل \model{Nemotron 3 Nano}، پروتکل داده‌ای ویژه‌ای به کار گرفته شد:
+\begin{itemize}
+    \item \textbf{طول توالی در پیش‌آموزش مداوم:} فاز \en{CPT} مستقیماً روی توالی‌هایی به طول \textbf{$512\text{K}$ توکن} پیاده‌سازی شده است.
+    \item \textbf{حذف برنامه‌ریزی مرحله‌ای طول توالی (\en{No Staged Schedule}):} برخلاف روال‌های مرسوم که طول توالی به تدریج از $8\text{K}$ به مقادیر بالاتر ارتقا می‌یابد، در معماری پیوندی این مدل داده‌های بافت $512\text{K}$ بدون نیاز به افزایش گام‌به‌گام به شبکه تزریق شدند.
+    \item \textbf{حذف نشانه‌گذاری موقعیتی دوار (\en{RoPE Elimination}):} با توجه به اینکه لایه‌های \en{Mamba-2} به صورت ذاتی و ساختاری اطلاعات موقعیت نسبی توکن‌ها را درون متغیرهای حالت پنهان کدگذاری می‌کنند \cite{dao2024transformers}، نیازی به تعبیه \en{RoPE} در لایه‌های توجه وجود نداشته و در نتیجه پدیده واگرایی ناشی از خروج از توزیع طول توالی (\en{OOD RoPE issues}) به کلی حذف شده است \cite{puvvada2025swan}.
+\end{itemize}
+
+\paragraph*{تحلیل آماری و مدل‌سازی رفتار ریاضی دادگان طولانی (\en{Statistical Modeling \& Power Law})}
+کارایی دادگان طولانی از طریق اندازه‌گیری میانگین تجمعی لگاریتم منفی درست‌نمایی (\en{Cumulative Average NLL}) به عنوان تابعی از موقعیت توکن ($t$) روی کدهای بزرگ‌تر از ۱ میلیون توکن ارزیابی شده است:
+\begin{equation}
+    \overline{\text{NLL}}(t) = - \frac{1}{t} \sum_{i=1}^{t} \log P(x_i \mid x_1, x_2, \dots, x_{i-1})
+\end{equation}
+
+توزیع داده‌ها و برازش ریاضی نشان می‌دهد که رابطه میان طول دنباله ورودی و افت خطای پیش‌بینی، به دقت از یک رابطه قانون توان (\en{Power Law}) تبعیت می‌کند:
+\begin{equation}
+    \overline{\text{NLL}}(t) \approx \alpha \cdot t^{-\beta} + \gamma
+\end{equation}
+برازش رگرسیونی این رابطه روی داده‌های کد به ضریب تبیین فوق‌العاده \textbf{$R^2 = 0.883$} دست یافته است. مقدار $\overline{\text{NLL}}$ از تراز اولیه $\approx 1.2$ در فواصل ابتدایی ($t \approx 128$) با روندی پیوسته به مجاورت $\approx 0.4$ در فواصل انتهایی ($t \approx 1\text{M}$) تقلیل می‌یابد که دال بر توانایی مدل در بهره‌برداری مؤثر از داده‌های پس‌زمینه در سراسر پنجره ۱ میلیون توکنی است.
+
+\paragraph*{قالب‌بندی عددی دادگان و پایداری در کوانتایزیشن \en{NVFP4}}
+آموزش تانسورهای داده‌ای بر روی فرمت \en{NVFP4} با بهره‌گیری از میکروبلوک‌های ۱۶ عنصری، فاکتور مقیاس‌بندی \en{E4M3} و مقیاس سراسری \en{FP32} انجام شد \cite{nvblackwell2025}. 
+\begin{itemize}
+    \item در مدل \en{Nano} با ۳ میلیارد پارامتر فعال (\en{A3B})، شکاف اتلاف داده‌ها بین آموزش \en{NVFP4} و فرمت \en{BF16} به کمتر از \textbf{۱٪} تقلیل یافت.
+    \item در مدل‌های بزرگ‌تر با ۸ میلیارد پارامتر فعال (\en{A8B})، شکاف اتلاف به کمتر از \textbf{۰.۶٪} محدود گردید که نشان‌دهنده کاهش خطای داده‌ها با افزایش اندازه مدل مطابق با قوانین مقیاس‌پذیری کوانتایزیشن است \cite{chen2025scaling}.
+\end{itemize}
+
+\paragraph*{ارزیابی‌های آماری مدل‌های پایه بر روی دادگان پیش‌آموزش (\en{Base Model Evaluations})}
+کیفیت پیکره و معماری داده‌های پیش‌آموزش در قالب جداول زیر بررسی شده است. جدول \ref{tab:nemotron3_latentmoe_eval} عملکرد داده‌ای معماری \en{LatentMoE} را در مقایسه با ساختار استاندارد روی ۱ تریلیون توکن نشان می‌دهد. همچنین جدول \ref{tab:nemotron3_mtp_eval} نشان‌دهنده ارتقای ۲.۴ درصدی بهره‌وری از دادگان در صورت بهره‌گیری از ماژول پیش‌بینی چندتوکنی (\en{MTP}) \cite{gloeckle2024better} است. در نهایت، جدول \ref{tab:nemotron3_ruler_eval} تاب‌آوری استخراج داده در بافت‌های فوق‌طولانی بنچمارک \en{RULER} \cite{hsieh2024ruler} را پس از فاز \en{CPT} گزارش می‌کند.
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه دقت بر روی داده‌های ارزیابی پس از آموزش روی ۱ تریلیون توکن بین \en{Standard MoE} و \en{LatentMoE}}
+\label{tab:nemotron3_latentmoe_eval}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccc}
+\toprule
+\textbf{معماری مدل} & \textbf{\en{MMLU-Pro} (\%)} & \textbf{\en{MMLU} (\%)} & \textbf{کد (\en{Code}) (\%)} & \textbf{ریاضی (\en{Math}) (\%)} & \textbf{درک شهودی (\en{Commonsense}) (\%)} \\
+\midrule
+\en{Standard MoE (8.09B active / 72.6B total)} & 48.30 & 70.10 & 51.95 & 78.32 & 81.73 \\
+\textbf{\en{LatentMoE (8.02B active / 72.8B total)}} & \textbf{52.87} & \textbf{72.11} & \textbf{55.14} & \textbf{80.19} & \textbf{82.10} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{ارزیابی تأثیر نظارت متراکم دادگان با پیش‌بینی چندتوکنی (\en{MTP}) بر مدل پایه \en{8B MoE} (آموزش روی ۱ تریلیون توکن)}
+\label{tab:nemotron3_mtp_eval}
+\resizebox{0.85\textwidth}{!}{%
+\begin{tabular}{lcc}
+\toprule
+\textbf{دسته و بنچمارک ارزیابی} & \textbf{مدل پایه (\en{8B MoE Base})} & \textbf{پایه به همراه \en{MTP} (\en{Base + MTP})} \\
+\midrule
+\textbf{دانش عمومی (\en{General Knowledge})} & & \\
+\en{MMLU (5-shot, acc)} & 70.06 & \textbf{71.26} \\
+\en{MMLU-Pro (5-shot, CoT EM)} & 45.05 & \textbf{47.84} \\
+\midrule
+\textbf{کدنویسی (\en{Code})} & & \\
+\en{MBPP-Sanitized (3-shot)} & 65.58 & \textbf{66.89} \\
+\midrule
+\textbf{درک عمومی (\en{Commonsense Understanding})} & & \\
+\en{ARC-Challenge (25-shot, acc\_norm)} & 86.43 & \textbf{88.05} \\
+\en{WinoGrande (0-shot, acc)} & 74.59 & \textbf{75.45} \\
+\midrule
+\textbf{درک مطلب (\en{Reading Comprehension})} & & \\
+\en{RACE (0-shot, acc)} & 84.02 & \textbf{85.36} \\
+\midrule
+\textbf{ریاضیات (\en{Math})} & & \\
+\en{GSM8K (8-shot, acc)} & 82.49 & \textbf{84.46} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{نتایج محک \en{RULER} جهت سنجش اکستراپولاسیون بافت پس از فاز \en{CPT} در طول توالی $512\text{K}$}
+\label{tab:nemotron3_ruler_eval}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{مدل} & \textbf{128k} & \textbf{256k} & \textbf{512k} & \textbf{1M} \\
+\midrule
+\model{Nemotron-Nano-12B-v2-Base} (\en{Dense Hybrid}) & 85.13 & 79.85 & 75.12 & 23.43 \\
+\model{Nemotron-3-Nano-30B-A3B-Base} (\en{MoE Hybrid}) & 74.48 & 71.67 & 66.02 & \textbf{54.19} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph*{حاکمیت داده، شفافیت و عوامل مشارکت‌کننده}
+انویدیا راهبردهای مهندسی داده، پایپ‌لاین‌های آماده‌سازی و بیش از ۱۰ تریلیون توکن از پیکره آموزشی را به شکل عمومی آزاد کرده است. طراحی و فیلترینگ این مجموعه داده عظیم توسط تیم توسعه داده‌های پیش‌آموزش شامل \en{Abhinav Khattar}، \en{Aleksander Ficek}، \en{Alisa Liu}، \en{Brandon Norick}، \en{Eileen Long}، \en{Mohammad Shoeybi} و بیش از ۵۰ پژوهشگر ارشد دیگر هدایت شده است.

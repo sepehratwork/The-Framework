@@ -95,54 +95,66 @@
 \newlabel{tab:mobilellm_pro_context_ablation}{{10}{18}{ارزیابی راهبردهای دادگان فاز ۲ در آزمون سوزن در انبار کاه (\en {NIH}) و میانگین تسک‌های عمومی}{table.10}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces تأثیر خوشه‌بندی دامنه‌ها روی متخصصان مجزا و هم‌افزایی حاصل از ادغام وزنی نهایی (\lr {Weight Avg})}}{18}{table.11}\protected@file@percent }
 \newlabel{tab:mobilellm_pro_specialist_ablation}{{11}{18}{تأثیر خوشه‌بندی دامنه‌ها روی متخصصان مجزا و هم‌افزایی حاصل از ادغام وزنی نهایی (\en {Weight Avg})}{table.11}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2}پس‌آموزش (\lr {Post-Training})}{18}{subsubsection.1.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}روش (\lr {Method})}{19}{subsection.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.1}پیش‌آموزش (\lr {Pre-Training})}{19}{subsubsection.1.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.2}پس‌آموزش (\lr {Post-Training})}{19}{subsubsection.1.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2}ساختار (\lr {Architecture})}{19}{section.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}کدگذاری موقعیت (\lr {Positional Encoding})}{19}{subsection.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}بردارکننده (\lr {Tokenizer})}{20}{subsection.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}شبکه عصبی (\lr {MLP})}{20}{subsection.2.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}تابع فعالساز (\lr {Activation Function})}{21}{subsection.2.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}نرمالسازی (\lr {Normalization})}{21}{subsection.2.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}مکانیزم توجه (\lr {Attention})}{21}{subsection.2.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.7}ساختار ترنسفورمر (\lr {Transformer})}{22}{subsection.2.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3}بهینه سازی (\lr {Optimization})}{22}{section.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}الگوریتم (\lr {Algorithm})}{22}{subsection.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}تابع هزینه (\lr {Loss Function})}{22}{subsection.3.2}\protected@file@percent }
+\citation{dao2024transformers}
+\citation{puvvada2025swan}
+\citation{nvblackwell2025}
+\citation{chen2025scaling}
+\citation{gloeckle2024better}
+\citation{hsieh2024ruler}
+\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces مقایسه دقت بر روی داده‌های ارزیابی پس از آموزش روی ۱ تریلیون توکن بین \lr {Standard MoE} و \lr {LatentMoE}}}{20}{table.12}\protected@file@percent }
+\newlabel{tab:nemotron3_latentmoe_eval}{{12}{20}{مقایسه دقت بر روی داده‌های ارزیابی پس از آموزش روی ۱ تریلیون توکن بین \en {Standard MoE} و \en {LatentMoE}}{table.12}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {13}{\ignorespaces ارزیابی تأثیر نظارت متراکم دادگان با پیش‌بینی چندتوکنی (\lr {MTP}) بر مدل پایه \lr {8B MoE} (آموزش روی ۱ تریلیون توکن)}}{20}{table.13}\protected@file@percent }
+\newlabel{tab:nemotron3_mtp_eval}{{13}{20}{ارزیابی تأثیر نظارت متراکم دادگان با پیش‌بینی چندتوکنی (\en {MTP}) بر مدل پایه \en {8B MoE} (آموزش روی ۱ تریلیون توکن)}{table.13}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {14}{\ignorespaces نتایج محک \lr {RULER} جهت سنجش اکستراپولاسیون بافت پس از فاز \lr {CPT} در طول توالی $512\text  {K}$}}{20}{table.14}\protected@file@percent }
+\newlabel{tab:nemotron3_ruler_eval}{{14}{20}{نتایج محک \en {RULER} جهت سنجش اکستراپولاسیون بافت پس از فاز \en {CPT} در طول توالی $512\text {K}$}{table.14}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.1.2}پس‌آموزش (\lr {Post-Training})}{21}{subsubsection.1.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}روش (\lr {Method})}{21}{subsection.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.1}پیش‌آموزش (\lr {Pre-Training})}{21}{subsubsection.1.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {1.2.2}پس‌آموزش (\lr {Post-Training})}{22}{subsubsection.1.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}ساختار (\lr {Architecture})}{22}{section.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}کدگذاری موقعیت (\lr {Positional Encoding})}{22}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}بردارکننده (\lr {Tokenizer})}{22}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}شبکه عصبی (\lr {MLP})}{23}{subsection.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}تابع فعالساز (\lr {Activation Function})}{23}{subsection.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}نرمالسازی (\lr {Normalization})}{23}{subsection.2.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}مکانیزم توجه (\lr {Attention})}{24}{subsection.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.7}ساختار ترنسفورمر (\lr {Transformer})}{24}{subsection.2.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}بهینه سازی (\lr {Optimization})}{25}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}الگوریتم (\lr {Algorithm})}{25}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}تابع هزینه (\lr {Loss Function})}{25}{subsection.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}تنظیم هایپرپارامتر (\lr {Hyperparameter Tuning})}{25}{section.4}\protected@file@percent }
 \citation{li2025farseer}
 \citation{chen2025revisiting}
 \citation{mcleish2025gemstones}
-\@writefile{toc}{\contentsline {section}{\numberline {4}تنظیم هایپرپارامتر (\lr {Hyperparameter Tuning})}{23}{section.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5}قوانین مقیاس پذیری (\lr {Scaling Laws})}{23}{section.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}مقدمه}{23}{subsection.5.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}اصلاح و توسعه قوانین مقیاس‌پذیری کلاسیک}{23}{subsection.5.2}\protected@file@percent }
 \citation{bian2025scaling}
 \citation{liu2026inverse}
 \citation{sun2026law}
 \citation{jha2025spectral}
+\@writefile{toc}{\contentsline {section}{\numberline {5}قوانین مقیاس پذیری (\lr {Scaling Laws})}{26}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}مقدمه}{26}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}اصلاح و توسعه قوانین مقیاس‌پذیری کلاسیک}{26}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}تاثیر معماری و شکل مدل (\lr {Model Shape \& Architecture})}{26}{subsection.5.3}\protected@file@percent }
 \citation{beck2026xlstm}
 \citation{anonymous2026recall}
 \citation{tian2025towards}
 \citation{abnar2025parameters}
 \citation{ludziejewski2025joint}
 \citation{liew2025scaling}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}تاثیر معماری و شکل مدل (\lr {Model Shape \& Architecture})}{24}{subsection.5.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}قوانین مقیاس‌پذیری برای مدل‌های ترکیبی از خبرگان (\lr {MoE})}{24}{subsection.5.4}\protected@file@percent }
 \citation{subramanyam2026scaling}
 \citation{shukor2025scaling}
 \citation{cagnetta2025scaling}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}قوانین مقیاس‌پذیری برای مدل‌های ترکیبی از خبرگان (\lr {MoE})}{27}{subsection.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}نقش داده‌ها: کیفیت، ترکیب و چگالی}{27}{subsection.5.5}\protected@file@percent }
 \citation{held2026relative}
 \citation{yue2025relative}
 \citation{xiao2025densing}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}نقش داده‌ها: کیفیت، ترکیب و چگالی}{25}{subsection.5.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}فراتر از خطای مطلق: معیارهای نوین ارزیابی}{25}{subsection.5.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}فراتر از خطای مطلق: معیارهای نوین ارزیابی}{28}{subsection.5.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.7}نتیجه‌گیری}{28}{subsection.5.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}ارزیابی (\lr {Evaluation})}{28}{section.6}\protected@file@percent }
 \citation{sutton2018reinforcement}
 \citation{kakade2002approximately}
 \citation{sutton2018reinforcement}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.7}نتیجه‌گیری}{26}{subsection.5.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}ارزیابی (\lr {Evaluation})}{26}{section.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7}یادگیری تقویتی (\lr {Reinforcement Learning})}{26}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}یادگیری تقویتی (\lr {Reinforcement Learning})}{29}{section.7}\protected@file@percent }
 \citation{sutton2000policy}
 \citation{sutton2018reinforcement}
 \citation{williams1992simple}
@@ -157,19 +169,19 @@
 \citation{schulman2015trust}
 \citation{geist2019theory}
 \citation{geist2019theory}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Trust Region Policy Optimization (TRPO)}}{32}{algorithm.1}\protected@file@percent }
 \citation{scherrer2014approximate}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Trust Region Policy Optimization (TRPO)}}{30}{algorithm.1}\protected@file@percent }
 \citation{scherrer2014approximate}
 \citation{scherrer2014approximate}
 \citation{scherrer2012use}
 \citation{schulman2017proximal}
+\@writefile{lot}{\contentsline {table}{\numberline {15}{\ignorespaces مقایسه مشخصه‌های نظری الگوریتم‌های تکرار خط‌مشی تقریبی~\cite  {scherrer2014approximate}}}{33}{table.15}\protected@file@percent }
+\newlabel{tab:api_cpi_comparison}{{15}{33}{مقایسه مشخصه‌های نظری الگوریتم‌های تکرار خط‌مشی تقریبی~\cite {scherrer2014approximate}}{table.15}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}الگوریتم بهینه‌سازی تقریبی خط‌مشی (\lr {Proximal Policy Optimization - PPO})}{33}{subsection.7.1}\protected@file@percent }
 \citation{mnih2015human}
 \citation{bellemare2015arcade}
 \citation{brockman2016openai}
 \citation{duan2016benchmarking}
-\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces مقایسه مشخصه‌های نظری الگوریتم‌های تکرار خط‌مشی تقریبی~\cite  {scherrer2014approximate}}}{31}{table.12}\protected@file@percent }
-\newlabel{tab:api_cpi_comparison}{{12}{31}{مقایسه مشخصه‌های نظری الگوریتم‌های تکرار خط‌مشی تقریبی~\cite {scherrer2014approximate}}{table.12}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}الگوریتم بهینه‌سازی تقریبی خط‌مشی (\lr {Proximal Policy Optimization - PPO})}{31}{subsection.7.1}\protected@file@percent }
 \citation{williams1992simple}
 \citation{mnih2016asynchronous}
 \citation{kakade2002approximately}
@@ -177,50 +189,50 @@
 \citation{kingma2014adam}
 \citation{kakade2002approximately}
 \citation{schulman2015high}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces دیاگرام جامع جریان داده‌ها، محاسبه مزیت و بهینه‌سازی چند دوره‌ای در الگوریتم \lr {\textbf  {PPO}}.}}{35}{figure.1}\protected@file@percent }
-\newlabel{fig:ppo_architecture}{{1}{35}{دیاگرام جامع جریان داده‌ها، محاسبه مزیت و بهینه‌سازی چند دوره‌ای در الگوریتم \model {PPO}}{figure.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces دیاگرام جامع جریان داده‌ها، محاسبه مزیت و بهینه‌سازی چند دوره‌ای در الگوریتم \lr {\textbf  {PPO}}.}}{37}{figure.1}\protected@file@percent }
+\newlabel{fig:ppo_architecture}{{1}{37}{دیاگرام جامع جریان داده‌ها، محاسبه مزیت و بهینه‌سازی چند دوره‌ای در الگوریتم \model {PPO}}{figure.1}{}}
 \citation{schulman2017proximal}
 \citation{schulman2017proximal}
 \citation{schulman2017proximal}
 \citation{heess2017emergence}
 \citation{shao2024deepseekmath}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Proximal Policy Optimization (PPO), Actor-Critic Style}}{36}{algorithm.2}\protected@file@percent }
-\newlabel{alg:ppo_actor_critic}{{2}{36}{}{algorithm.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {13}{\ignorespaces مقایسه عملکرد انواع توابع هدف جایگزین در ۷ محیط پیوسته \lr {MuJoCo} (برگرفته از مقاله مرجع \cite  {schulman2017proximal}).}}{37}{table.13}\protected@file@percent }
-\newlabel{tab:mujoco_ablation}{{13}{37}{مقایسه عملکرد انواع توابع هدف جایگزین در ۷ محیط پیوسته \en {MuJoCo} (برگرفته از مقاله مرجع \cite {schulman2017proximal})}{table.13}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {14}{\ignorespaces تعداد بازی‌های برده‌شده توسط هر الگوریتم در بنچمارک ۴۹ تایی آتاری (\lr {ALE}) \cite  {schulman2017proximal}.}}{37}{table.14}\protected@file@percent }
-\newlabel{tab:atari_comparison}{{14}{37}{تعداد بازی‌های برده‌شده توسط هر الگوریتم در بنچمارک ۴۹ تایی آتاری (\en {ALE}) \cite {schulman2017proximal}}{table.14}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {15}{\ignorespaces ابرپارامترهای \lr {\textbf  {PPO}} در بنچمارک رباتیک پیوسته \lr {MuJoCo} (۱ میلیون گام).}}{37}{table.15}\protected@file@percent }
-\newlabel{tab:params_mujoco}{{15}{37}{ابرپارامترهای \model {PPO} در بنچمارک رباتیک پیوسته \en {MuJoCo} (۱ میلیون گام)}{table.15}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {16}{\ignorespaces ابرپارامترهای \lr {\textbf  {PPO}} در بنچمارک بازی‌های آتاری (\lr {Atari}).}}{37}{table.16}\protected@file@percent }
-\newlabel{tab:params_atari}{{16}{37}{ابرپارامترهای \model {PPO} در بنچمارک بازی‌های آتاری (\en {Atari})}{table.16}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Proximal Policy Optimization (PPO), Actor-Critic Style}}{38}{algorithm.2}\protected@file@percent }
+\newlabel{alg:ppo_actor_critic}{{2}{38}{}{algorithm.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {16}{\ignorespaces مقایسه عملکرد انواع توابع هدف جایگزین در ۷ محیط پیوسته \lr {MuJoCo} (برگرفته از مقاله مرجع \cite  {schulman2017proximal}).}}{39}{table.16}\protected@file@percent }
+\newlabel{tab:mujoco_ablation}{{16}{39}{مقایسه عملکرد انواع توابع هدف جایگزین در ۷ محیط پیوسته \en {MuJoCo} (برگرفته از مقاله مرجع \cite {schulman2017proximal})}{table.16}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {17}{\ignorespaces تعداد بازی‌های برده‌شده توسط هر الگوریتم در بنچمارک ۴۹ تایی آتاری (\lr {ALE}) \cite  {schulman2017proximal}.}}{39}{table.17}\protected@file@percent }
+\newlabel{tab:atari_comparison}{{17}{39}{تعداد بازی‌های برده‌شده توسط هر الگوریتم در بنچمارک ۴۹ تایی آتاری (\en {ALE}) \cite {schulman2017proximal}}{table.17}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {18}{\ignorespaces ابرپارامترهای \lr {\textbf  {PPO}} در بنچمارک رباتیک پیوسته \lr {MuJoCo} (۱ میلیون گام).}}{39}{table.18}\protected@file@percent }
+\newlabel{tab:params_mujoco}{{18}{39}{ابرپارامترهای \model {PPO} در بنچمارک رباتیک پیوسته \en {MuJoCo} (۱ میلیون گام)}{table.18}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {19}{\ignorespaces ابرپارامترهای \lr {\textbf  {PPO}} در بنچمارک بازی‌های آتاری (\lr {Atari}).}}{39}{table.19}\protected@file@percent }
+\newlabel{tab:params_atari}{{19}{39}{ابرپارامترهای \model {PPO} در بنچمارک بازی‌های آتاری (\en {Atari})}{table.19}{}}
 \citation{schulman2017proximal}
 \citation{ouyang2022training}
 \citation{schulman2020approximating}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}الگوریتم بهینه‌سازی نسبی خط‌مشی گروهی (\lr {Group Relative Policy Optimization - GRPO})}{38}{subsection.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}الگوریتم بهینه‌سازی نسبی خط‌مشی گروهی (\lr {Group Relative Policy Optimization - GRPO})}{40}{subsection.7.2}\protected@file@percent }
 \citation{lightman2023let}
 \citation{wang2023math}
 \citation{shao2024deepseekmath}
 \citation{yuan2023scaling}
 \citation{rafailov2023direct}
 \citation{schulman2017proximal}
-\@writefile{lot}{\contentsline {table}{\numberline {17}{\ignorespaces تحلیل ساختار روش‌های هم‌ترازسازی در چارچوب یکپارچه گرادیان \cite  {shao2024deepseekmath}.}}{40}{table.17}\protected@file@percent }
-\newlabel{tab:unified_paradigm}{{17}{40}{تحلیل ساختار روش‌های هم‌ترازسازی در چارچوب یکپارچه گرادیان \cite {shao2024deepseekmath}}{table.17}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {20}{\ignorespaces تحلیل ساختار روش‌های هم‌ترازسازی در چارچوب یکپارچه گرادیان \cite  {shao2024deepseekmath}.}}{42}{table.20}\protected@file@percent }
+\newlabel{tab:unified_paradigm}{{20}{42}{تحلیل ساختار روش‌های هم‌ترازسازی در چارچوب یکپارچه گرادیان \cite {shao2024deepseekmath}}{table.20}{}}
 \citation{shao2024deepseekmath}
 \citation{shao2024deepseekmath}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces Iterative Group Relative Policy Optimization (GRPO)}}{41}{algorithm.3}\protected@file@percent }
-\newlabel{alg:iterative_grpo}{{3}{41}{}{algorithm.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces دیاگرام جامع جریان داده‌ها، ارزیابی آماری گروهی و به‌روزرسانی بدون منتقد در الگوریتم \lr {\textbf  {GRPO}}.}}{42}{figure.2}\protected@file@percent }
-\newlabel{fig:grpo_architecture}{{2}{42}{دیاگرام جامع جریان داده‌ها، ارزیابی آماری گروهی و به‌روزرسانی بدون منتقد در الگوریتم \model {GRPO}}{figure.2}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces Iterative Group Relative Policy Optimization (GRPO)}}{43}{algorithm.3}\protected@file@percent }
+\newlabel{alg:iterative_grpo}{{3}{43}{}{algorithm.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces دیاگرام جامع جریان داده‌ها، ارزیابی آماری گروهی و به‌روزرسانی بدون منتقد در الگوریتم \lr {\textbf  {GRPO}}.}}{44}{figure.2}\protected@file@percent }
+\newlabel{fig:grpo_architecture}{{2}{44}{دیاگرام جامع جریان داده‌ها، ارزیابی آماری گروهی و به‌روزرسانی بدون منتقد در الگوریتم \model {GRPO}}{figure.2}{}}
 \citation{zheng2025gspo}
 \citation{shao2024deepseekmath}
 \citation{qwen2025technical}
 \citation{qwen2025qwq}
-\@writefile{lot}{\contentsline {table}{\numberline {18}{\ignorespaces مقایسه عملکرد \lr {\textbf  {DeepSeekMath-RL (GRPO)}} با مدل‌های پیشرو در بنچمارک‌های استدلال ریاضی \cite  {shao2024deepseekmath}.}}{43}{table.18}\protected@file@percent }
-\newlabel{tab:grpo_eval_results}{{18}{43}{مقایسه عملکرد \model {DeepSeekMath-RL (GRPO)} با مدل‌های پیشرو در بنچمارک‌های استدلال ریاضی \cite {shao2024deepseekmath}}{table.18}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {19}{\ignorespaces ابرپارامترهای آموزش یادگیری تقویتی با \lr {\textbf  {GRPO}} در مدل \lr {\textbf  {DeepSeekMath 7B}}.}}{43}{table.19}\protected@file@percent }
-\newlabel{tab:grpo_hyperparams}{{19}{43}{ابرپارامترهای آموزش یادگیری تقویتی با \model {GRPO} در مدل \model {DeepSeekMath 7B}}{table.19}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}الگوریتم بهینه‌سازی توالی گروهی خط‌مشی (\lr {Group Sequence Policy Optimization - GSPO})}{43}{subsection.7.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {21}{\ignorespaces مقایسه عملکرد \lr {\textbf  {DeepSeekMath-RL (GRPO)}} با مدل‌های پیشرو در بنچمارک‌های استدلال ریاضی \cite  {shao2024deepseekmath}.}}{45}{table.21}\protected@file@percent }
+\newlabel{tab:grpo_eval_results}{{21}{45}{مقایسه عملکرد \model {DeepSeekMath-RL (GRPO)} با مدل‌های پیشرو در بنچمارک‌های استدلال ریاضی \cite {shao2024deepseekmath}}{table.21}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {22}{\ignorespaces ابرپارامترهای آموزش یادگیری تقویتی با \lr {\textbf  {GRPO}} در مدل \lr {\textbf  {DeepSeekMath 7B}}.}}{45}{table.22}\protected@file@percent }
+\newlabel{tab:grpo_hyperparams}{{22}{45}{ابرپارامترهای آموزش یادگیری تقویتی با \model {GRPO} در مدل \model {DeepSeekMath 7B}}{table.22}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}الگوریتم بهینه‌سازی توالی گروهی خط‌مشی (\lr {Group Sequence Policy Optimization - GSPO})}{45}{subsection.7.3}\protected@file@percent }
 \citation{openai2024learning}
 \citation{deepseek2025r1}
 \citation{schulman2017proximal}
@@ -228,76 +240,76 @@
 \citation{qwen2025technical}
 \citation{minimax2025m1}
 \citation{zheng2023click}
-\newlabel{eq:gspo_objective}{{69}{45}{}{equation.69}{}}
-\newlabel{eq:seq_ratio}{{71}{45}{}{equation.71}{}}
-\newlabel{eq:gspo_gradient_final}{{76}{46}{}{equation.76}{}}
-\newlabel{eq:grpo_gradient}{{77}{46}{}{equation.77}{}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces Group Sequence Policy Optimization (GSPO)}}{47}{algorithm.4}\protected@file@percent }
-\newlabel{alg:gspo_algorithm}{{4}{47}{}{algorithm.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces دیاگرام جامع معماری خط لوله آموزش، محاسبه نسبت اهمیت توالی با نرمال‌سازی طولی و به‌روزرسانی گرادیان همگن در الگوریتم \lr {\textbf  {GSPO}}.}}{48}{figure.3}\protected@file@percent }
-\newlabel{fig:gspo_architecture}{{3}{48}{دیاگرام جامع معماری خط لوله آموزش، محاسبه نسبت اهمیت توالی با نرمال‌سازی طولی و به‌روزرسانی گرادیان همگن در الگوریتم \model {GSPO}}{figure.3}{}}
+\newlabel{eq:gspo_objective}{{72}{47}{}{equation.72}{}}
+\newlabel{eq:seq_ratio}{{74}{47}{}{equation.74}{}}
+\newlabel{eq:gspo_gradient_final}{{79}{48}{}{equation.79}{}}
+\newlabel{eq:grpo_gradient}{{80}{48}{}{equation.80}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces Group Sequence Policy Optimization (GSPO)}}{49}{algorithm.4}\protected@file@percent }
+\newlabel{alg:gspo_algorithm}{{4}{49}{}{algorithm.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces دیاگرام جامع معماری خط لوله آموزش، محاسبه نسبت اهمیت توالی با نرمال‌سازی طولی و به‌روزرسانی گرادیان همگن در الگوریتم \lr {\textbf  {GSPO}}.}}{50}{figure.3}\protected@file@percent }
+\newlabel{fig:gspo_architecture}{{3}{50}{دیاگرام جامع معماری خط لوله آموزش، محاسبه نسبت اهمیت توالی با نرمال‌سازی طولی و به‌روزرسانی گرادیان همگن در الگوریتم \model {GSPO}}{figure.3}{}}
 \citation{zheng2025gspo}
 \citation{zheng2025gspo}
 \citation{zheng2025gspo}
 \citation{yu2025dapo}
 \citation{yang2024qwen25}
 \citation{guo2025deepseek}
-\@writefile{lot}{\contentsline {table}{\numberline {20}{\ignorespaces مقایسه عملکرد و پایداری الگوریتم‌های \lr {\textbf  {GRPO}} و \lr {\textbf  {GSPO}} بر روی مدل \lr {\textbf  {Qwen3-30B-A3B}} (برگرفته از \cite  {zheng2025gspo}).}}{49}{table.20}\protected@file@percent }
-\newlabel{tab:gspo_benchmark_results}{{20}{49}{مقایسه عملکرد و پایداری الگوریتم‌های \model {GRPO} و \model {GSPO} بر روی مدل \model {Qwen3-30B-A3B} (برگرفته از \cite {zheng2025gspo})}{table.20}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {21}{\ignorespaces مقایسه کسر توکن‌های برش‌خورده در طول آموزش \cite  {zheng2025gspo}.}}{49}{table.21}\protected@file@percent }
-\newlabel{tab:clipping_paradox}{{21}{49}{مقایسه کسر توکن‌های برش‌خورده در طول آموزش \cite {zheng2025gspo}}{table.21}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {22}{\ignorespaces ابرپارامترهای استاندارد آموزش RL برای مدل \lr {\textbf  {Qwen3-30B-A3B}}.}}{49}{table.22}\protected@file@percent }
-\newlabel{tab:gspo_hyperparams}{{22}{49}{ابرپارامترهای استاندارد آموزش RL برای مدل \model {Qwen3-30B-A3B}}{table.22}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {23}{\ignorespaces مقایسه عملکرد و پایداری الگوریتم‌های \lr {\textbf  {GRPO}} و \lr {\textbf  {GSPO}} بر روی مدل \lr {\textbf  {Qwen3-30B-A3B}} (برگرفته از \cite  {zheng2025gspo}).}}{51}{table.23}\protected@file@percent }
+\newlabel{tab:gspo_benchmark_results}{{23}{51}{مقایسه عملکرد و پایداری الگوریتم‌های \model {GRPO} و \model {GSPO} بر روی مدل \model {Qwen3-30B-A3B} (برگرفته از \cite {zheng2025gspo})}{table.23}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {24}{\ignorespaces مقایسه کسر توکن‌های برش‌خورده در طول آموزش \cite  {zheng2025gspo}.}}{51}{table.24}\protected@file@percent }
+\newlabel{tab:clipping_paradox}{{24}{51}{مقایسه کسر توکن‌های برش‌خورده در طول آموزش \cite {zheng2025gspo}}{table.24}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {25}{\ignorespaces ابرپارامترهای استاندارد آموزش RL برای مدل \lr {\textbf  {Qwen3-30B-A3B}}.}}{51}{table.25}\protected@file@percent }
+\newlabel{tab:gspo_hyperparams}{{25}{51}{ابرپارامترهای استاندارد آموزش RL برای مدل \model {Qwen3-30B-A3B}}{table.25}{}}
 \citation{openai2024learning}
 \citation{guo2025deepseek}
 \citation{shao2024deepseekmath}
 \citation{schulman2017proximal}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}الگوریتم بهینه‌سازی خط‌مشی با برش مجزا و نمونه‌برداری پویا (\lr {Decoupled Clip and Dynamic Sampling Policy Optimization - DAPO})}{50}{subsection.7.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}الگوریتم بهینه‌سازی خط‌مشی با برش مجزا و نمونه‌برداری پویا (\lr {Decoupled Clip and Dynamic Sampling Policy Optimization - DAPO})}{52}{subsection.7.4}\protected@file@percent }
 \citation{shao2024deepseekmath}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces دیاگرام جامع جریان داده، نمونه‌برداری پویا، شکل‌دهی طول و بهینه‌سازی توکن‌محور در الگوریتم \lr {\textbf  {DAPO}}.}}{53}{figure.4}\protected@file@percent }
-\newlabel{fig:dapo_architecture}{{4}{53}{دیاگرام جامع جریان داده، نمونه‌برداری پویا، شکل‌دهی طول و بهینه‌سازی توکن‌محور در الگوریتم \model {DAPO}}{figure.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces دیاگرام جامع جریان داده، نمونه‌برداری پویا، شکل‌دهی طول و بهینه‌سازی توکن‌محور در الگوریتم \lr {\textbf  {DAPO}}.}}{55}{figure.4}\protected@file@percent }
+\newlabel{fig:dapo_architecture}{{4}{55}{دیاگرام جامع جریان داده، نمونه‌برداری پویا، شکل‌دهی طول و بهینه‌سازی توکن‌محور در الگوریتم \model {DAPO}}{figure.4}{}}
 \citation{yu2025dapo}
 \citation{yu2025dapo}
 \citation{guo2025deepseek}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {5}{\ignorespaces Decoupled Clip and Dynamic Sampling Policy Optimization (DAPO)}}{54}{algorithm.5}\protected@file@percent }
-\newlabel{alg:dapo_algorithm}{{5}{54}{}{algorithm.5}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {5}{\ignorespaces Decoupled Clip and Dynamic Sampling Policy Optimization (DAPO)}}{56}{algorithm.5}\protected@file@percent }
+\newlabel{alg:dapo_algorithm}{{5}{56}{}{algorithm.5}{}}
 \citation{sheng2024hybridflow}
 \citation{loshchilov2018decoupled}
 \citation{gao2025sapo}
 \citation{shao2024deepseekmath}
 \citation{zheng2025group}
-\@writefile{lot}{\contentsline {table}{\numberline {23}{\ignorespaces تحلیل ابلیشن و سهم پیشرونده تکنیک‌های \lr {\textbf  {DAPO}} روی مدل \lr {\textbf  {Qwen2.5-32B}} در بنچمارک \lr {AIME 2024} \cite  {yu2025dapo}.}}{55}{table.23}\protected@file@percent }
-\newlabel{tab:dapo_ablation}{{23}{55}{تحلیل ابلیشن و سهم پیشرونده تکنیک‌های \model {DAPO} روی مدل \model {Qwen2.5-32B} در بنچمارک \en {AIME 2024} \cite {yu2025dapo}}{table.23}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {24}{\ignorespaces پیکربندی ابرپارامترهای الگوریتم \lr {\textbf  {DAPO}} روی مدل \lr {\textbf  {Qwen2.5-32B}}.}}{55}{table.24}\protected@file@percent }
-\newlabel{tab:dapo_hyperparameters}{{24}{55}{پیکربندی ابرپارامترهای الگوریتم \model {DAPO} روی مدل \model {Qwen2.5-32B}}{table.24}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {26}{\ignorespaces تحلیل ابلیشن و سهم پیشرونده تکنیک‌های \lr {\textbf  {DAPO}} روی مدل \lr {\textbf  {Qwen2.5-32B}} در بنچمارک \lr {AIME 2024} \cite  {yu2025dapo}.}}{57}{table.26}\protected@file@percent }
+\newlabel{tab:dapo_ablation}{{26}{57}{تحلیل ابلیشن و سهم پیشرونده تکنیک‌های \model {DAPO} روی مدل \model {Qwen2.5-32B} در بنچمارک \en {AIME 2024} \cite {yu2025dapo}}{table.26}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {27}{\ignorespaces پیکربندی ابرپارامترهای الگوریتم \lr {\textbf  {DAPO}} روی مدل \lr {\textbf  {Qwen2.5-32B}}.}}{57}{table.27}\protected@file@percent }
+\newlabel{tab:dapo_hyperparameters}{{27}{57}{پیکربندی ابرپارامترهای الگوریتم \model {DAPO} روی مدل \model {Qwen2.5-32B}}{table.27}{}}
 \citation{openai2024learning}
 \citation{deepseek2025deepseekr1}
 \citation{qwen2025qwen3}
 \citation{shao2024deepseekmath}
 \citation{zheng2025group}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}الگوریتم بهینه‌سازی خط‌مشی تطبیقی نرم (\lr {Soft Adaptive Policy Optimization - SAPO})}{56}{subsection.7.5}\protected@file@percent }
-\newlabel{eq:autoregressive_policy}{{90}{56}{}{equation.90}{}}
-\newlabel{eq:group_advantage}{{91}{57}{}{equation.91}{}}
-\newlabel{eq:token_ratio}{{92}{57}{}{equation.92}{}}
-\newlabel{eq:sapo_objective}{{93}{57}{}{equation.93}{}}
-\newlabel{eq:soft_gating_func}{{94}{57}{}{equation.94}{}}
-\newlabel{eq:grad_chain_rule}{{95}{57}{}{equation.95}{}}
-\newlabel{eq:grad_ratio}{{96}{57}{}{equation.96}{}}
-\newlabel{eq:f_prime_derivation}{{97}{57}{}{equation.97}{}}
-\newlabel{eq:weight_def}{{98}{57}{}{equation.98}{}}
-\newlabel{eq:weight_sech}{{99}{57}{}{equation.99}{}}
-\newlabel{eq:final_sapo_gradient}{{100}{57}{}{equation.100}{}}
-\newlabel{eq:logit_grad_chain}{{102}{58}{}{equation.102}{}}
-\newlabel{eq:jacob_sampled}{{103}{58}{}{equation.103}{}}
-\newlabel{eq:jacob_unsampled}{{104}{58}{}{equation.104}{}}
-\newlabel{eq:logit_gradient_cases}{{105}{58}{}{equation.105}{}}
-\newlabel{eq:taylor_expansion}{{106}{59}{}{equation.106}{}}
-\newlabel{eq:taylor_mean}{{107}{59}{}{equation.107}{}}
-\newlabel{eq:second_derivative}{{108}{59}{}{equation.108}{}}
-\newlabel{eq:uniform_bound}{{109}{59}{}{equation.109}{}}
-\newlabel{eq:sapo_gspo_reduction}{{110}{59}{}{equation.110}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces دیاگرام جامع جریان داده، انتخاب دمای نامتقارن، دروازه‌بندی نرم و بهینه‌سازی خط‌مشی در الگوریتم \lr {\textbf  {SAPO}}.}}{60}{figure.5}\protected@file@percent }
-\newlabel{fig:sapo_pipeline}{{5}{60}{دیاگرام جامع جریان داده، انتخاب دمای نامتقارن، دروازه‌بندی نرم و بهینه‌سازی خط‌مشی در الگوریتم \model {SAPO}}{figure.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}الگوریتم بهینه‌سازی خط‌مشی تطبیقی نرم (\lr {Soft Adaptive Policy Optimization - SAPO})}{58}{subsection.7.5}\protected@file@percent }
+\newlabel{eq:autoregressive_policy}{{93}{58}{}{equation.93}{}}
+\newlabel{eq:group_advantage}{{94}{59}{}{equation.94}{}}
+\newlabel{eq:token_ratio}{{95}{59}{}{equation.95}{}}
+\newlabel{eq:sapo_objective}{{96}{59}{}{equation.96}{}}
+\newlabel{eq:soft_gating_func}{{97}{59}{}{equation.97}{}}
+\newlabel{eq:grad_chain_rule}{{98}{59}{}{equation.98}{}}
+\newlabel{eq:grad_ratio}{{99}{59}{}{equation.99}{}}
+\newlabel{eq:f_prime_derivation}{{100}{59}{}{equation.100}{}}
+\newlabel{eq:weight_def}{{101}{59}{}{equation.101}{}}
+\newlabel{eq:weight_sech}{{102}{59}{}{equation.102}{}}
+\newlabel{eq:final_sapo_gradient}{{103}{59}{}{equation.103}{}}
+\newlabel{eq:logit_grad_chain}{{105}{60}{}{equation.105}{}}
+\newlabel{eq:jacob_sampled}{{106}{60}{}{equation.106}{}}
+\newlabel{eq:jacob_unsampled}{{107}{60}{}{equation.107}{}}
+\newlabel{eq:logit_gradient_cases}{{108}{60}{}{equation.108}{}}
+\newlabel{eq:taylor_expansion}{{109}{61}{}{equation.109}{}}
+\newlabel{eq:taylor_mean}{{110}{61}{}{equation.110}{}}
+\newlabel{eq:second_derivative}{{111}{61}{}{equation.111}{}}
+\newlabel{eq:uniform_bound}{{112}{61}{}{equation.112}{}}
+\newlabel{eq:sapo_gspo_reduction}{{113}{61}{}{equation.113}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces دیاگرام جامع جریان داده، انتخاب دمای نامتقارن، دروازه‌بندی نرم و بهینه‌سازی خط‌مشی در الگوریتم \lr {\textbf  {SAPO}}.}}{62}{figure.5}\protected@file@percent }
+\newlabel{fig:sapo_pipeline}{{5}{62}{دیاگرام جامع جریان داده، انتخاب دمای نامتقارن، دروازه‌بندی نرم و بهینه‌سازی خط‌مشی در الگوریتم \model {SAPO}}{figure.5}{}}
 \citation{gao2025sapo}
 \citation{shao2024deepseekmath}
 \citation{zheng2025group}
@@ -306,18 +318,18 @@
 \citation{jain2024livecodebench}
 \citation{lin2025zebralogic}
 \citation{wang2024measuring}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {6}{\ignorespaces Soft Adaptive Policy Optimization (SAPO)}}{61}{algorithm.6}\protected@file@percent }
-\newlabel{alg:sapo_pseudocode}{{6}{61}{}{algorithm.6}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {6}{\ignorespaces Soft Adaptive Policy Optimization (SAPO)}}{63}{algorithm.6}\protected@file@percent }
+\newlabel{alg:sapo_pseudocode}{{6}{63}{}{algorithm.6}{}}
 \citation{minimax2025m1}
 \citation{deepseek2025r1}
 \citation{jimenez2024swebench}
 \citation{schulman2017proximal}
 \citation{shao2024deepseekmath}
-\@writefile{lot}{\contentsline {table}{\numberline {25}{\ignorespaces مقایسه عملکرد نهایی و پایداری در بنچمارک‌های استدلال ریاضی (\lr {Pass@1} روی ۱۶ نمونه) \cite  {gao2025sapo}.}}{62}{table.25}\protected@file@percent }
-\newlabel{tab:sapo_math_benchmarks}{{25}{62}{مقایسه عملکرد نهایی و پایداری در بنچمارک‌های استدلال ریاضی (\en {Pass@1} روی ۱۶ نمونه) \cite {gao2025sapo}}{table.25}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {26}{\ignorespaces تحلیل ابلیشن تنظیمات دما در الگوریتم \lr {\textbf  {SAPO}} روی مدل \lr {Qwen3-30B-A3B} \cite  {gao2025sapo}.}}{62}{table.26}\protected@file@percent }
-\newlabel{tab:sapo_temp_ablation}{{26}{62}{تحلیل ابلیشن تنظیمات دما در الگوریتم \model {SAPO} روی مدل \en {Qwen3-30B-A3B} \cite {gao2025sapo}}{table.26}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.6}الگوریتم بهینه‌سازی خط‌مشی با ضریب اهمیت برش‌خورده (\lr {Clipped IS-weight Policy Optimization - CISPO})}{62}{subsection.7.6}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {28}{\ignorespaces مقایسه عملکرد نهایی و پایداری در بنچمارک‌های استدلال ریاضی (\lr {Pass@1} روی ۱۶ نمونه) \cite  {gao2025sapo}.}}{64}{table.28}\protected@file@percent }
+\newlabel{tab:sapo_math_benchmarks}{{28}{64}{مقایسه عملکرد نهایی و پایداری در بنچمارک‌های استدلال ریاضی (\en {Pass@1} روی ۱۶ نمونه) \cite {gao2025sapo}}{table.28}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {29}{\ignorespaces تحلیل ابلیشن تنظیمات دما در الگوریتم \lr {\textbf  {SAPO}} روی مدل \lr {Qwen3-30B-A3B} \cite  {gao2025sapo}.}}{64}{table.29}\protected@file@percent }
+\newlabel{tab:sapo_temp_ablation}{{29}{64}{تحلیل ابلیشن تنظیمات دما در الگوریتم \model {SAPO} روی مدل \en {Qwen3-30B-A3B} \cite {gao2025sapo}}{table.29}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.6}الگوریتم بهینه‌سازی خط‌مشی با ضریب اهمیت برش‌خورده (\lr {Clipped IS-weight Policy Optimization - CISPO})}{64}{subsection.7.6}\protected@file@percent }
 \citation{cui2025entropy}
 \citation{wang2025beyond}
 \citation{yu2025dapo}
@@ -329,13 +341,13 @@
 \citation{wang2025beyond}
 \citation{qin2024lightning2}
 \citation{loshchilov2019adamw}
-\@writefile{lot}{\contentsline {table}{\numberline {27}{\ignorespaces مقایسه ساختاری الگوریتم‌های یادگیری تقویتی برون‌پویا بر پایه فرمولاسیون یکپارچه.}}{65}{table.27}\protected@file@percent }
-\newlabel{tab:rl_comparison_unified}{{27}{65}{مقایسه ساختاری الگوریتم‌های یادگیری تقویتی برون‌پویا بر پایه فرمولاسیون یکپارچه}{table.27}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces دیاگرام جامع جریان داده، محاسبه مزیت درون‌گروهی، برش ضرایب اهمیت و به‌روزرسانی در الگوریتم \lr {\textbf  {CISPO}}.}}{66}{figure.6}\protected@file@percent }
-\newlabel{fig:cispo_architecture}{{6}{66}{دیاگرام جامع جریان داده، محاسبه مزیت درون‌گروهی، برش ضرایب اهمیت و به‌روزرسانی در الگوریتم \model {CISPO}}{figure.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {30}{\ignorespaces مقایسه ساختاری الگوریتم‌های یادگیری تقویتی برون‌پویا بر پایه فرمولاسیون یکپارچه.}}{67}{table.30}\protected@file@percent }
+\newlabel{tab:rl_comparison_unified}{{30}{67}{مقایسه ساختاری الگوریتم‌های یادگیری تقویتی برون‌پویا بر پایه فرمولاسیون یکپارچه}{table.30}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces دیاگرام جامع جریان داده، محاسبه مزیت درون‌گروهی، برش ضرایب اهمیت و به‌روزرسانی در الگوریتم \lr {\textbf  {CISPO}}.}}{68}{figure.6}\protected@file@percent }
+\newlabel{fig:cispo_architecture}{{6}{68}{دیاگرام جامع جریان داده، محاسبه مزیت درون‌گروهی، برش ضرایب اهمیت و به‌روزرسانی در الگوریتم \model {CISPO}}{figure.6}{}}
 \citation{minimax2025m1}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {7}{\ignorespaces Clipped IS-weight Policy Optimization (CISPO)}}{67}{algorithm.7}\protected@file@percent }
-\newlabel{alg:cispo_standard}{{7}{67}{}{algorithm.7}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {7}{\ignorespaces Clipped IS-weight Policy Optimization (CISPO)}}{69}{algorithm.7}\protected@file@percent }
+\newlabel{alg:cispo_standard}{{7}{69}{}{algorithm.7}{}}
 \citation{minimax2025m1}
 \citation{minimax2025m1}
 \citation{lambert2024tulu3}
@@ -347,9 +359,9 @@
 \citation{cobbe2021training}
 \citation{hendrycks2021measuring}
 \citation{zhou2023instruction}
-\@writefile{lot}{\contentsline {table}{\numberline {28}{\ignorespaces ارزیابی مقایسه‌ای مدل‌های \lr {\textbf  {MiniMax-M1}} آموزش‌دیده با الگوریتم \lr {\textbf  {CISPO}} در بنچمارک‌های استاندارد بین‌المللی \cite  {minimax2025m1}.}}{68}{table.28}\protected@file@percent }
-\newlabel{tab:m1_benchmark_results}{{28}{68}{ارزیابی مقایسه‌ای مدل‌های \model {MiniMax-M1} آموزش‌دیده با الگوریتم \model {CISPO} در بنچمارک‌های استاندارد بین‌المللی \cite {minimax2025m1}}{table.28}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.7}الگوریتم یادگیری تقویتی با پاداش‌های اعتبارسنجی‌پذیر (\lr {Reinforcement Learning with Verifiable Rewards - RLVR})}{68}{subsection.7.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {31}{\ignorespaces ارزیابی مقایسه‌ای مدل‌های \lr {\textbf  {MiniMax-M1}} آموزش‌دیده با الگوریتم \lr {\textbf  {CISPO}} در بنچمارک‌های استاندارد بین‌المللی \cite  {minimax2025m1}.}}{70}{table.31}\protected@file@percent }
+\newlabel{tab:m1_benchmark_results}{{31}{70}{ارزیابی مقایسه‌ای مدل‌های \model {MiniMax-M1} آموزش‌دیده با الگوریتم \model {CISPO} در بنچمارک‌های استاندارد بین‌المللی \cite {minimax2025m1}}{table.31}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.7}الگوریتم یادگیری تقویتی با پاداش‌های اعتبارسنجی‌پذیر (\lr {Reinforcement Learning with Verifiable Rewards - RLVR})}{70}{subsection.7.7}\protected@file@percent }
 \citation{zelikman2022star}
 \citation{zelikman2024quiet}
 \citation{hoffman2023training}
@@ -361,19 +373,19 @@
 \citation{rajbhandari2020zero}
 \citation{noukhovitch2024asynchronous}
 \citation{huang2024implementation}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces جریان داده‌ها و معماری محاسباتی ناهمگام الگوریتم \lr {\textbf  {RLVR}} در چارچوب \lr {\textbf  {Tülu 3}}.}}{71}{figure.7}\protected@file@percent }
-\newlabel{fig:rlvr_architecture}{{7}{71}{جریان داده‌ها و معماری محاسباتی ناهمگام الگوریتم \model {RLVR} در چارچوب \model {Tülu 3}}{figure.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces جریان داده‌ها و معماری محاسباتی ناهمگام الگوریتم \lr {\textbf  {RLVR}} در چارچوب \lr {\textbf  {Tülu 3}}.}}{73}{figure.7}\protected@file@percent }
+\newlabel{fig:rlvr_architecture}{{7}{73}{جریان داده‌ها و معماری محاسباتی ناهمگام الگوریتم \model {RLVR} در چارچوب \model {Tülu 3}}{figure.7}{}}
 \citation{lambert2024tulu3}
 \citation{lambert2024tulu3}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {8}{\ignorespaces Reinforcement Learning with Verifiable Rewards (RLVR)}}{72}{algorithm.8}\protected@file@percent }
-\newlabel{alg:rlvr_algorithm}{{8}{72}{}{algorithm.8}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {8}{\ignorespaces Reinforcement Learning with Verifiable Rewards (RLVR)}}{74}{algorithm.8}\protected@file@percent }
+\newlabel{alg:rlvr_algorithm}{{8}{74}{}{algorithm.8}{}}
 \citation{olmo32025}
 \citation{shao2024deepseekmath}
-\@writefile{lot}{\contentsline {table}{\numberline {29}{\ignorespaces ارزیابی مقایسه‌ای مدل‌های آموزش‌دیده با \lr {\textbf  {RLVR}} در مقایسه با مبدا \lr {\textbf  {DPO}} و خط مبنای \lr {\textbf  {Llama 3.1 Instruct}} \cite  {lambert2024tulu3}.}}{73}{table.29}\protected@file@percent }
-\newlabel{tab:rlvr_eval_results}{{29}{73}{ارزیابی مقایسه‌ای مدل‌های آموزش‌دیده با \model {RLVR} در مقایسه با مبدا \model {DPO} و خط مبنای \model {Llama 3.1 Instruct} \cite {lambert2024tulu3}}{table.29}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {30}{\ignorespaces پیکربندی ابرپارامترهای آموزش الگوریتم \lr {\textbf  {RLVR}} در مدل‌های \lr {\textbf  {Tülu 3}}.}}{73}{table.30}\protected@file@percent }
-\newlabel{tab:rlvr_hyperparameters}{{30}{73}{پیکربندی ابرپارامترهای آموزش الگوریتم \model {RLVR} در مدل‌های \model {Tülu 3}}{table.30}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.8}الگوریتم یادگیری تقویتی با پاداش‌های قابل اعتبارسنجی و بهینه‌سازی گروهی (\lr {OlmoRL: RLVR + GRPO})}{73}{subsection.7.8}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {32}{\ignorespaces ارزیابی مقایسه‌ای مدل‌های آموزش‌دیده با \lr {\textbf  {RLVR}} در مقایسه با مبدا \lr {\textbf  {DPO}} و خط مبنای \lr {\textbf  {Llama 3.1 Instruct}} \cite  {lambert2024tulu3}.}}{75}{table.32}\protected@file@percent }
+\newlabel{tab:rlvr_eval_results}{{32}{75}{ارزیابی مقایسه‌ای مدل‌های آموزش‌دیده با \model {RLVR} در مقایسه با مبدا \model {DPO} و خط مبنای \model {Llama 3.1 Instruct} \cite {lambert2024tulu3}}{table.32}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {33}{\ignorespaces پیکربندی ابرپارامترهای آموزش الگوریتم \lr {\textbf  {RLVR}} در مدل‌های \lr {\textbf  {Tülu 3}}.}}{75}{table.33}\protected@file@percent }
+\newlabel{tab:rlvr_hyperparameters}{{33}{75}{پیکربندی ابرپارامترهای آموزش الگوریتم \model {RLVR} در مدل‌های \model {Tülu 3}}{table.33}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.8}الگوریتم یادگیری تقویتی با پاداش‌های قابل اعتبارسنجی و بهینه‌سازی گروهی (\lr {OlmoRL: RLVR + GRPO})}{75}{subsection.7.8}\protected@file@percent }
 \citation{schulman2017proximal}
 \citation{shao2024deepseekmath}
 \citation{liu2025drgrpo}
@@ -389,19 +401,19 @@
 \citation{pyatkin2025generalizing}
 \citation{shao2025spurious}
 \citation{piche2025pipelinerl}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces معماری جامع زیرساخت توزیع‌شده، پایپ‌لاین اعتبارسنجی پاداش‌ها و جریان بهینه‌سازی در الگوریتم \lr {\textbf  {OlmoRL}}.}}{77}{figure.8}\protected@file@percent }
-\newlabel{fig:olmorl_architecture}{{8}{77}{معماری جامع زیرساخت توزیع‌شده، پایپ‌لاین اعتبارسنجی پاداش‌ها و جریان بهینه‌سازی در الگوریتم \model {OlmoRL}}{figure.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces معماری جامع زیرساخت توزیع‌شده، پایپ‌لاین اعتبارسنجی پاداش‌ها و جریان بهینه‌سازی در الگوریتم \lr {\textbf  {OlmoRL}}.}}{79}{figure.8}\protected@file@percent }
+\newlabel{fig:olmorl_architecture}{{8}{79}{معماری جامع زیرساخت توزیع‌شده، پایپ‌لاین اعتبارسنجی پاداش‌ها و جریان بهینه‌سازی در الگوریتم \model {OlmoRL}}{figure.8}{}}
 \citation{olmo32025}
 \citation{olmo32025}
 \citation{olmo32025}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {9}{\ignorespaces OlmoRL: Group Relative Policy Optimization with Verifiable Rewards}}{78}{algorithm.9}\protected@file@percent }
-\newlabel{alg:olmorl_algorithm}{{9}{78}{}{algorithm.9}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {31}{\ignorespaces تحلیل ابلیشن زیرساخت \lr {\textbf  {OlmoRL}} و تاثیر آن بر سرعت آموزش و بهره‌وری سخت‌افزار \cite  {olmo32025}.}}{79}{table.31}\protected@file@percent }
-\newlabel{tab:olmorl_infra_ablation}{{31}{79}{تحلیل ابلیشن زیرساخت \model {OlmoRL} و تاثیر آن بر سرعت آموزش و بهره‌وری سخت‌افزار \cite {olmo32025}}{table.31}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {32}{\ignorespaces مقایسه عملکرد مدل استدلالی \lr {\textbf  {Olmo 3 Think-32B}} در بنچمارک‌های استاندارد \cite  {olmo32025}.}}{79}{table.32}\protected@file@percent }
-\newlabel{tab:olmo3_think_results}{{32}{79}{مقایسه عملکرد مدل استدلالی \model {Olmo 3 Think-32B} در بنچمارک‌های استاندارد \cite {olmo32025}}{table.32}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {33}{\ignorespaces ابرپارامترهای نهایی آموزش یادگیری تقویتی \lr {\textbf  {OlmoRL}} در مدل‌های خانواده \lr {\textbf  {Olmo 3}} \cite  {olmo32025}.}}{79}{table.33}\protected@file@percent }
-\newlabel{tab:olmorl_hyperparams}{{33}{79}{ابرپارامترهای نهایی آموزش یادگیری تقویتی \model {OlmoRL} در مدل‌های خانواده \model {Olmo 3} \cite {olmo32025}}{table.33}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {9}{\ignorespaces OlmoRL: Group Relative Policy Optimization with Verifiable Rewards}}{80}{algorithm.9}\protected@file@percent }
+\newlabel{alg:olmorl_algorithm}{{9}{80}{}{algorithm.9}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {34}{\ignorespaces تحلیل ابلیشن زیرساخت \lr {\textbf  {OlmoRL}} و تاثیر آن بر سرعت آموزش و بهره‌وری سخت‌افزار \cite  {olmo32025}.}}{81}{table.34}\protected@file@percent }
+\newlabel{tab:olmorl_infra_ablation}{{34}{81}{تحلیل ابلیشن زیرساخت \model {OlmoRL} و تاثیر آن بر سرعت آموزش و بهره‌وری سخت‌افزار \cite {olmo32025}}{table.34}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {35}{\ignorespaces مقایسه عملکرد مدل استدلالی \lr {\textbf  {Olmo 3 Think-32B}} در بنچمارک‌های استاندارد \cite  {olmo32025}.}}{81}{table.35}\protected@file@percent }
+\newlabel{tab:olmo3_think_results}{{35}{81}{مقایسه عملکرد مدل استدلالی \model {Olmo 3 Think-32B} در بنچمارک‌های استاندارد \cite {olmo32025}}{table.35}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {36}{\ignorespaces ابرپارامترهای نهایی آموزش یادگیری تقویتی \lr {\textbf  {OlmoRL}} در مدل‌های خانواده \lr {\textbf  {Olmo 3}} \cite  {olmo32025}.}}{81}{table.36}\protected@file@percent }
+\newlabel{tab:olmorl_hyperparams}{{36}{81}{ابرپارامترهای نهایی آموزش یادگیری تقویتی \model {OlmoRL} در مدل‌های خانواده \model {Olmo 3} \cite {olmo32025}}{table.36}{}}
 \citation{*}
 \bibstyle{unsrt}
 \bibdata{references}
@@ -426,7 +438,7 @@
 \bibcite{mistral2025magistral}{19}
 \bibcite{mistral2024large2}{20}
 \bibcite{joulin2016fasttext}{21}
-\@writefile{toc}{\contentsline {section}{\numberline {8}منابع}{81}{section.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}منابع}{83}{section.8}\protected@file@percent }
 \bibcite{guha2025openthoughts}{22}
 \bibcite{openr1_2025}{23}
 \bibcite{shao2024deepseekmath}{24}
@@ -455,103 +467,108 @@
 \bibcite{paster2023openwebmath}{47}
 \bibcite{together2023redpajama}{48}
 \bibcite{azerbayev2023llemma}{49}
-\bibcite{li2025farseer}{50}
-\bibcite{chen2025revisiting}{51}
-\bibcite{mcleish2025gemstones}{52}
-\bibcite{bian2025scaling}{53}
-\bibcite{liu2026inverse}{54}
-\bibcite{sun2026law}{55}
-\bibcite{jha2025spectral}{56}
-\bibcite{beck2026xlstm}{57}
-\bibcite{anonymous2026recall}{58}
-\bibcite{tian2025towards}{59}
-\bibcite{abnar2025parameters}{60}
-\bibcite{ludziejewski2025joint}{61}
-\bibcite{liew2025scaling}{62}
-\bibcite{subramanyam2026scaling}{63}
-\bibcite{shukor2025scaling}{64}
-\bibcite{cagnetta2025scaling}{65}
-\bibcite{held2026relative}{66}
-\bibcite{yue2025relative}{67}
-\bibcite{xiao2025densing}{68}
-\bibcite{sutton2018reinforcement}{69}
-\bibcite{kakade2002approximately}{70}
-\bibcite{sutton2000policy}{71}
-\bibcite{williams1992simple}{72}
-\bibcite{bagnell2003covariant}{73}
-\bibcite{kakade2002natural}{74}
-\bibcite{schulman2015trust}{75}
-\bibcite{geist2019theory}{76}
-\bibcite{scherrer2014approximate}{77}
-\bibcite{scherrer2012use}{78}
-\bibcite{schulman2017proximal}{79}
-\bibcite{mnih2015human}{80}
-\bibcite{bellemare2015arcade}{81}
-\bibcite{brockman2016openai}{82}
-\bibcite{duan2016benchmarking}{83}
-\bibcite{mnih2016asynchronous}{84}
-\bibcite{kingma2014adam}{85}
-\bibcite{schulman2015high}{86}
-\bibcite{heess2017emergence}{87}
-\bibcite{ouyang2022training}{88}
-\bibcite{schulman2020approximating}{89}
-\bibcite{lightman2023let}{90}
-\bibcite{wang2023math}{91}
-\bibcite{yuan2023scaling}{92}
-\bibcite{rafailov2023direct}{93}
-\bibcite{zheng2025gspo}{94}
-\bibcite{qwen2025technical}{95}
-\bibcite{qwen2025qwq}{96}
-\bibcite{openai2024learning}{97}
-\bibcite{deepseek2025r1}{98}
-\bibcite{minimax2025m1}{99}
-\bibcite{zheng2023click}{100}
-\bibcite{yu2025dapo}{101}
-\bibcite{yang2024qwen25}{102}
-\bibcite{guo2025deepseek}{103}
-\bibcite{sheng2024hybridflow}{104}
-\bibcite{loshchilov2018decoupled}{105}
-\bibcite{gao2025sapo}{106}
-\bibcite{zheng2025group}{107}
-\bibcite{deepseek2025deepseekr1}{108}
-\bibcite{qwen2025qwen3}{109}
-\bibcite{jain2024livecodebench}{110}
-\bibcite{lin2025zebralogic}{111}
-\bibcite{wang2024measuring}{112}
-\bibcite{jimenez2024swebench}{113}
-\bibcite{cui2025entropy}{114}
-\bibcite{wang2025beyond}{115}
-\bibcite{qin2024lightning2}{116}
-\bibcite{loshchilov2019adamw}{117}
-\bibcite{lambert2024tulu3}{118}
-\bibcite{christiano2017deep}{119}
-\bibcite{stiennon2020learning}{120}
-\bibcite{gao2023scaling}{121}
-\bibcite{singhal2024long}{122}
-\bibcite{cobbe2021training}{123}
-\bibcite{hendrycks2021measuring}{124}
-\bibcite{zhou2023instruction}{125}
-\bibcite{zelikman2022star}{126}
-\bibcite{zelikman2024quiet}{127}
-\bibcite{hoffman2023training}{128}
-\bibcite{gehring2024rlef}{129}
-\bibcite{kazemnejad2024vineppo}{130}
-\bibcite{kwon2023efficient}{131}
-\bibcite{rajbhandari2020zero}{132}
-\bibcite{noukhovitch2024asynchronous}{133}
-\bibcite{huang2024implementation}{134}
-\bibcite{olmo32025}{135}
-\bibcite{liu2025drgrpo}{136}
-\bibcite{yao2025offpolicy}{137}
-\bibcite{zeng2025acecoder}{138}
-\bibcite{pyatkin2025generalizing}{139}
-\bibcite{shao2025spurious}{140}
-\bibcite{piche2025pipelinerl}{141}
-\bibcite{wang2016sample}{142}
-\bibcite{chen2023sufficiency}{143}
-\bibcite{yao2025taubench}{144}
-\bibcite{bai2024longbench}{145}
-\bibcite{liu2025synlogic}{146}
-\bibcite{bagnell2003policy}{147}
-\bibcite{scherrer2014local}{148}
-\gdef \@abspage@last{91}
+\bibcite{dao2024transformers}{50}
+\bibcite{puvvada2025swan}{51}
+\bibcite{nvblackwell2025}{52}
+\bibcite{chen2025scaling}{53}
+\bibcite{li2025farseer}{54}
+\bibcite{chen2025revisiting}{55}
+\bibcite{mcleish2025gemstones}{56}
+\bibcite{bian2025scaling}{57}
+\bibcite{liu2026inverse}{58}
+\bibcite{sun2026law}{59}
+\bibcite{jha2025spectral}{60}
+\bibcite{beck2026xlstm}{61}
+\bibcite{anonymous2026recall}{62}
+\bibcite{tian2025towards}{63}
+\bibcite{abnar2025parameters}{64}
+\bibcite{ludziejewski2025joint}{65}
+\bibcite{liew2025scaling}{66}
+\bibcite{subramanyam2026scaling}{67}
+\bibcite{shukor2025scaling}{68}
+\bibcite{cagnetta2025scaling}{69}
+\bibcite{held2026relative}{70}
+\bibcite{yue2025relative}{71}
+\bibcite{xiao2025densing}{72}
+\bibcite{sutton2018reinforcement}{73}
+\bibcite{kakade2002approximately}{74}
+\bibcite{sutton2000policy}{75}
+\bibcite{williams1992simple}{76}
+\bibcite{bagnell2003covariant}{77}
+\bibcite{kakade2002natural}{78}
+\bibcite{schulman2015trust}{79}
+\bibcite{geist2019theory}{80}
+\bibcite{scherrer2014approximate}{81}
+\bibcite{scherrer2012use}{82}
+\bibcite{schulman2017proximal}{83}
+\bibcite{mnih2015human}{84}
+\bibcite{bellemare2015arcade}{85}
+\bibcite{brockman2016openai}{86}
+\bibcite{duan2016benchmarking}{87}
+\bibcite{mnih2016asynchronous}{88}
+\bibcite{kingma2014adam}{89}
+\bibcite{schulman2015high}{90}
+\bibcite{heess2017emergence}{91}
+\bibcite{ouyang2022training}{92}
+\bibcite{schulman2020approximating}{93}
+\bibcite{lightman2023let}{94}
+\bibcite{wang2023math}{95}
+\bibcite{yuan2023scaling}{96}
+\bibcite{rafailov2023direct}{97}
+\bibcite{zheng2025gspo}{98}
+\bibcite{qwen2025technical}{99}
+\bibcite{qwen2025qwq}{100}
+\bibcite{openai2024learning}{101}
+\bibcite{deepseek2025r1}{102}
+\bibcite{minimax2025m1}{103}
+\bibcite{zheng2023click}{104}
+\bibcite{yu2025dapo}{105}
+\bibcite{yang2024qwen25}{106}
+\bibcite{guo2025deepseek}{107}
+\bibcite{sheng2024hybridflow}{108}
+\bibcite{loshchilov2018decoupled}{109}
+\bibcite{gao2025sapo}{110}
+\bibcite{zheng2025group}{111}
+\bibcite{deepseek2025deepseekr1}{112}
+\bibcite{qwen2025qwen3}{113}
+\bibcite{jain2024livecodebench}{114}
+\bibcite{lin2025zebralogic}{115}
+\bibcite{wang2024measuring}{116}
+\bibcite{jimenez2024swebench}{117}
+\bibcite{cui2025entropy}{118}
+\bibcite{wang2025beyond}{119}
+\bibcite{qin2024lightning2}{120}
+\bibcite{loshchilov2019adamw}{121}
+\bibcite{lambert2024tulu3}{122}
+\bibcite{christiano2017deep}{123}
+\bibcite{stiennon2020learning}{124}
+\bibcite{gao2023scaling}{125}
+\bibcite{singhal2024long}{126}
+\bibcite{cobbe2021training}{127}
+\bibcite{hendrycks2021measuring}{128}
+\bibcite{zhou2023instruction}{129}
+\bibcite{zelikman2022star}{130}
+\bibcite{zelikman2024quiet}{131}
+\bibcite{hoffman2023training}{132}
+\bibcite{gehring2024rlef}{133}
+\bibcite{kazemnejad2024vineppo}{134}
+\bibcite{kwon2023efficient}{135}
+\bibcite{rajbhandari2020zero}{136}
+\bibcite{noukhovitch2024asynchronous}{137}
+\bibcite{huang2024implementation}{138}
+\bibcite{olmo32025}{139}
+\bibcite{liu2025drgrpo}{140}
+\bibcite{yao2025offpolicy}{141}
+\bibcite{zeng2025acecoder}{142}
+\bibcite{pyatkin2025generalizing}{143}
+\bibcite{shao2025spurious}{144}
+\bibcite{piche2025pipelinerl}{145}
+\bibcite{wang2016sample}{146}
+\bibcite{chen2023sufficiency}{147}
+\bibcite{yao2025taubench}{148}
+\bibcite{bai2024longbench}{149}
+\bibcite{liu2025synlogic}{150}
+\bibcite{bagnell2003policy}{151}
+\bibcite{scherrer2014local}{152}
+\bibcite{nemotron3_2025}{153}
+\gdef \@abspage@last{93}
