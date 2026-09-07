@@ -801,6 +801,62 @@ Xiang Yue, Tianyu Zheng, Yuansheng Ni, Yubo Wang, Kai Zhang, et~al.
   benchmark.
 \newblock {\em Proceedings of ACL}, 2025.
 
+\bibitem{wang2024auxiliary}
+Lean Wang, Huazuo Gao, Chenggang Zhao, Xu~Sun, and Damai Dai.
+\newblock {Auxiliary-loss-free load balancing strategy for mixture-of-experts}.
+\newblock {\em arXiv preprint arXiv:2408.15664}, 2024.
+
+\bibitem{jimenez2024swe}
+Carlos~E. Jimenez, John Yang, Alexander Wettig, et~al.
+\newblock {SWE-bench: Can Language Models Resolve Real-World GitHub Issues?}
+\newblock In {\em Proceedings of ICLR}, 2024.
+
+\bibitem{yang2024swesmith}
+John Yang, Kilian Lee, Kilian Lieret, et~al.
+\newblock {SWE-smith: Scaling data for software engineering agents}.
+\newblock {\em arXiv preprint arXiv:2410.06992}, 2024.
+
+\bibitem{merrill2026terminal}
+M.~A. Merrill, A.~G. Shaw, N.~Carlini, B.~Li, et~al.
+\newblock Terminal-bench: Benchmarking agents on hard, realistic tasks in
+  command line interfaces.
+\newblock {\em arXiv preprint arXiv:2601.11868}, 2026.
+
+\bibitem{luo2026cve}
+Xianzhen Luo, Jingyuan Zhang, Shiqi Zhou, et~al.
+\newblock {CVE-Factory: Scaling expert-level agentic tasks for code security
+  vulnerability}.
+\newblock {\em arXiv preprint arXiv:2602.04486}, 2026.
+
+\bibitem{patwardhan2025gdpval}
+Tejal Patwardhan, Rachel Dias, Elizabeth Proehl, et~al.
+\newblock {GDPval: Evaluating AI model performance on real-world economically
+  valuable tasks}.
+\newblock {\em arXiv preprint arXiv:2501.14723}, 2025.
+
+\bibitem{chen2026dive}
+Aili Chen, Chi Zhang, Junteng Liu, et~al.
+\newblock {Dive: Scaling diversity in agentic task synthesis for generalizable
+  tool use}.
+\newblock {\em arXiv preprint arXiv:2603.11076}, 2026.
+
+\bibitem{liu2025webexplorer}
+Junteng Liu, Yunji Li, Chi Zhang, et~al.
+\newblock {WebExplorer: Explore and evolve for training long-horizon web
+  agents}.
+\newblock {\em arXiv preprint arXiv:2509.06501}, 2025.
+
+\bibitem{minimax2026roleplay}
+{MiniMax AI}.
+\newblock {A deep dive into the minimax-m2-her}.
+\newblock \url{https://x.com/MiniMax_AI/status/2016521115355799660}, 2026.
+
+\bibitem{minimax2025cispo}
+{MiniMax}.
+\newblock {MiniMax-M1: Scaling test-time compute efficiently with lightning
+  attention}.
+\newblock {\em Technical Report}, 2025.
+
 \bibitem{li2025farseer}
 Houyi Li, Wenzhen Zheng, Qiufeng Wang, Zhenyu Ding, Haoying Wang, Zili Wang,
   Shijie Xuyang, Ning Ding, Shuigeng Zhou, Xiangyu Zhang, et~al.
@@ -1438,12 +1494,6 @@ Z.~Lu, C.~Li, Y.~Shi, W.~Shen, et~al.
 \newblock Corpusqa: A 10 million token benchmark for corpus-level analysis and
   reasoning.
 \newblock {\em arXiv preprint arXiv:2601.14952}, 2026.
-
-\bibitem{merrill2026terminal}
-M.~A. Merrill, A.~G. Shaw, N.~Carlini, B.~Li, et~al.
-\newblock Terminal-bench: Benchmarking agents on hard, realistic tasks in
-  command line interfaces.
-\newblock {\em arXiv preprint arXiv:2601.11868}, 2026.
 
 \bibitem{openai2024swe}
 {OpenAI}.
