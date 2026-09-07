@@ -1,1 +1,257 @@
-\item \textbf asd
+\item \model{DeepSeek-V4}
+
+\paragraph*{مقدمه و پارادایم نوین دادگان پس‌آموزش}
+فاز پس‌آموزش (\en{Post-Training}) در سری مدل‌های \model{DeepSeek-V4}—شامل دو نگارش \en{DeepSeek-V4-Flash} (با ۲۸۴ میلیارد پارامتر کل و ۱۳ میلیارد پارامتر فعال) و \en{DeepSeek-V4-Pro} (با ۱.۶ تریلیون پارامتر کل و ۴۹ میلیارد پارامتر فعال)—شاهد یک دگرگونی بنیادین روش‌شناختی نسبت به نسل‌های پیشین بوده است. در این نسخه، رویکرد متداول یادگیری تقویتی ترکیبی (\en{Mixed Reinforcement Learning}) که با چالش رقابت گرادیان‌ها و تضعیف هم‌زمان مهارت‌های ناهمگن روبرو بود، کاملاً با یک پارادایم دومرحله‌ای جایگزین گردید:
+\begin{enumerate}
+    \item \textbf{پرورش مستقل متخصصان حوزه‌ای (\en{Specialist Training}):} بهینه‌سازی مدل‌های تخصصی مستقل در حوزه‌های هدف از طریق تلفیق تنظیم دقیق نظارت‌شده (\en{SFT}) و یادگیری تقویتی حوزه‌ای (\en{Domain-Specific RL}).
+    \item \textbf{تجمیع یکپارچه از طریق تقطیر برخط خط‌مشی (\en{On-Policy Distillation - OPD}):} ادغام دانش و توزیع خروجی بیش از ۱۰ مدل معلم متخصص در یک مدل نهایی دانش‌آموز بر روی خطوط سیر تولیدشده توسط خود دانش‌آموز \cite{lu2025opd}.
+\end{enumerate}
+
+\paragraph*{مرحله اول: آموزش متخصصان حوزه‌ای و مهندسی داده‌های \en{SFT} و \en{RL}}
+در فاز نخست، مدل پایه با بهره‌گیری از داده‌های حوزه‌ای دست‌چین‌شده با چگالی اطلاعاتی بالا در چهار محور کلیدی آموزش داده می‌شود:
+\begin{itemize}
+    \item \textbf{داده‌های تنظیم دقیق نظارت‌شده (\en{SFT Data}):} شامل نمونه‌های غنی و گام‌به‌گام استدلال زنجیره تفکر (\en{CoT}) در ریاضیات، داده‌های تعاملی حل مسائل چندمرحله‌ای نرم‌افزاری و متون دقیق نگارشی.
+    \item \textbf{یادگیری تقویتی با الگوریتم \en{GRPO}:} بهینه‌سازی خط‌مشی با الگوریتم بهینه‌سازی نسبی خط‌مشی گروهی (\en{GRPO}) \cite{deepseek2025r1} صورت می‌پذیرد که بدون نیاز به مدل نقاد مستقل، مزیت نسبی خروجی‌ها را از میان یک گروه $G$ تایی از پاسخ‌های هم‌پرومپت محاسبه می‌کند:
+    \begin{equation}
+        A_i = \frac{R_i - \operatorname{mean}(\{R_1, \dots, R_G\})}{\operatorname{std}(\{R_1, \dots, R_G\})}
+    \end{equation}
+\end{itemize}
+
+\paragraph*{شرط‌گذاری داده‌ها بر پایه تلاش استنتاجی (\en{Reasoning Effort})}
+توزیع خروجی و طول استدلال مدل از طریق تعیین جریمه‌های متغیر طول (\en{Length Penalties}) و پنجره‌های بافت در فاز \en{RL} به سه حالت رفتاری متمایز کالیبره شده است (جدول \ref{tab:v4_reasoning_modes}).
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه حالات سه‌گانه تلاش استنتاجی و الزامات ساختاری داده‌ها در \model{DeepSeek-V4}}
+\label{tab:v4_reasoning_modes}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llll}
+\toprule
+\textbf{حالت استدلال (\en{Mode})} & \textbf{ویژگی‌های رفتاری داده} & \textbf{سناریوی کاربردی} & \textbf{قالب پاسخ (\en{Response Format})} \\
+\midrule
+\textbf{غیرتفکری (\en{Non-think})} & پاسخ‌های شهودی و سریع بر پایه عادات آماری & وظایف روزمره و تصمیم‌گیری کم‌ریسک & \en{</think> summary} \\
+\textbf{تفکر عمیق (\en{Think High})} & تحلیل منطقی و کندتر با تمرکز بر دقت بالا & حل مسئله پیچیده و برنامه‌ریزی & \en{<think> thinking tokens </think> summary} \\
+\textbf{حداکثر تفکر (\en{Think Max})} & کشش استدلال تا نهایت مرزهای تحلیلی مدل & کاوش در دشوارترین مسائل منطقی & پرامپت سیستمی ویژه + \en{<think> ... </think> summary} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+در حالت \en{Think Max}، پرامپت با تزریق یک دستورالعمل الزام‌آور سیستمی هدایت می‌شود:
+\begin{latin}
+\begin{quote}
+\small
+\textbf{Injected Instruction:} \textit{Reasoning Effort: Absolute maximum with no shortcuts permitted. You MUST be very thorough in your thinking and comprehensively decompose the problem to resolve the root cause, rigorously stress-testing your logic against all potential paths, edge cases, and adversarial scenarios. Explicitly write out your entire deliberation process, documenting every intermediate step, considered alternative, and rejected hypothesis to ensure absolutely no assumption is left unchecked.}
+\end{quote}
+\end{latin}
+
+\paragraph*{مدل پاداش زایشی (\en{GRM}) بر پایه داده‌های هدایت‌شده با شیوه‌نامه}
+در تکالیف فاقد آزمون‌گر عینی، مدل‌های سنتی پاداش اسکالر که مبتنی بر ترجیحات انسانی (\en{RLHF}) آموزش می‌دیدند کنار گذاشته شده‌اند:
+\begin{itemize}
+    \item \textbf{داده‌های روباریک‌محور (\en{Rubric-Guided Data}):} برای هر دسته از وظایف باز، شیوه‌نامه‌های تفصیلی تدوین گردید.
+    \item \textbf{یگانگی ارزیاب و عامل زایا:} شبکه عامل اصلی (\en{Actor Network}) خود هم‌زمان در نقش مدل پاداش زایشی (\en{GRM}) عمل می‌کند. بهینه‌سازی تقویتی مستقیم بر روی رفتار قضاوت‌گری \en{GRM}، قوه استدلال درونی مدل را در فرایند امتیازدهی ادغام کرده و اتکا به داده‌های برچسب‌خورده انسانی را به حداقل رسانده است.
+\end{itemize}
+
+\paragraph*{پروتکل‌های ساختاری داده: ابزارها، تفکر متناوب و دستورات سریع}
+مدیریت بافت متنی عظیم یک میلیون توکنی در محیط‌های تعاملی نیازمند قالب‌بندی‌های داده‌ای دقیق است:
+\begin{itemize}
+    \item \textbf{شمای فراخوانی ابزار با نشانگر \en{|DSML|}:} برای پیشگیری از نقص‌های متداول در قالب \en{JSON}، ساختاری بر پایه نشانه‌گذاری \en{XML} و توکن ویژه \en{|DSML|} توسعه یافت:
+\begin{latin}
+\begin{small}
+\begin{verbatim}
+<|DSML|tool_calls>
+<|DSML|invoke name="$TOOL_NAME">
+<|DSML|parameter name="$PARAM_NAME" string="true|false">$PARAM_VALUE</|DSML|parameter>
+</|DSML|invoke>
+</|DSML|tool_calls>
+\end{verbatim}
+\end{small}
+\end{latin}
+    \item \textbf{استدلال متناوب (\en{Interleaved Thinking}):} برخلاف رویکردهای پیشین، در سناریوهای ابزارمحور کلیه ردپاهای فکری (\en{Thinking Traces}) در خلال نوبت‌های متوالی کاربر حفظ می‌گردد تا زنجیره استدلال در افق‌های زمانی بلند گسسته نشود؛ در حالی که در گفتگوهای عمومی جهت حفظ ظرفیت بافت، تاریخچه تفکر نوبت‌های قبلی حذف می‌شود.
+    \item \textbf{توکن‌های دستور سریع (\en{Quick Instruction}):} جهت حذف سربار مدل‌های کوچک کمکی و جلوگیری از بازپردازش پرهزینه پیش‌تکمیل (\en{Prefill})، توکن‌های اختصاصی نظیر \en{<|action|>} (تشخیص نیاز به وب‌گردی)، \en{<|title|>} (ساخت عنوان)، \en{<|query|>} (تولید کلیدواژه جستجو)، \en{<|authority|>} (سنجش اعتبار مرجع)، \en{<|domain|>} (شناسایی دامنه) و \en{<|read\_url|>} (تصمیم‌گیری خواندن آدرس وب) مستقیماً درون بافت پردازش می‌شوند.
+\end{itemize}
+
+\paragraph*{مرحله دوم: تقطیر برخط خط‌مشی (\en{On-Policy Distillation - OPD})}
+به‌منظور تثبیت یکپارچه دانش $N$ مدل معلم تخصصی ($\pi_{E_1}, \dots, \pi_{E_N}$ با $N > 10$) در قالب مدل واحد $\pi_\theta$، تابع هزینه تقطیر برخط بر مبنای دیورژانس کولبک-لایبلر معکوس بر روی نمونه‌های مشتق‌شده از توزیع خود دانش‌آموز بهینه‌سازی می‌شود:
+\begin{equation}
+    \mathcal{L}_{\text{OPD}}(\theta) = \sum_{i=1}^{N} w_i \cdot \mathbb{D}_{\text{KL}}\left(\pi_\theta \parallel \pi_{E_i}\right) = \sum_{i=1}^{N} w_i \cdot \mathbb{E}_{x \sim \mathcal{D}, y \sim \pi_\theta(\cdot \mid x)} \left[ \log \frac{\pi_\theta(y \mid x)}{\pi_{E_i}(y \mid x)} \right]
+\end{equation}
+که در آن $w_i$ وزن تخصیص‌یافته به تخصص معلم $i$-ام است. برخلاف تقریب‌های تک‌توکنی مرسوم:
+\begin{equation}
+    \text{sg}\left[ \log \frac{\pi_{E_i}(y_t \mid x, y_{<t})}{\pi_\theta(y_t \mid x, y_{<t})} \right]
+\end{equation}
+که نوسان شدید شیب ایجاد می‌کردند، در \model{DeepSeek-V4} تقطیر بر روی لاجیت‌های کل دایره واژگان ($|V| > 100\text{K}$) پیاده‌سازی شده است. همچنین جهت جلوگیری از اریب آماری طول توالی (\en{Length Bias}) در صورت بروز وقفه حین تولید بافت‌های میلیونی، سازوکار ثبت پیش‌نویس توکن‌محور (\en{Token-Granular WAL}) مستقر گردیده تا رمزگشایی دقیقاً از توکن متوقف‌شده از سر گرفته شود.
+
+\paragraph*{ارزیابی‌های تجربی روی بنچمارک‌های استاندارد (\en{Standard Evaluations})}
+نتایج ارزیابی مدل نهایی پس‌آموزش‌دیده \en{DeepSeek-V4-Pro-Max} در جدول \ref{tab:v4_sota_eval} و بررسی اثر حالات تفکر در جدول \ref{tab:v4_ablation_modes} آورده شده است. ارقام گویای آن است که مدل در استدلال رقابتی به ریتینگ کدفرسز $3206$ (رتبه ۲۳ انسانی در جهان) و دقت $93.5$ در \en{LiveCodeBench} دست یافته و در آزمون حقیقت‌سنجی \en{SimpleQA-Verified} با امتیاز $57.9$، رکورد مدل‌های متن‌باز را به میزان ۲۰ درصد مطلق جابجا کرده است.
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه عملکرد \en{DeepSeek-V4-Pro-Max} در برابر مدل‌های رقیب متن‌باز و تجاری}
+\label{tab:v4_sota_eval}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llcccccc}
+\toprule
+\textbf{دسته ارزیابی} & \textbf{بنچمارک (متریک)} & \textbf{\en{Opus-4.6-Max}} & \textbf{\en{GPT-5.4-xHigh}} & \textbf{\en{Gemini-3.1-Pro}} & \textbf{\en{K2.6-Thinking}} & \textbf{\en{GLM-5.1-Thinking}} & \textbf{\en{DS-V4-Pro-Max}} \\
+\midrule
+\multirow{10}{*}{\textbf{دانش و استدلال}} 
+& \en{MMLU-Pro (EM)} & 89.1 & 87.5 & \textbf{91.0} & 87.1 & 86.0 & 87.5 \\
+& \en{SimpleQA-Verified (Pass@1)} & 46.2 & 45.3 & \textbf{75.6} & 36.9 & 38.1 & \underline{57.9} \\
+& \en{Chinese-SimpleQA (Pass@1)} & 76.4 & 76.8 & \textbf{85.9} & 75.9 & 75.0 & \underline{84.4} \\
+& \en{GPQA Diamond (Pass@1)} & 91.3 & 93.0 & \textbf{94.3} & 90.5 & 86.2 & 90.1 \\
+& \en{HLE (Pass@1)} & 40.0 & 39.8 & \textbf{44.4} & 36.4 & 34.7 & 37.7 \\
+& \en{LiveCodeBench (Pass@1)} & 88.8 & — & 91.7 & 89.6 & — & \textbf{93.5} \\
+& \en{Codeforces (Rating)} & — & \underline{3168} & 3052 & — & — & \textbf{3206} \\
+& \en{HMMT 2026 Feb (Pass@1)} & 96.2 & \textbf{97.7} & 94.7 & 92.7 & 89.4 & 95.2 \\
+& \en{IMOAnswerBench (Pass@1)} & 75.3 & \textbf{91.4} & 81.0 & 86.0 & 83.8 & \underline{89.8} \\
+& \en{Apex Shortlist (Pass@1)} & 85.9 & 78.1 & 89.1 & 75.5 & 72.4 & \textbf{90.2} \\
+\midrule
+\multirow{2}{*}{\textbf{بافت طولانی}} 
+& \en{MRCR 1M (MMR)} & \textbf{92.9} & — & 76.3 & — & — & \underline{83.5} \\
+& \en{CorpusQA 1M (ACC)} & \textbf{71.7} & — & 53.8 & — & — & \underline{62.0} \\
+\midrule
+\multirow{6}{*}{\textbf{عملکرد عاملی}} 
+& \en{Terminal Bench 2.0 (Acc)} & 65.4 & \textbf{75.1} & 68.5 & 66.7 & 63.5 & 67.9 \\
+& \en{SWE-Verified (Resolved)} & \textbf{80.8} & — & \underline{80.6} & 80.2 & — & \underline{80.6} \\
+& \en{SWE-Pro (Resolved)} & 57.3 & 57.7 & 54.2 & \textbf{58.6} & \underline{58.4} & 55.4 \\
+& \en{BrowseComp (Pass@1)} & 83.7 & 82.7 & \textbf{85.9} & 83.2 & 79.3 & 83.4 \\
+& \en{MCPAtlas Public (Pass@1)} & \textbf{73.8} & 67.2 & 69.2 & 66.6 & 71.8 & \underline{73.6} \\
+& \en{Toolathlon (Pass@1)} & 47.2 & \textbf{54.6} & 48.8 & 50.0 & 40.7 & \underline{51.8} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه تاثیر حالات تلاش تفکر بر نسخه‌های \en{Flash} و \en{Pro} مدل \model{DeepSeek-V4}}
+\label{tab:v4_ablation_modes}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+\multirow{2}{*}{\textbf{بنچمارک (متریک)}} & \multicolumn{3}{c}{\textbf{\en{DeepSeek-V4-Flash}}} & \multicolumn{3}{c}{\textbf{\en{DeepSeek-V4-Pro}}} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+& \textbf{\en{Non-Think}} & \textbf{\en{High}} & \textbf{\en{Max}} & \textbf{\en{Non-Think}} & \textbf{\en{High}} & \textbf{\en{Max}} \\
+\midrule
+\en{MMLU-Pro (EM)} & 83.0 & 86.4 & 86.2 & 82.9 & 87.1 & 87.5 \\
+\en{SimpleQA-Verified (Pass@1)} & 23.1 & 28.9 & 34.1 & 45.0 & 46.2 & 57.9 \\
+\en{Chinese-SimpleQA (Pass@1)} & 71.5 & 73.2 & 78.9 & 75.8 & 77.7 & 84.4 \\
+\en{GPQA Diamond (Pass@1)} & 71.2 & 87.4 & 88.1 & 72.9 & 89.1 & 90.1 \\
+\en{HLE (Pass@1)} & 8.1 & 29.4 & 34.8 & 7.7 & 34.5 & 37.7 \\
+\en{LiveCodeBench (Pass@1-COT)} & 55.2 & 88.4 & 91.6 & 56.8 & 89.8 & 93.5 \\
+\en{Codeforces (Rating)} & — & 2816 & 3052 & — & 2919 & 3206 \\
+\en{HMMT 2026 Feb (Pass@1)} & 40.8 & 91.9 & 94.8 & 31.7 & 94.0 & 95.2 \\
+\en{MRCR 1M (MMR)} & 37.5 & 76.9 & 78.7 & 44.7 & 83.3 & 83.5 \\
+\en{CorpusQA 1M (ACC)} & 15.5 & 59.3 & 60.5 & 35.6 & 56.5 & 62.0 \\
+\en{SWE-Verified (Resolved)} & 73.7 & 78.6 & 79.0 & 73.6 & 79.4 & 80.6 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\paragraph*{ارزیابی‌های کیفی بر روی دادگان کاربردی جهان واقعی}
+به‌منظور پر کردن شکاف میان بنچمارک‌های ایستا و تجربه واقعی کاربران، مجموعه‌داده‌های داخلی زیر ارزیابی گردیدند:
+\begin{itemize}
+    \item \textbf{نگارش عملکردی زبان چینی (۳,۱۷۰ نمونه):} طبق جدول \ref{tab:v4_func_writing}، مدل در برابر \en{Gemini-3.1-Pro} به نرخ برد کلی $62.65\%$ دست یافت.
+    \item \textbf{نگارش خلاقانه چینی (۲,۸۳۷ نمونه):} مطابق جدول \ref{tab:v4_creative_writing}، مدل در کیفیت نویسندگی به نرخ برتری چشمگیر $77.48\%$ در برابر رقیب رسید.
+    \item \textbf{دستورات پیچیده و نگارش چندنوبته (۱۹۶ پرامپت چالش‌برانگیز):} طبق جدول \ref{tab:v4_complex_writing}، رقابت فشرده‌ای میان \en{DeepSeek-V4-Pro} با نرخ $45.9\%$ و \en{Claude-Opus-4.5} با $52.0\%$ ثبت شد.
+    \item \textbf{ارزیابی جستجوی عاملی در برابر \en{RAG}:} آزمون بر روی ۸۶۹ پرامپت (جدول \ref{tab:v4_agentic_search}) نشان داد که جستجوی عاملی با $61.7\%$ برد، رویکرد \en{RAG} را پشت سر گذاشته است؛ در حالی که طبق ارزیابی ۹۵۶ پرامپت جستجو، مدل \en{V4} با برتری $28.1\%$ در برابر $10.4\%$ نسبت به \en{DeepSeek-V3.2} غلبه دارد.
+    \item \textbf{تکالیف اداری-تخصصی سفیدپوشان (\en{White-Collar Tasks}):} ارزیابی انسانی ۳۰ سناریوی پیشرفته اداری در ۱۳ صنعت حاکی از نرخ عدم باخت $63\%$ نسبت به \en{Opus-4.6-Max} و برتری در تکمیل تسک ($98.32$ در برابر $96.68$) و غنای محتوا ($83.32$ در برابر $78.00$) است.
+    \item \textbf{عامل‌های مهندسی نرم‌افزار در محیط \en{R\&D}:} طبق جدول \ref{tab:v4_code_agent_rd}، ارزیابی روی ۳۰ تسک استانداردسازی‌شده از مسائل واقعی مهندسان داخلی نشان داد \model{DeepSeek-V4-Pro-Max} با نرخ موفقیت $67\%$، مدل \en{Claude Sonnet 4.5} ($47\%$) را قاطعانه پشت سر گذاشته و در مجاورت \en{Opus 4.5} ($70\%$) قرار گرفته است.
+\end{itemize}
+
+\begin{table}[htbp]
+\centering
+\caption{خلاصه نتایج نگارش عملکردی چینی در برابر \en{Gemini-3.1-Pro} (۳,۱۷۰ نمونه)}
+\label{tab:v4_func_writing}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{دسته نوشتاری} & \textbf{تعداد (\#)} & \textbf{برد \en{DS}} & \textbf{برد \en{Gem}} & \textbf{درصد برد \en{DS}} & \textbf{درصد برد \en{Gem}} & \textbf{درصد مساوی} \\
+\midrule
+متون اداری و تجاری (\en{Business}) & 1349 & 879 & 436 & 65.16\% & 32.32\% & 2.52\% \\
+متون رسانه‌ای و تبلیغاتی (\en{Media}) & 666 & 386 & 256 & 57.96\% & 38.44\% & 3.60\% \\
+نگارش روزمره و ارتباطی (\en{Everyday}) & 390 & 271 & 101 & 69.49\% & 25.90\% & 4.62\% \\
+متون گفتاری و سخنرانی (\en{Oral}) & 319 & 187 & 120 & 58.62\% & 37.62\% & 3.76\% \\
+اسناد رسمی و نامه‌های دولتی (\en{Official}) & 230 & 126 & 97 & 54.78\% & 42.17\% & 3.04\% \\
+متون آکادمیک و ترویج علم (\en{Academic}) & 216 & 137 & 71 & 63.43\% & 32.87\% & 3.70\% \\
+\midrule
+\textbf{مجموع کل} & \textbf{3170} & \textbf{1986} & \textbf{1081} & \textbf{62.65\%} & \textbf{34.10\%} & \textbf{3.25\%} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{ارزیابی نگارش خلاقانه چینی در برابر \en{Gemini-3.1-Pro} (۲,۸۳۷ نمونه)}
+\label{tab:v4_creative_writing}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+\multirow{2}{*}{\textbf{محور ارزیابی}} & \multicolumn{3}{c}{\textbf{آمار شمارشی}} & \multicolumn{3}{c}{\textbf{درصد آماری}} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+& \textbf{برد \en{DS}} & \textbf{برد \en{Gem}} & \textbf{مساوی} & \textbf{\% برد \en{DS}} & \textbf{\% برد \en{Gem}} & \textbf{\% مساوی} \\
+\midrule
+پیروی از دستورالعمل (\en{Instruction Following}) & 1703 & 1119 & 15 & 60.03\% & 39.44\% & 0.53\% \\
+کیفیت ادبی و نویسندگی (\en{Writing Quality}) & 2198 & 634 & 5 & 77.48\% & 22.35\% & 0.18\% \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{ارزیابی دستورات فوق‌پیچیده و نگارش چندنوبته در برابر \en{Claude Opus 4.5}}
+\label{tab:v4_complex_writing}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{دسته‌بندی} & \textbf{تعداد (\#)} & \textbf{برد \en{DS}} & \textbf{برد \en{Opus}} & \textbf{درصد \en{DS}} & \textbf{درصد \en{Opus}} & \textbf{درصد مساوی} \\
+\midrule
+پیروی از دستورات پیچیده (\en{Complex Instructions}) & 49 & 23 & 26 & 46.9\% & 53.1\% & 0.0\% \\
+نگارش چندنوبته (\en{Multi-Turn Writing}) & 147 & 67 & 76 & 45.6\% & 51.7\% & 2.7\% \\
+\midrule
+\textbf{مجموع کل} & \textbf{196} & \textbf{90} & \textbf{102} & \textbf{45.9\%} & \textbf{52.0\%} & \textbf{2.0\%} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{سنجش کارایی جستجوی عاملی در مقایسه با \en{RAG} سنتی در \en{DeepSeek-V4-Pro}}
+\label{tab:v4_agentic_search}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llcccccc}
+\toprule
+\textbf{سطح مسئله} & \textbf{نوع پرسش} & \textbf{تعداد} & \textbf{برد عامل} & \textbf{برد \en{RAG}} & \textbf{\% برد عامل} & \textbf{\% برد \en{RAG}} & \textbf{\% مساوی} \\
+\midrule
+\multirow{2}{*}{\textbf{آسان (\en{Easy})}} 
+& عینی (\en{Objective}) & 196 & 110 & 43 & 56.1\% & 21.9\% & 21.9\% \\
+& تحلیلی (\en{Subjective}) & 321 & 198 & 56 & 61.7\% & 17.4\% & 20.9\% \\
+\midrule
+\multirow{2}{*}{\textbf{دشوار (\en{Hard})}} 
+& عینی (\en{Objective}) & 168 & 102 & 33 & 60.7\% & 19.6\% & 19.6\% \\
+& تحلیلی (\en{Subjective}) & 184 & 126 & 27 & 68.5\% & 14.7\% & 16.8\% \\
+\midrule
+\textbf{جمع کل} & — & \textbf{869} & \textbf{536} & \textbf{159} & \textbf{61.7\%} & \textbf{18.3\%} & \textbf{20.0\%} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه نرخ موفقیت در حل وظایف مهندسی نرم‌افزار واقعی (\en{R\&D Benchmark})}
+\label{tab:v4_code_agent_rd}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{مدل} & \textbf{\en{Haiku 4.5}} & \textbf{\en{Sonnet 4.5}} & \textbf{\en{DS-V4-Pro-Max}} & \textbf{\en{Opus 4.5}} & \textbf{\en{Opus 4.5 (Think)}} & \textbf{\en{Opus 4.6 (Think)}} \\
+\midrule
+\textbf{نرخ حل (\en{Pass Rate \%})} & 13\% & 47\% & \textbf{67\%} & 70\% & 73\% & 80\% \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

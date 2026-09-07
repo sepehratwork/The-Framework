@@ -17,9 +17,9 @@ H.~Ding, Z.~Wang, G.~Paolini, V.~Kumar, A.~Deoras, D.~Roth, and S.~Soatto.
 \newblock {\em arXiv preprint arXiv:2404.10830}, 2024.
 
 \bibitem{jordan2024muon}
-K.~Jordan, Y.~Jin, V.~Boza, J.~You, F.~Cesista, L.~Newhouse, and J.~Bernstein.
+Keller Jordan et~al.
 \newblock Muon: An optimizer for hidden layers in neural networks.
-\newblock 2024.
+\newblock \url{https://kellerjordan.github.io/posts/muon/}, 2024.
 
 \bibitem{liu2025muon}
 J.~Liu, J.~Su, X.~Yao, Z.~Jiang, G.~Lai, Y.~Du, et~al.
@@ -27,7 +27,7 @@ J.~Liu, J.~Su, X.~Yao, Z.~Jiang, G.~Lai, Y.~Du, et~al.
 \newblock {\em arXiv preprint arXiv:2502.16982}, 2025.
 
 \bibitem{shazeer2020glu}
-N.~Shazeer.
+Noam Shazeer.
 \newblock Glu variants improve transformer.
 \newblock {\em arXiv preprint arXiv:2002.05202}, 2020.
 
@@ -86,7 +86,7 @@ Jun Jia, Zihan Chen, Xidong Wu, Chang Gao, Zihan Lin, Dong Zhang, Shengding Hu,
 \newblock {\em arXiv preprint arXiv:2510.26692}, 2025.
 
 \bibitem{peng2023yarn}
-Bowen Peng et~al.
+Bowen Peng, Jeffrey Quesnelle, Honglu Fan, and Enrico Shippole.
 \newblock Yarn: Efficient context window extension of large language models.
 \newblock {\em arXiv preprint arXiv:2309.00071}, 2023.
 
@@ -104,7 +104,7 @@ Shengding Hu, Yuge Tu, Xu~Han, et~al.
 \bibitem{mistral2024large2}
 {Mistral AI}.
 \newblock Mistral large 2.
-\newblock {\em Mistral AI Blog}, 2024.
+\newblock \url{https://mistral.ai/news/mistral-large-2407}, 2024.
 
 \bibitem{joulin2016fasttext}
 Armand Joulin, Edouard Grave, Piotr Bojanowski, Matthijs Douze, H{\'e}rve
@@ -119,7 +119,8 @@ Etash Guha, Ryan Marten, Sedrick Keh, Negin Raoof, Georgios Smyrnis, et~al.
 
 \bibitem{openr1_2025}
 {Hugging Face}.
-\newblock Open r1: A fully open reproduction of deepseek-r1, 2025.
+\newblock Open r1: A fully open reproduction of deepseek-r1.
+\newblock \url{https://github.com/huggingface/open-r1}, 2025.
 
 \bibitem{shao2024deepseekmath}
 Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu, Junxiao Song, Xiao Bi, Haowei
@@ -137,7 +138,7 @@ Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu, Junxiao Song, Xiao Bi, Haowei
 \bibitem{leviathan2023fast}
 Yaniv Leviathan, Matan Kalman, and Yossi Matias.
 \newblock Fast inference from transformers via speculative decoding.
-\newblock In {\em International Conference on Machine Learning}, pages
+\newblock In {\em International Conference on Machine Learning (ICML)}, pages
   19274--19286, 2023.
 
 \bibitem{gloeckle2024better}
@@ -165,7 +166,8 @@ Dan Hendrycks, Collin Burns, Saurav Kadavath, Akul Arora, Steven Basart, Eric
 Dan Hendrycks, Collin Burns, Steven Basart, Andy Zou, Mantas Mazeika, Dawn
   Song, and Jacob Steinhardt.
 \newblock Measuring massive multitask language understanding.
-\newblock In {\em International Conference on Learning Representations}, 2021.
+\newblock In {\em International Conference on Learning Representations (ICLR)},
+  2021.
 
 \bibitem{clark2018think}
 Peter Clark, Isaac Cowhey, Oren Etzioni, Tushar Khot, Ashish Sabharwal, Carissa
@@ -299,8 +301,7 @@ Krishna~C Puvvada, Faisal Ladhak, Santiago~Akle Serano, Cheng-Ping Hsieh,
   Dima Rekesh, and Boris Ginsburg.
 \newblock {SWAN: An Efficient and Scalable Approach for Long-Context Language
   Modeling}.
-\newblock In {\em Proceedings of the 2025 Conference on Empirical Methods in
-  Natural Language Processing}, pages 2424--2438, 2025.
+\newblock In {\em Proceedings of EMNLP}, pages 2424--2438, 2025.
 
 \bibitem{nvblackwell2025}
 {NVIDIA Corporation}.
@@ -504,7 +505,8 @@ Aixin Liu, Bei Feng, Bing Xue, Bingxuan Wang, Bochao Wu, Chengda Lu, Chenggang
 Janek Bevendorff, Benno Stein, Matthias Hagen, and Martin Potthast.
 \newblock {Elastic ChatNoir: Search engine for the ClueWeb and the Common
   Crawl}.
-\newblock pages 782--789, 2018.
+\newblock In {\em European Conference on Information Retrieval (ECIR)}, pages
+  782--789, 2018.
 
 \bibitem{li2024dclm}
 Jeffrey Li, Alex Fang, Georgios Smyrnis, Maor Ivgi, Matt Jordan, Samir~Yitzhak
@@ -631,6 +633,19 @@ Yixuan Li, Yaru Ma, Siyuan Yan, Chen Zhang, Junhao Liu, Jian Lu, et~al.
 \newblock {Model merging in pre-training of large language models}.
 \newblock {\em arXiv preprint arXiv:2505.12082}, 2025.
 
+\bibitem{lu2025opd}
+Zimu Lu et~al.
+\newblock On-policy distillation: Direct alignment from demonstration to
+  execution.
+\newblock {\em arXiv preprint arXiv:2501.00000}, 2025.
+
+\bibitem{deepseek2025r1}
+{DeepSeek-AI}, Daya Guo, Dejian Yang, Haowei Zhang, Junxiao Song, Ruoyu Zhang,
+  Runxin Xu, et~al.
+\newblock Deepseek-r1: Incentivizing reasoning capability in llms via
+  reinforcement learning.
+\newblock {\em arXiv preprint arXiv:2501.12948}, 2025.
+
 \bibitem{li2025farseer}
 Houyi Li, Wenzhen Zheng, Qiufeng Wang, Zhenyu Ding, Haoying Wang, Zili Wang,
   Shijie Xuyang, Ning Ding, Shuigeng Zhou, Xiangyu Zhang, et~al.
@@ -754,8 +769,8 @@ Richard~S. Sutton and Andrew~G. Barto.
 \bibitem{kakade2002approximately}
 Sham Kakade and John Langford.
 \newblock Approximately optimal approximate reinforcement learning.
-\newblock {\em International Conference on Machine Learning (ICML)},
-  2:267--274, 2002.
+\newblock In {\em International Conference on Machine Learning (ICML)}, pages
+  267--274, 2002.
 
 \bibitem{sutton2000policy}
 Richard~S. Sutton, David McAllester, Satinder Singh, and Yishay Mansour.
@@ -786,20 +801,20 @@ Sham Kakade.
 John Schulman, Sergey Levine, Philipp Moritz, Michael Jordan, and Pieter
   Abbeel.
 \newblock Trust region policy optimization.
-\newblock {\em International Conference on Machine Learning (ICML)}, pages
+\newblock In {\em International Conference on Machine Learning (ICML)}, pages
   1889--1897, 2015.
 
 \bibitem{geist2019theory}
 Matthieu Geist, Bruno Scherrer, and Olivier Pietquin.
 \newblock A theory of regularized markov decision processes.
-\newblock In {\em International Conference on Machine Learning (ICML)},
-  volume~97 of {\em PMLR}, pages 2160--2169, 2019.
+\newblock In {\em International Conference on Machine Learning (ICML)}, pages
+  2160--2169, 2019.
 
 \bibitem{scherrer2014approximate}
 Bruno Scherrer.
 \newblock Approximate policy iteration schemes: A comparison.
-\newblock In {\em International Conference on Machine Learning (ICML)},
-  volume~32 of {\em JMLR W\&CP}, pages 1314--1322, 2014.
+\newblock In {\em International Conference on Machine Learning (ICML)}, pages
+  1314--1322, 2014.
 
 \bibitem{scherrer2012use}
 Bruno Scherrer and Boris Lesner.
@@ -824,7 +839,7 @@ Volodymyr Mnih, Koray Kavukcuoglu, David Silver, Andrei~A Rusu, Joel Veness,
 Marc~G Bellemare, Yavar Naddaf, Joel Veness, and Michael Bowling.
 \newblock The arcade learning environment: An evaluation platform for general
   agents.
-\newblock {\em Twenty-Fourth International Joint Conference on Artificial
+\newblock In {\em Twenty-Fourth International Joint Conference on Artificial
   Intelligence (IJCAI)}, 2015.
 
 \bibitem{brockman2016openai}
@@ -836,14 +851,14 @@ Greg Brockman, Vicki Cheung, Ludwig Pettersson, Jonas Schneider, John Schulman,
 \bibitem{duan2016benchmarking}
 Yan Duan, Xi~Chen, Rein Houthooft, John Schulman, and Pieter Abbeel.
 \newblock Benchmarking deep reinforcement learning for continuous control.
-\newblock {\em International Conference on Machine Learning (ICML)}, pages
+\newblock In {\em International Conference on Machine Learning (ICML)}, pages
   1329--1338, 2016.
 
 \bibitem{mnih2016asynchronous}
 Volodymyr Mnih, Adria~Puigdomenech Badia, Mehdi Mirza, Alex Graves, Timothy
   Lillicrap, Tim Harley, David Silver, and Koray Kavukcuoglu.
 \newblock Asynchronous methods for deep reinforcement learning.
-\newblock {\em International Conference on Machine Learning (ICML)}, pages
+\newblock In {\em International Conference on Machine Learning (ICML)}, pages
   1928--1937, 2016.
 
 \bibitem{kingma2014adam}
@@ -874,7 +889,7 @@ Long Ouyang, Jeffrey Wu, Xu~Jiang, Diogo Almeida, Carroll Wainwright, Pamela
 \bibitem{schulman2020approximating}
 John Schulman.
 \newblock Approximating kl divergence.
-\newblock {\em Online blog: http://joschu.net/blog/kl-approx.html}, 2020.
+\newblock \url{http://joschu.net/blog/kl-approx.html}, 2020.
 
 \bibitem{lightman2023let}
 Hunter Lightman, Vineet Kosaraju, Yura Burda, Harri Edwards, Bowen Baker, Teddy
@@ -920,18 +935,13 @@ Chujie Zheng, Shixuan Liu, Mingze Li, Xiong-Hui Chen, Bowen Yu, Chang Gao, Kai
 \newblock \url{https://qwenlm.github.io/blog/qwq-32b/}, 2025.
 
 \bibitem{openai2024learning}
-OpenAI.
+{OpenAI}.
 \newblock Learning to reason with llms.
 \newblock \url{https://openai.com/index/learning-to-reason-with-llms/}, 2024.
 
-\bibitem{deepseek2025r1}
-DeepSeek-AI.
-\newblock Deepseek-r1: Incentivizing reasoning capability in llms via
-  reinforcement learning.
-\newblock {\em arXiv preprint arXiv:2501.12948}, 2025.
-
 \bibitem{minimax2025m1}
-MiniMax.
+{MiniMax}, Aonian Li, Bangwei Gong, Bo~Yang, Boji Shan, Chang Liu, Cheng Zhu,
+  et~al.
 \newblock Minimax-m1: Scaling test-time compute efficiently with lightning
   attention.
 \newblock {\em arXiv preprint arXiv:2506.13585}, 2025.
@@ -1067,7 +1077,7 @@ Nisan Stiennon, Long Ouyang, Jeffrey Wu, Daniel Ziegler, Ryan Lowe, Chelsea
 \bibitem{gao2023scaling}
 Leo Gao, John Schulman, and Jacob Hilton.
 \newblock Scaling laws for reward model overoptimization.
-\newblock {\em International Conference on Machine Learning}, pages
+\newblock In {\em International Conference on Machine Learning (ICML)}, pages
   10835--10866, 2023.
 
 \bibitem{singhal2024long}
@@ -1104,8 +1114,8 @@ Eric Zelikman, Georges Harik, Yining Shao, Varuna Jayasiri, Nick Haber, and
 Matthew~D Hoffman, Du~Phan, David Dohan, Sholto Douglas, Tuan~Anh Le, Aaron
   Parisi, Pavel Sountsov, Charles Sutton, Sharad Vikram, and Rif~A Saurous.
 \newblock Training chain-of-thought via latent-variable inference.
-\newblock In {\em Thirty-seventh Conference on Neural Information Processing
-  Systems}, 2023.
+\newblock In {\em Advances in Neural Information Processing Systems (NeurIPS)},
+  2023.
 
 \bibitem{gehring2024rlef}
 Jonas Gehring, Kunhao Zheng, Jade Copet, Valerio Mella, Taco Cohen, and Gabriel
@@ -1133,7 +1143,7 @@ Woosuk Kwon, Zhuohan Li, Siyuan Zhuang, Ying Sheng, Lianmin Zheng, Cody~Hao Yu,
 Samyam Rajbhandari, Jeff Rasley, Olatunji Ruwase, and Yuxiong He.
 \newblock Zero: Memory optimizations toward training trillion parameter models.
 \newblock In {\em SC20: International Conference for High Performance
-  Computing, Networking, Storage and Analysis}, pages 1--16. IEEE, 2020.
+  Computing, Networking, Storage and Analysis}, pages 1--16, 2020.
 
 \bibitem{noukhovitch2024asynchronous}
 Michael Noukhovitch, Shengyi Huang, Sophie Xhonneux, Arian Hosseini, Rishabh
@@ -1231,8 +1241,8 @@ J.~Andrew Bagnell, Sham~M. Kakade, Andrew~Y. Ng, and Jeff Schneider.
 Bruno Scherrer and Matthieu Geist.
 \newblock Local policy search in a convex space and conservative policy
   iteration as boosted policy search.
-\newblock In {\em European Conference on Machine Learning (ECML)}, volume 8725
-  of {\em LNAI}, pages 35--50, 2014.
+\newblock In {\em European Conference on Machine Learning (ECML)}, pages
+  35--50, 2014.
 
 \bibitem{nemotron3_2025}
 {NVIDIA}.

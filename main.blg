@@ -3,169 +3,44 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: unsrt.bst
 Database file #1: references.bib
-Repeated entry---line 300 of file references.bib
- : @article{shao2024deepseekmath
- :                              ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 365 of file references.bib
- : @article{openai2024learning
- :                            ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 379 of file references.bib
- : @article{shao2024deepseekmath
- :                              ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 408 of file references.bib
- : @article{shao2024deepseekmath
- :                              ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 429 of file references.bib
- : @misc{openai2024learning
- :                         ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 477 of file references.bib
- : @article{minimax2025m1
- :                       ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 484 of file references.bib
- : @article{shao2024deepseekmath
- :                              ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 491 of file references.bib
- : @article{yu2025dapo
- :                    ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 498 of file references.bib
- : @article{deepseek2025r1
- :                        ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 569 of file references.bib
- : @article{schulman2017proximal
- :                              ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 576 of file references.bib
- : @article{ouyang2022training
- :                            ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 716 of file references.bib
- : @article{shao2024deepseekmath
- :                              ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 723 of file references.bib
- : @article{yu2025dapo
- :                    ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 790 of file references.bib
- : @article{williams1992simple
- :                            ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 809 of file references.bib
- : @inproceedings{kakade2002approximately
- :                                       ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 833 of file references.bib
- : @inproceedings{schulman2015trust
- :                                 ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 1009 of file references.bib
- : @article{shazeer2020glu
- :                        ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 1016 of file references.bib
- : @misc{jordan2024muon
- :                     ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 1039 of file references.bib
- : @article{deepseek2025r1
- :                        ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 1046 of file references.bib
- : @article{shao2024deepseekmath
- :                              ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 1089 of file references.bib
- : @article{deepseek2024v3
- :                        ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 1294 of file references.bib
- : @article{hsieh2024ruler
- :                        ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 1301 of file references.bib
- : @inproceedings{gloeckle2024better
- :                                  ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 1325 of file references.bib
- : @article{yang2024qwen25
- :                        ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 1403 of file references.bib
- : @article{su2024roformer
- :                        ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 1419 of file references.bib
- : @article{peng2023yarn
- :                      ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 1433 of file references.bib
- : @inproceedings{hendrycks2021mmlu
- :                                 ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 1476 of file references.bib
- : @article{cobbe2021training
- :                           ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 1483 of file references.bib
- : @article{hendrycks2021math
- :                           ,
-I'm skipping whatever remains of this entry
-Repeated entry---line 1679 of file references.bib
- : @article{liu2024regmix
- :                       ,
-I'm skipping whatever remains of this entry
-Warning--empty journal in jordan2024muon
-Warning--can't use both volume and number fields in wang2020neural
-Warning--empty journal in bevendorff2018elastic
-Warning--can't use both volume and number fields in chen2023sufficiency
-You've used 199 entries,
+You've used 200 entries,
             1791 wiz_defined-function locations,
-            1277 strings with 45646 characters,
-and the built_in function-call counts, 48275 in all, are:
-= -- 3293
-> -- 4084
-< -- 41
-+ -- 1437
-- -- 1238
-* -- 3338
-:= -- 8507
-add.period$ -- 597
-call.type$ -- 199
-change.case$ -- 199
+            1267 strings with 45698 characters,
+and the built_in function-call counts, 48797 in all, are:
+= -- 3316
+> -- 4127
+< -- 39
++ -- 1451
+- -- 1251
+* -- 3337
+:= -- 8560
+add.period$ -- 600
+call.type$ -- 200
+change.case$ -- 200
 chr.to.int$ -- 0
-cite$ -- 203
-duplicate$ -- 2035
-empty$ -- 3773
-format.name$ -- 1238
-if$ -- 10238
+cite$ -- 200
+duplicate$ -- 2062
+empty$ -- 3867
+format.name$ -- 1251
+if$ -- 10391
 int.to.chr$ -- 0
-int.to.str$ -- 199
-missing$ -- 191
-newline$ -- 997
-num.names$ -- 199
-pop$ -- 719
+int.to.str$ -- 200
+missing$ -- 189
+newline$ -- 1003
+num.names$ -- 200
+pop$ -- 755
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 1056
+skip$ -- 1079
 stack$ -- 0
-substring$ -- 1347
-swap$ -- 557
-text.length$ -- 41
+substring$ -- 1354
+swap$ -- 568
+text.length$ -- 39
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
-warning$ -- 4
-while$ -- 301
-width$ -- 202
-write$ -- 2041
-(There were 30 error messages)
+warning$ -- 0
+while$ -- 303
+width$ -- 203
+write$ -- 2051
