@@ -857,6 +857,42 @@ Junteng Liu, Yunji Li, Chi Zhang, et~al.
   attention}.
 \newblock {\em Technical Report}, 2025.
 
+\bibitem{bercovich2025llama}
+Akhiad Bercovich, Itay Levy, Izik Golan, Mohammad Dabbah, Ran El-Yaniv, Omri
+  Puny, Ido Galil, Zach Moshe, Tomer Ronen, et~al.
+\newblock Llama-nemotron: Efficient reasoning models.
+\newblock {\em arXiv preprint arXiv:2505.00949}, 2025.
+
+\bibitem{wei2021finetuned}
+Jason Wei, Maarten Bosma, Vincent Zhao, Kelvin Guu, Adams~Wei Yu, Brian Lester,
+  Nan Du, Andrew~M Dai, and Quoc~V Le.
+\newblock Finetuned language models are zero-shot learners.
+\newblock In {\em International Conference on Learning Representations}, 2021.
+
+\bibitem{lambert2024tulu}
+Nathan Lambert, Jacob Morrison, Valentina Pyatkin, Shengyi Huang, Hamish
+  Ivison, Faeze Brahman, Lester James~V Miranda, Alisa Liu, Nouha Dziri, et~al.
+\newblock T{\"u}lu 3: Pushing frontiers in open language model post-training.
+\newblock {\em arXiv preprint arXiv:2411.15124}, 2024.
+
+\bibitem{rafailov2024direct}
+Rafael Rafailov, Archit Sharma, Eric Mitchell, Stefano Ermon, Christopher~D
+  Manning, and Chelsea Finn.
+\newblock Direct preference optimization: Your language model is secretly a
+  reward model.
+\newblock {\em Advances in Neural Information Processing Systems}, 36, 2024.
+
+\bibitem{team2025gemma3}
+{Gemma Team}, Aishwarya Kamath, Johan Ferret, Shreya Pathak, Nino Vieillard,
+  et~al.
+\newblock Gemma 3 technical report.
+\newblock {\em arXiv preprint arXiv:2503.19786}, 2025.
+
+\bibitem{grattafiori2024llama3}
+Aaron Grattafiori, Abhimanyu Dubey, Abhinav Jauhri, et~al.
+\newblock The llama 3 herd of models.
+\newblock {\em arXiv preprint arXiv:2407.21783}, 2024.
+
 \bibitem{li2025farseer}
 Houyi Li, Wenzhen Zheng, Qiufeng Wang, Zhenyu Ding, Haoying Wang, Zili Wang,
   Shijie Xuyang, Ning Ding, Shuigeng Zhou, Xiangyu Zhang, et~al.

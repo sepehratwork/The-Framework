@@ -1,1 +1,116 @@
-\item \textbf asd
+\item \model{MobileLLM-Pro}
+
+\paragraph*{مقدمه و ساختار کلان فاز پس‌آموزش (\en{Post-Training})}
+در مدل زبانی \model{MobileLLM-Pro}—یک مدل کارآمد در مقیاس ۱ میلیارد پارامتر ($1.08\text{B}$) توسعه‌یافته برای استقرار بر روی پردازنده‌ها (\en{CPUs}) و شتاب‌دهنده‌های عصبی تراشه‌های تلفن همراه (\en{NPU/HTP})—مرحله پس‌آموزش (\en{Post-Training}) نقشی حیاتی در دگرگونی مدل پایه به یک دستیار هوشمند محلی (\en{On-Device Assistant}) ایفا می‌کند \cite{huber2025mobilellmpro}. اهداف کاربردی مدل در این فاز شامل درک دستور، خلاصه‌سازی (\en{Summarization})، بازنویسی متون (\en{Rewriting})، پاسخ به پرسش‌های منطقی، بازیابی درون‌متنی و فراخوانی توابع و ابزارها (\en{Tool/Function Calling}) است.
+
+در طول این فرایند، مدل پنجره بافت فوق‌طولانی $128\text{K}$ توکنی خود را همراه با سازوکار بهینه توجه ترکیبی محلی-سراسری (\en{Local-Global Attention}) حفظ می‌نماید. برخلاف مرحله پیش‌آموزش که بر پایه تقطیر لاجیت (\en{Logit KD}) از مدل معلم بزرگ \en{Llama 4-Scout} بهینه‌سازی شده بود، در فاز تنظیم دستوری (\en{IFT}) هدف آموزشی به بهینه‌سازی زیان استاندارد آنتروپی متقاطع (\en{Cross-Entropy Loss}) تغییر می‌یابد:
+\begin{equation}
+    \mathcal{L}_{\text{CE}}(\theta) = - \sum_{t=1}^{T} \log P_\theta(y_t \mid y_{<t}, x)
+\end{equation}
+که در آن $x$ توالی دستور ورودی، $y$ توالی پاسخ مطلوب دستیار و $T$ طول توالی هدف است. کل خط لوله پس‌آموزش در قالب یک سازوکار منسجم سه‌مرحله‌ای با بودجه توکنی نزولی (\en{Decaying Budget}) پیکربندی شده است.
+
+\paragraph*{مرحله اول: تنظیم دستوری مبتنی بر تنوع حداکثری (\en{Diversity-First IFT})}
+در گام نخست، ارزیابی‌های اولیه نشان داد که در مدل‌های زبانی فشرده زیر ۲ میلیارد پارامتر، تنوع داده‌ها (\en{Data Diversity}) بالاترین همبستگی مثبت را با عملکرد کل مدل دارد. به دلیل ظرفیت پارامتری محدود، بیش‌نمونه‌برداری مصنوعی (\en{Oversampling}) از مجموعه‌داده‌های کوچک نه تنها مزیتی ایجاد نمی‌کند، بلکه تعادل گرادیان را برهم زده و اثر منفی بر پایداری مدل می‌گذارد. از این رو، راهبرد این فاز بر پایبندی به توزیع طبیعی (\en{Natural Distribution}) داده‌های منبع‌باز بنا نهاده شد.
+
+مجموع نمونه‌های گردآوری‌شده در این مرحله بالغ بر \textbf{۷.۶۴ میلیون نمونه} ($7.64\text{M}$) از هفت مجموعه‌داده استاندارد است. جدول \ref{tab:mobilellm_pro_ift_data} آمار دقیق، منابع و سهم درصدی هر یک را نشان می‌دهد:
+
+\begin{table}[htbp]
+\centering
+\caption{مشخصات آماری پیکره داده‌های مرحله اول تنظیم دستوری (\en{Diversity-First IFT}) در مدل \model{MobileLLM-Pro}}
+\label{tab:mobilellm_pro_ift_data}
+\resizebox{0.95\textwidth}{!}{%
+\begin{tabular}{llccc}
+\toprule
+\textbf{نام مجموعه‌داده (\en{Dataset})} & \textbf{حوزه تخصصی (\en{Domain})} & \textbf{سال انتشار} & \textbf{تعداد نمونه‌ها (میلیون)} & \textbf{سهم از کل دادگان (\%)} \\
+\midrule
+\en{Nemotron Math} \cite{bercovich2025llama} & ریاضیات و استدلال تحلیلی & 2025 & $2.70\text{M}$ & $35.34\%$ \\
+\en{Nemotron Safety} \cite{bercovich2025llama} & ایمنی و مهار محتوای مخرب & 2025 & $0.03\text{M}$ & $0.39\%$ \\
+\en{Nemotron Code} \cite{bercovich2025llama} & برنامه‌نویسی و سنتز کد & 2025 & $0.65\text{M}$ & $8.51\%$ \\
+\en{Nemotron Chat} \cite{bercovich2025llama} & تعامل و مکالمه انسانی & 2025 & $0.04\text{M}$ & $0.52\%$ \\
+\en{Nemotron Science} \cite{bercovich2025llama} & علوم پایه و پرسش‌های دانشگاهی & 2025 & $0.48\text{M}$ & $6.28\%$ \\
+\en{Flan} \cite{wei2021finetuned} & دستورالعمل‌های چندوظیفه‌ای متنوع & 2021 & $2.80\text{M}$ & $36.65\%$ \\
+\en{Tülu 3} \cite{lambert2024tulu} & هم‌ترازی نوین و تنظیم دستوری باز & 2024 & $0.94\text{M}$ & $12.30\%$ \\
+\midrule
+\textbf{مجموع کل (\en{Total})} & — & — & $\mathbf{7.64\text{M}}$ & $\mathbf{100.00\%}$ \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+بررسی تحلیلی این توزیع نشان می‌دهد که دو پیکره \en{Flan} و \en{Nemotron Math} در مجموع بالغ بر $71.99\%$ (حدود ۷۲ درصد) حجم نمونه‌ها را به خود اختصاص داده‌اند:
+\begin{equation}
+    \text{Share}(\text{Flan} + \text{NemoMath}) = \frac{2.80\text{M} + 2.70\text{M}}{7.64\text{M}} \times 100 \approx 71.99\%
+\end{equation}
+همچنین، در آزمایش‌های شبیه‌سازی ترکیب داده (\en{SDM}) در حجم ۸۰ میلیارد توکن پسا-آموزش \cite{chang2025sdm}، استفاده از توزیع داده‌های تنوع‌محور بهینه‌شده امتیاز میانگین بنچمارک مدل را از $17.94\%$ (در ترکیب تصادفی یکنواخت) به \textbf{$45.23\%$} رساند که بیانگر جهش مطلق $27.29\%$ ناشی از مهندسی دقیق دادگان است.
+
+\paragraph*{مرحله دوم: تنظیم شکاف دامنه‌ها با تحلیل حذفی (\en{LOO Continued Tuning})}
+در مرحله دوم، برای انطباق ترکیب داده‌ها با نیازهای خاص مدل، تحلیل تجربی حذفی یک‌به‌یک (\en{Leave-One-Out - LOO}) بر روی هر یک از ۷ منبع داده اعمال شد. اگر مجموعه کل منابع داده را $\mathcal{D} = \{d_1, d_2, \dots, d_7\}$ بنامیم، اثر حذف هر دامنه بر روی بردارهای مهارتی (شامل ریاضیات، استدلال، خلاصه‌سازی، بازنویسی، دانش، پیروی از دستور و فراخوانی ابزار) با آموزش مدل روی پیکره $\mathcal{D} \setminus \{d_k\}$ به دست آمد.
+
+بر اساس شواهد برآمده از تحلیل نمودار راداری حذفی:
+\begin{itemize}
+    \item حذف داده‌های \en{Tülu 3} ($\neg\text{Tülu 3}$) عمیق‌ترین افت عملکرد سراسری، به‌ویژه در توانمندی پیروی از دستورات (\en{Instruction Following}) را به همراه داشت.
+    \item حذف داده‌های \en{Nemotron Science} ($\neg\text{Nemotron Science}$) بیشترین ضربه را به مهارت‌های استدلال منطقی و حل مسائل علمی وارد نمود.
+\end{itemize}
+در نتیجه این ارزیابی، داده‌های فاز دوم به منظور رفع نواقص مهارتی مدل (\en{Domain Gaps}) بازآرایی و سهم داده‌های کلیدی تقویت گردید.
+
+\paragraph*{مرحله سوم: هم‌ترازی ایمنی، خود-شناسایی و بهینه‌سازی ترجیحات (\en{Safety \& Self-ID})}
+فاز نهایی پس‌آموزش به تثبیت مرزهای ایمنی اخلاقی و رفتار هویتی مدل بدون نقض استانداردهای سیستمی اختصاص یافت. در این مرحله، از رویکرد داده‌های سنتزی (\en{Synthetic Data}) در پیوند با دو سازوکار استفاده شد:
+\begin{enumerate}
+    \item \textbf{تنظیم نظارت‌شده سنتزی (\en{Synthetic SFT}):} برای القای چارچوب پاسخ‌دهی ایمن و رد درخواست‌های خطرآفرین.
+    \item \textbf{بهینه‌سازی مستقیم ترجیحات (\en{DPO}):} بهره‌گیری از الگوریتم \en{DPO} \cite{rafailov2024direct} با استفاده از جفت‌داده‌های ترجیحی سنتزی $(x, y_w, y_l)$:
+    \begin{equation}
+        \mathcal{L}_{\text{DPO}}(\theta; \pi_{\text{ref}}) = -\mathbb{E}_{(x, y_w, y_l) \sim \mathcal{D}_{\text{pref}}} \left[ \log \sigma \left( \beta \log \frac{\pi_\theta(y_w \mid x)}{\pi_{\text{ref}}(y_w \mid x)} - \beta \log \frac{\pi_\theta(y_l \mid x)}{\pi_{\text{ref}}(y_l \mid x)} \right) \right]
+    \end{equation}
+    که در آن $y_w$ پاسخ ایمن هم‌تراز با هویت مدل، $y_l$ خروجی آسیب‌رسان یا ناهماهنگ و $\pi_{\text{ref}}$ نگاشت مدل در انتهای فاز دوم است.
+\end{enumerate}
+نویسندگان تصریح نموده‌اند که در مدل‌های ۱ میلیارد پارامتری، دستیابی به سطوح بالای ایمنی مستلزم پرداخت «مالیات هم‌ترازی» (\en{Alignment Tax}) و پذیرش افتی اندک در بنچمارک‌های دانش عمومی است.
+
+\paragraph*{ارزیابی‌های تجربی و اعتبارسنجی کارایی دادگان پس‌آموزش}
+کیفیت پیکره پسا-آموزش در دو سطح آزمون‌های استاندارد و ارزیابی مقایسه‌ای انسانی سنجیده شد. جدول \ref{tab:mobilellm_pro_instruct_eval} عملکرد نسخه دستوری را در برابر رقبای هم‌رده شامل \model{Gemma 3-1B} \cite{team2025gemma3} و \model{Llama 3.2-1B} \cite{grattafiori2024llama3} نشان می‌دهد.
+
+\begin{table}[htbp]
+\centering
+\caption{مقایسه عملکرد بنچمارک‌های تنظیمی مدل \model{MobileLLM-Pro (Instruct)} با مدل‌های هم‌رده}
+\label{tab:mobilellm_pro_instruct_eval}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lllccc}
+\toprule
+\textbf{حوزه آزمون} & \textbf{بنچمارک (متریک)} & \textbf{ابعاد مهارت} & \model{MobileLLM-Pro} & \model{Gemma 3-1B} & \model{Llama 3.2-1B} \\
+\midrule
+\textbf{دانش عمومی} & \en{MMLU (macro avg/acc)} & درک چندوظیفه‌ای زبانی & 44.8 & 29.9 & \textbf{49.3} \\
+\textbf{پیروی از دستور} & \en{IFEval (acc*)} & پایبندی به قیود دقیق پرامپت & 62.0 & \textbf{80.2} & 59.5 \\
+\multirow{2}{*}{\textbf{برنامه‌نویسی}} & \en{MBPP (pass@1)} & حل مسائل پایه‌ای کدنویسی & \textbf{46.8} & 35.2 & 39.6 \\
+& \en{HumanEval (pass@1)} & حل توابع الگوریتمی پیشرفته & \textbf{59.8} & 41.5 & 37.8 \\
+\multirow{2}{*}{\textbf{پرسش و پاسخ}} & \en{ARC-Challenge (acc)} & استدلال علمی استنتاجی & \textbf{62.7} & — & 59.4 \\
+& \en{HellaSwag (acc)} & استنتاج عقل سلیم در تکمیل متن & \textbf{58.4} & — & 41.2 \\
+\textbf{عامل هوشمند} & \en{BFCL v2 (acc)} & فراخوانی ساختاریافته ابزارها & \textbf{29.4} & — & 25.7 \\
+\textbf{بازنویسی} & \en{Open Rewrite (rougeL)} & ویرایش، تصحیح و تبدیل متن & \textbf{51.0} & — & 41.6 \\
+\textbf{خلاصه‌سازی} & \en{TLDR9+ (rougeL)} & چکیده‌سازی پست‌ها و اسناد & \textbf{16.8} & — & \textbf{16.8} \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
+
+برتری چشمگیر مدل در آزمون‌های کدنویسی نظیر \en{HumanEval} ($59.8$ در مقایسه با $37.8$ در \model{Llama 3.2-1B}) و فراخوانی ابزار برکلی (\en{BFCL v2}) گواه مستقیم اثربخشی دادگان مهندسی‌شده است.
+
+علاوه بر این، نتایج ارزیابی‌های کیفی انسانی روی ۱۰۰ پرامپت تصادفی در جدول \ref{tab:mobilellm_pro_human_eval} خلاصه شده است. در وظیفه فراخوانی ابزار (\en{Tool Calling})، به دلیل نیاز به راستی‌آزمایی دقیق کد و خروجی‌های ساختاریافته، مدل قدرتمند \model{Llama 3-70B} به عنوان داور جایگزین ارزیاب انسانی شده است.
+
+\begin{table}[htbp]
+\centering
+\caption{نتایج ارزیابی مقایسه‌ای ترجیحات انسانی و داوری خودکار روی ۱۰۰ پرامپت تصادفی در هر دسته}
+\label{tab:mobilellm_pro_human_eval}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccc|cccc}
+\toprule
+& \multicolumn{4}{c|}{\textbf{مقایسه با \model{Gemma 3-1B}}} & \multicolumn{4}{c}{\textbf{مقایسه با \model{Llama 3.2-1B}}} \\
+\cmidrule(lr){2-5} \cmidrule(lr){6-9}
+\textbf{وظیفه ارزیابی} & \textbf{برد \model{MobileLLM}} & \textbf{برد رقیب} & \textbf{مساوی} & \textbf{تحلیل برتری} & \textbf{برد \model{MobileLLM}} & \textbf{برد رقیب} & \textbf{مساوی} & \textbf{تحلیل برتری} \\
+\midrule
+خلاصه‌سازی (\en{Summarization}) & 47 & \textbf{51} & 2 & رقابت نزدیک (برتری جزئی رقیب) & \textbf{42} & 30 & 28 & برتری قاطع \\
+بازنویسی (\en{Rewrite}) & 45 & \textbf{49} & 6 & رقابت نزدیک (برتری جزئی رقیب) & \textbf{53} & 30 & 16 & برتری قاطع ($+23$) \\
+بازیابی (\en{Recall}) & \textbf{47} & 30 & 23 & برتری قاطع ($+17$) & \textbf{56} & 8 & 37 & برتری خردکننده ($+48$) \\
+فراخوانی ابزار (\en{Tool Calling*}) & \textbf{53} & 24 & 23 & برتری چشمگیر ($+29$) & \textbf{40} & 35 & 25 & برتری معنادار \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}
