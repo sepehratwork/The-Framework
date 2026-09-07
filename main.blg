@@ -4,44 +4,44 @@ The top-level auxiliary file: main.aux
 The style file: unsrt.bst
 Database file #1: references.bib
 Reallocated field_info (elt_size=8) to 10014 items from 5000.
-You've used 219 entries,
+You've used 230 entries,
             1791 wiz_defined-function locations,
-            1334 strings with 48811 characters,
-and the built_in function-call counts, 52277 in all, are:
-= -- 3523
-> -- 4453
+            1374 strings with 50045 characters,
+and the built_in function-call counts, 53860 in all, are:
+= -- 3649
+> -- 4520
 < -- 39
-+ -- 1568
-- -- 1349
-* -- 3545
-:= -- 9214
-add.period$ -- 652
-call.type$ -- 219
-change.case$ -- 219
++ -- 1596
+- -- 1366
+* -- 3578
+:= -- 9472
+add.period$ -- 685
+call.type$ -- 230
+change.case$ -- 230
 chr.to.int$ -- 0
-cite$ -- 219
-duplicate$ -- 2196
-empty$ -- 4157
-format.name$ -- 1349
-if$ -- 11110
+cite$ -- 230
+duplicate$ -- 2274
+empty$ -- 4357
+format.name$ -- 1366
+if$ -- 11480
 int.to.chr$ -- 0
-int.to.str$ -- 219
-missing$ -- 202
-newline$ -- 1093
-num.names$ -- 219
-pop$ -- 835
+int.to.str$ -- 230
+missing$ -- 207
+newline$ -- 1148
+num.names$ -- 230
+pop$ -- 894
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 1141
+skip$ -- 1178
 stack$ -- 0
 substring$ -- 1354
-swap$ -- 587
+swap$ -- 600
 text.length$ -- 39
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 322
-width$ -- 222
-write$ -- 2231
+while$ -- 333
+width$ -- 233
+write$ -- 2341

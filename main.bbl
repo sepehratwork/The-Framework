@@ -703,6 +703,65 @@ Y.~Tian, C.~Wang, Z.~Liu, H.~Huang, W.~Yu, D.~Song, J.~Tang, and Y.~Guo.
   translation evaluation.
 \newblock {\em arXiv preprint arXiv:2602.00000}, 2026.
 
+\bibitem{kimi2026k25}
+{Kimi Team}.
+\newblock Kimi k2.5: Visual agentic intelligence.
+\newblock {\em arXiv preprint arXiv:2602.02276}, 2026.
+
+\bibitem{rouhani2023mxfp}
+Bita~Darvish Rouhani et~al.
+\newblock Microscaling data formats for deep learning.
+\newblock {\em arXiv preprint arXiv:2310.10537}, 2023.
+
+\bibitem{kimicli2026}
+{Moonshot AI}.
+\newblock Kimi cli.
+\newblock \url{https://www.kimi.com/code}, 2026.
+
+\bibitem{claudecode2026}
+{Anthropic}.
+\newblock Claude code.
+\newblock \url{https://docs.anthropic.com/en/docs/claude-code}, 2026.
+
+\bibitem{codex2026}
+{OpenAI}.
+\newblock Codex.
+\newblock \url{https://github.com/openai/codex}, 2026.
+
+\bibitem{openclaw2026}
+{OpenClaw}.
+\newblock Openclaw.
+\newblock \url{https://docs.openclaw.ai/}, 2026.
+
+\bibitem{hermes2026}
+{Nous Research}.
+\newblock Hermes agent.
+\newblock \url{https://hermes-agent.nousresearch.com/docs/}, 2026.
+
+\bibitem{yang2024fla}
+Songlin Yang and Yu~Zhang.
+\newblock Fla: A triton-based library for hardware-efficient implementations of
+  linear attention mechanism.
+\newblock \url{https://github.com/fla-org/flash-linear-attention}, 2024.
+
+\bibitem{tillet2019triton}
+Philippe Tillet, Hsiang-Tsung Kung, and David Cox.
+\newblock Triton: An intermediate language and compiler for tiled neural
+  network computations.
+\newblock In {\em Proceedings of the 3rd ACM SIGPLAN International Workshop on
+  Machine Learning and Programming Languages (MAPL)}, 2019.
+
+\bibitem{spector2025thunderkittens}
+Benjamin~F. Spector et~al.
+\newblock Thunderkittens: Simple, fast, and adorable kernels.
+\newblock In {\em The Thirteenth International Conference on Learning
+  Representations}, 2025.
+
+\bibitem{wang2025tilelang}
+Lei Wang et~al.
+\newblock Tilelang: A composable tiled programming model for ai systems.
+\newblock {\em arXiv preprint arXiv:2504.17577}, 2025.
+
 \bibitem{li2025farseer}
 Houyi Li, Wenzhen Zheng, Qiufeng Wang, Zhenyu Ding, Haoying Wang, Zili Wang,
   Shijie Xuyang, Ning Ding, Shuigeng Zhou, Xiangyu Zhang, et~al.
