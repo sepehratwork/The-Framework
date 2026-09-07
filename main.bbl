@@ -1249,4 +1249,55 @@ Bruno Scherrer and Matthieu Geist.
 \newblock {NVIDIA Nemotron 3: Efficient and Open Intelligence}.
 \newblock {\em arXiv preprint arXiv:2512.20856}, 2025.
 
+\bibitem{wang2026tilelang}
+L.~Wang, Y.~Cheng, Y.~Shi, Z.~Mo, et~al.
+\newblock Tilelang: Bridge programmability and performance in modern neural
+  kernels.
+\newblock {\em International Conference on Learning Representations (ICLR)},
+  2026.
+
+\bibitem{haas2025simpleqa}
+L.~Haas, G.~Yona, G.~D'Antonio, S.~Goldshtein, and D.~Das.
+\newblock Simpleqa verified: A reliable factuality benchmark to measure
+  parametric knowledge.
+\newblock {\em arXiv preprint arXiv:2509.07968}, 2025.
+
+\bibitem{he2024chinese}
+Y.~He, S.~Li, J.~Liu, Y.~Tan, et~al.
+\newblock Chinese simpleqa: A chinese factuality evaluation for large language
+  models.
+\newblock {\em arXiv preprint arXiv:2411.07140}, 2024.
+
+\bibitem{phan2025hle}
+L.~Phan, A.~Gatti, Z.~Han, N.~Li, et~al.
+\newblock Humanity's last exam.
+\newblock {\em arXiv preprint arXiv:2501.14249}, 2025.
+
+\bibitem{tsoukalas2024putnambench}
+G.~Tsoukalas, J.~Lee, J.~Jennings, J.~Xin, et~al.
+\newblock Putnambench: Evaluating neural theorem-provers on the putnam
+  mathematical competition.
+\newblock {\em arXiv preprint arXiv:2407.11214}, 2024.
+
+\bibitem{openai2024mrcr}
+{OpenAI}.
+\newblock Openai mrcr: Long context multiple needle in a haystack benchmark,
+  2024.
+
+\bibitem{lu2026corpusqa}
+Z.~Lu, C.~Li, Y.~Shi, W.~Shen, et~al.
+\newblock Corpusqa: A 10 million token benchmark for corpus-level analysis and
+  reasoning.
+\newblock {\em arXiv preprint arXiv:2601.14952}, 2026.
+
+\bibitem{merrill2026terminal}
+M.~A. Merrill, A.~G. Shaw, N.~Carlini, B.~Li, et~al.
+\newblock Terminal-bench: Benchmarking agents on hard, realistic tasks in
+  command line interfaces.
+\newblock {\em arXiv preprint arXiv:2601.11868}, 2026.
+
+\bibitem{openai2024swe}
+{OpenAI}.
+\newblock Introducing swe-bench verified, 2024.
+
 \end{thebibliography}
