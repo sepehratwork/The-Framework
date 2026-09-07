@@ -762,6 +762,45 @@ Lei Wang et~al.
 \newblock Tilelang: A composable tiled programming model for ai systems.
 \newblock {\em arXiv preprint arXiv:2504.17577}, 2025.
 
+\bibitem{jaech2024o1}
+Aaron Jaech, Adam Kalai, Adam Lerer, Adam Richardson, Ahmed El-Kishky, et~al.
+\newblock Openai o1 system card.
+\newblock {\em arXiv preprint arXiv:2412.16720}, 2024.
+
+\bibitem{mistral2025medium3}
+{MistralAI}.
+\newblock Mistral medium 3.
+\newblock \url{https://mistral.ai/news/mistral-medium-3}, 2025.
+
+\bibitem{openr12025}
+{Hugging Face}.
+\newblock Open r1: A fully open reproduction of deepseek-r1.
+\newblock \url{https://github.com/huggingface/open-r1}, 2025.
+
+\bibitem{penedo2025codeforces}
+Guilherme Penedo, Anton Lozhkov, Hynek Kydl{\'\i}{\v{c}}ek, Loubna~Ben Allal,
+  et~al.
+\newblock Codeforces cots dataset.
+\newblock \url{https://huggingface.co/datasets/open-r1/codeforces-cots}, 2025.
+
+\bibitem{yu2025dapo}
+Qiying Yu, Zheng Zhang, Ruofei Zhu, Yufeng Yuan, Xiaochen Zuo, Yu~Yue, Weinan
+  Dai, Tiantian Fan, Gaohong Liu, Juncai Liu, et~al.
+\newblock Dapo: An open-source llm reinforcement learning system at scale.
+\newblock {\em arXiv preprint arXiv:2503.14476}, 2025.
+
+\bibitem{yue2024mmmu}
+Xiang Yue, Yuansheng Ni, Kai Zhang, Tianyu Zheng, Ruoqi Liu, et~al.
+\newblock Mmmu: A massive multi-discipline multimodal understanding and
+  reasoning benchmark for expert agi.
+\newblock {\em Proceedings of CVPR}, 2024.
+
+\bibitem{yue2025mmmupro}
+Xiang Yue, Tianyu Zheng, Yuansheng Ni, Yubo Wang, Kai Zhang, et~al.
+\newblock Mmmu-pro: A more robust multi-discipline multimodal understanding
+  benchmark.
+\newblock {\em Proceedings of ACL}, 2025.
+
 \bibitem{li2025farseer}
 Houyi Li, Wenzhen Zheng, Qiufeng Wang, Zhenyu Ding, Haoying Wang, Zili Wang,
   Shijie Xuyang, Ning Ding, Shuigeng Zhou, Xiangyu Zhang, et~al.
@@ -1068,12 +1107,6 @@ Chujie Zheng, Pei Ke, Zheng Zhang, and Minlie Huang.
   contrastive learning.
 \newblock In {\em Findings of the Association for Computational Linguistics:
   ACL 2023}, pages 65--78, 2023.
-
-\bibitem{yu2025dapo}
-Qiying Yu, Zheng Zhang, Ruofei Zhu, Yufeng Yuan, Xiaochen Zuo, Yu~Yue, Weinan
-  Dai, Tiantian Fan, Gaohong Liu, Juncai Liu, et~al.
-\newblock Dapo: An open-source llm reinforcement learning system at scale.
-\newblock {\em arXiv preprint arXiv:2503.14476}, 2025.
 
 \bibitem{guo2025deepseek}
 Daya Guo, Dejian Yang, Haowei Zhang, Junxiao Song, Ruoyu Zhang, Runxin Xu,
