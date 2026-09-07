@@ -646,6 +646,63 @@ Zimu Lu et~al.
   reinforcement learning.
 \newblock {\em arXiv preprint arXiv:2501.12948}, 2025.
 
+\bibitem{nemotronmath2025}
+W.~Du, S.~Toshniwal, B.~Kisacanin, S.~Mahdavi, I.~Moshkov, G.~Armstrong, S.~Ge,
+  E.~Minasyan, F.~Chen, and I.~Gitman.
+\newblock Nemotron-math: Efficient long-context distillation of mathematical
+  reasoning from multi-mode supervision.
+\newblock {\em arXiv preprint arXiv:2512.15489}, 2025.
+
+\bibitem{moshkov2025aimo2}
+I.~Moshkov, D.~Hanley, I.~Sorokin, S.~Toshniwal, C.~Henkel, B.~Schifferer,
+  W.~Du, and I.~Gitman.
+\newblock Aimo-2 winning solution: Building state-of-the-art mathematical
+  reasoning models with openmathreasoning dataset.
+\newblock {\em arXiv preprint arXiv:2504.16891}, 2025.
+
+\bibitem{openai2025gpt52}
+{OpenAI}.
+\newblock Introducing gpt 5.2, 2025.
+
+\bibitem{deepmind2025gemini3}
+{Google DeepMind}.
+\newblock Gemini 3 pro model card, 2025.
+
+\bibitem{li2023taco}
+R.~Li, J.~Fu, B.-W. Zhang, T.~Huang, Z.~Sun, C.~Lyu, G.~Liu, Z.~Jin, and G.~Li.
+\newblock Taco: Topics in algorithmic code generation dataset.
+\newblock {\em arXiv preprint arXiv:2312.14852}, 2023.
+
+\bibitem{primeintellect2025synthetic2}
+{Prime Intellect}.
+\newblock Synthetic-2 release: Four million collaboratively generated reasoning
+  traces.
+\newblock Blog post, 2025.
+
+\bibitem{zhao2025icepop}
+X.~Zhao, Y.~Liu, K.~Xu, J.~Guo, Z.~Wang, Y.~Sun, X.~Kong, Q.~Cao, L.~Jiang,
+  Z.~Wen, et~al.
+\newblock Small leak can sink a great ship--boost rl training on moe with
+  icepop!
+\newblock {\em arXiv preprint arXiv:2509.00000}, 2025.
+
+\bibitem{zhang2025swebenchlive}
+L.~Zhang, S.~He, C.~Zhang, Y.~Kang, B.~Li, C.~Xie, J.~Wang, M.~Wang, Y.~Huang,
+  S.~Fu, et~al.
+\newblock Swe-bench goes live!
+\newblock {\em arXiv preprint arXiv:2505.23419}, 2025.
+
+\bibitem{harbor2026}
+{Harbor Framework Team}.
+\newblock Harbor: A framework for evaluating and optimizing agents and models
+  in container environments, 2026.
+
+\bibitem{tian2026beyond}
+Y.~Tian, C.~Wang, Z.~Liu, H.~Huang, W.~Yu, D.~Song, J.~Tang, and Y.~Guo.
+\newblock Beyond literal mapping: Benchmarking and improving non-literal
+  translation evaluation.
+\newblock {\em arXiv preprint arXiv:2602.00000}, 2026.
+
 \bibitem{li2025farseer}
 Houyi Li, Wenzhen Zheng, Qiufeng Wang, Zhenyu Ding, Haoying Wang, Zili Wang,
   Shijie Xuyang, Ning Ding, Shuigeng Zhou, Xiangyu Zhang, et~al.
